@@ -7,6 +7,18 @@ const server = new Hapi.Server(serverOptions)
 
 server.connection({ port: process.env.PORT || 8000 })
 
+
+if(process.env.DATABASE_URL){
+  //get heroku db params from env vars
+  var workingVariable=process.env.DATABASE_URL.replace('postgres://','')
+  console.log(workingVariable)
+  process.env.PGUSER=workingVariable.split('@')[0].split(':')[0]
+  process.env.PGPASSWORD=workingVariable.split('@')[0].split(':')[1]
+  process.env.PGHOST=workingVariable.split('@')[1].split(':')[0]
+  process.env.PSPORT=workingVariable.split('@')[1].split(':')[1].split('/')[0]
+  process.env.PGDATABASE=workingVariable.split('@')[1].split(':')[1].split('/')[1]
+}
+
 const cacheKey=process.env.cacheKey||'super-secret-cookie-encryption-key'
 console.log('Cache key'+cacheKey)
 const sessionPluginOptions = {

@@ -37,11 +37,9 @@ Database connection string
 
 ## Launching
 
-node index.js
+`node index.js`
 
 ## Usage
-
-
 
 The following RESTful endpoints are exposed:
 

@@ -3,14 +3,50 @@
 
 Data agnostic permit repository project for the GOV.UK Water Abstraction service, using the HAPI engine for Node.js + the Handlebars view engine, with a Postgres datastore.
 
+
+
 ## Admin Interface
 
 A simple admin UI is exposed at /admin
 
 This exposes a hierarchical view of the orgs/licence types/licences and enables additional attributes to be added to licence types
 
+## Installation
+
+npm install --only=dev
+gulp clean && gulp copy-govuk-files && gulp install-govuk-files && gulp copy-static-assets && gulp sass
+
+## Environment variables
+
+A .env file should be created in the root directory with the following optional configuration variables
+
+### PORT
+Specify the port for the service to run on
+`PORT=[port]
+
+### DATABASE_URL
+Database connection string
+`DATABASE_URL: postgres://[user]:[password]@[host]:[port]/[database]
+
+### cacheKey
+32+ characters used to secure session variables
+
+`cacheKey=a-string-of-at-least-32-characters
+
+
+
+PGUSER=postgres
+PGHOST=127.0.0.1
+PGPASSWORD=postgres
+PGDATABASE=postgres
+PGPORT=5432
+## Launching
+
+node index.js
 
 ## Usage
+
+
 
 The following RESTful endpoints are exposed:
 

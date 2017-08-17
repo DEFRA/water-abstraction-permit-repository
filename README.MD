@@ -35,13 +35,6 @@ Database connection string
 
 `cacheKey=a-string-of-at-least-32-characters`
 
-
-
-PGUSER=postgres
-PGHOST=127.0.0.1
-PGPASSWORD=postgres
-PGDATABASE=postgres
-PGPORT=5432
 ## Launching
 
 node index.js

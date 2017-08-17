@@ -5,6 +5,10 @@ Data agnostic permit repository project for the GOV.UK Water Abstraction service
 
 ## Usage
 
+A simple admin UI is exposed at /admin
+
+This exposes a hierarchical view of the orgs/licence types/licences as a convenience.
+
 The following RESTful endpoints are exposed:
 
 ### GET /API/1.0/org

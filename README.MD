@@ -1,7 +1,7 @@
 
 # prototype-permit-repository
 
-Data agnostic permit repository project for the GOV.UK Water Abstraction service
+Data agnostic permit repository project for the GOV.UK Water Abstraction service, using the HAPI engine for Node.js + the Handlebares view engine, with a Postgres datastore.
 
 ## Usage
 

@@ -22,16 +22,15 @@ A .env file should be created in the root directory with the following optional 
 
 ### PORT
 Specify the port for the service to run on
-`PORT=[port]
+`PORT=[port]`
 
 ### DATABASE_URL
 Database connection string
-`DATABASE_URL: postgres://[user]:[password]@[host]:[port]/[database]
+`DATABASE_URL: postgres://[user]:[password]@[host]:[port]/[database]`
 
 ### cacheKey
 32+ characters used to secure session variables
-
-`cacheKey=a-string-of-at-least-32-characters
+`cacheKey=a-string-of-at-least-32-characters`
 
 
 

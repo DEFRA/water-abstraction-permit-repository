@@ -237,8 +237,6 @@ Create a licence of type [type id] for organisation [org id]
 	"licence_start_dt": "2017-01-01T00:00:00.000Z",
 	"licence_end_dt": "2018-01-01T00:00:00.000Z",
 	"licence_status_id": "1",
-	"licence_type_id": "1",
-	"licence_org_id": "1",
 	"attributes": {
 		"Attribute1": "Text Value"
 	}
@@ -265,8 +263,6 @@ Update a licence with ID [licence id] of type [type id] for organisation [org id
 	"licence_start_dt": "2017-01-01T00:00:00.000Z",
 	"licence_end_dt": "2018-01-01T00:00:00.000Z",
 	"licence_status_id": "1",
-	"licence_type_id": "1",
-	"licence_org_id": "1",
 	"attributes": {
 		"Attribute1": "Text Value"
 	}

@@ -157,6 +157,7 @@ function listLicences (request, reply) {
 }
 
 function createLicence (request, reply) {
+  console.log("create licence!")
   var payload = request.payload
   var foundErrors = false
   var errors = []
@@ -246,7 +247,7 @@ function createLicence (request, reply) {
         VALUES
         ($1,$2,$3,$4,$5,to_date($6::text,'YYYY/MM/DD'),to_date($7::text,'YYYY/MM/DD'))
         RETURNING licence_id`
-      var queryParams = [payload.licence_org_id, payload.licence_type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
+      var queryParams = [request.params.orgId, request.params.typeId, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
       DB.query(query, queryParams)
   .then((res) => {

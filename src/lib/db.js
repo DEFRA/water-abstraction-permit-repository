@@ -1,34 +1,35 @@
 
-const { Client } = require('pg')
+const { Pool } = require('pg')
 
+const pool = new Pool({
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000
+})
 
+function promiseQuery (queryString, params) {
+  return queryAsPromise = new Promise((resolve, reject) => {
 
-console.log("DB....")
-console.log(__dirname)
-
-function query(queryString,params,cb){
-  const client = new Client()
-  client.connect()
-  client.query(queryString, params, (err, res) => {
-    client.end()
-    response={error:null,data:[]};
-    if(err){
-      response.error=err;
-      console.error("DB Error")
-      console.error(err)
-    } else {
-      response.data=res.rows
-    }
-    cb(response)
+    console.log(queryString)
+    query(queryString, params, (res) => {
+      console.log(res)
+      resolve(res)
+    })
   })
-
-
 }
 
+function query (queryString, params, cb) {
+  pool.query(queryString, params)
+    .then((res) => {
+      cb({data: res.rows})
+    }) // brianc
+    .catch(err => {
+      cb({error: err.stack})
+    })
+}
 
-module.exports={
+module.exports = {
 
-query:query
-
+  query: promiseQuery
 
 }

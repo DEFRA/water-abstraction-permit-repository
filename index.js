@@ -8,9 +8,10 @@ const server = new Hapi.Server(serverOptions)
 server.connection({ port: process.env.PORT || 8000 })
 
 
-process.env.DATABASE_URL='postgres://mcslhbcxodaqlx:0380f67a6c93e34d7c7d6c1b2c60b4985d64246e1fc97104c5a52ef8f6965a82@ec2-54-75-224-100.eu-west-1.compute.amazonaws.com:5432/d5u3rcgq341irg'
+
 if(process.env.DATABASE_URL){
   //get heroku db params from env vars
+
   var workingVariable=process.env.DATABASE_URL.replace('postgres://','')
   console.log(workingVariable)
   process.env.PGUSER=workingVariable.split('@')[0].split(':')[0]

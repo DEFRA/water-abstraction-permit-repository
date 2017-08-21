@@ -21,6 +21,7 @@ module.exports = [
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence', handler: API.licence.list },
   { method: 'POST', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence', handler: API.licence.create },
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence/{licenceId}', handler: API.licence.get },
+  { method: 'PUT', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence/{licenceId}', handler: API.licence.update },
 { method: 'GET', path: '/API/' + version + '/reset', handler: API.general.reset }
 ]
 /**

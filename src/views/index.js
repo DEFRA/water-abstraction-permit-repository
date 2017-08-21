@@ -15,6 +15,7 @@ handlebars.registerHelper( 'concat', function(){
   return arg.join('');
 })
 
+
 handlebars.registerHelper( 'stringify', function(variable){
   var arg = JSON.stringify(variable);
   return arg;

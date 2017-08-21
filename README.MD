@@ -244,6 +244,39 @@ Create a licence of type [type id] for organisation [org id]
 }
 ```
 
+### PUT /API/1.0/org/[org id]/licencetype/[type id]/licence/[licence id]
+
+Update a licence with ID [licence id] of type [type id] for organisation [org id]
+
+#### Example request
+
+```
+{
+	"licence_ref": "New Licence",
+	"licence_start_dt": "2017-01-01T00:00:00.000Z",
+	"licence_end_dt": "2018-01-01T00:00:00.000Z",
+	"licence_status_id": "1",
+	"licence_type_id": "1",
+	"licence_org_id": "1",
+	"attributes": {
+		"Attribute1": "Text Value"
+	}
+}
+```
+
+#### Example Response
+
+```
+{
+    "error": null,
+    "data": [
+        {
+          "licence_id": "51"
+        }
+    ]
+}
+```
+
 ### GET /API/1.0/org/[org id]/licencetype/[type id]/licence/[licence id]
 
 Returns detail of licence [licence id] of type [type id] for organisation [org id]

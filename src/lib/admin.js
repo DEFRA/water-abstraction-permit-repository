@@ -8,8 +8,6 @@ console.log('ADMIN JS')
 
 console.log(API)
 
-
-
 function index (request, reply) {
   var viewContext = View.contextDefaults(request)
   viewContext.pageTitle = 'GOV.UK - Admin'
@@ -19,22 +17,20 @@ function index (request, reply) {
 
 function fields (request, reply) {
   var viewContext = {}
-  var uri=request.connection.info.protocol + '://' + request.info.host + '/API/1.0/field';
+  var uri = request.connection.info.protocol + '://' + request.info.host + '/API/1.0/field'
   console.log(uri)
-  API.system.getFields({},(data)=>{
+  API.system.getFields({}, (data) => {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
     viewContext.data = data
-    viewContext.debug.data=viewContext.data
+    viewContext.debug.data = viewContext.data
     console.log('*** adminIndex ***')
     reply.view('water/admin/fields', viewContext)
   })
 }
 
 function organisations (request, reply) {
-
-  API.org.list(request,(data)=>{
-
+  API.org.list(request, (data) => {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
     viewContext.data = data
@@ -42,9 +38,8 @@ function organisations (request, reply) {
   })
 }
 function organisationLicenceTypes (request, reply) {
-
   var viewContext = {}
-  API.licencetype.list(request,(data)=>{
+  API.licencetype.list(request, (data) => {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
     viewContext.data = data.data
@@ -55,18 +50,35 @@ function organisationLicenceTypes (request, reply) {
 }
 
 function organisationLicenceType (request, reply) {
-
   var viewContext = {}
-  API.licencetype.get(request,(data)=>{
-
+  API.licencetype.get(request, (data) => {
     var viewContext = View.contextDefaults(request)
-
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
+    console.log(JSON.stringify(data.data))
+    if (!data.data[0].attributedata) {
+      data.data[0].attributedata = []
+    }
+
+    viewContext.debug.data = data.data
     viewContext.data = data.data
     viewContext.orgId = request.params.orgId
     viewContext.typeId = request.params.typeId
-    viewContext.debug.data = data
-    reply.view('water/admin/organisationLicenceType', viewContext)
+//    viewContext.debug.data = data
+
+    API.system.getFields({}, (fields) => {
+      viewContext.fields = fields.data
+      viewContext.debug.fields = fields
+//      reply(JSON.stringify(viewContext))
+      reply.view('water/admin/organisationLicenceType', viewContext)
+    })
+  })
+}
+
+function addFieldToOrganisationLicenceType (request, reply) {
+  console.log(request.params)
+  console.log(request.payload)
+  API.licencetype.createField(request, (data) => {
+    reply('<script>location.href=\'/admin/organisation/' + request.params.orgId + '/licencetypes/' + request.params.typeId + '/\'</script>')
   })
 }
 
@@ -75,6 +87,6 @@ module.exports = {
   fields: fields,
   organisations: organisations,
   organisationLicenceTypes: organisationLicenceTypes,
-  organisationLicenceType: organisationLicenceType
-
+  organisationLicenceType: organisationLicenceType,
+  addFieldToOrganisationLicenceType: addFieldToOrganisationLicenceType
 }

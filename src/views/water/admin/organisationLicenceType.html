@@ -46,10 +46,63 @@
           </tr>
           {{/each}}
           {{/each}}
+
+          <form method="post" action="/admin/organisation/{{orgId}}/licencetypes/{{typeId}}/field">
+            <tr>
+              <td>&nbsp;</td>
+              <td>Add Field:</td>
+              <td>
+                <select name="field_id">
+        {{#each fields}}
+          <option value="{{field_id}}">{{field_id}} {{this.field_nm}}</option>
+
+        {{/each}}
+      </select>
+              </td>
+              <td>
+                <input type="text" name="type_field_alias">
+              </td>
+              <td>&nbsp;</td>
+              <td>
+                <input type="checkbox" name="is_required" value="1"/>
+              </td>
+              <td>
+                <input type="checkbox" name="is_public_domain" value="1"/>
+              </td>
+              <td><input type="submit" value="Add"/></td>
+            </tr>
+          </form>
+
         </table>
       </ul>
 
+<hr>
+      <h2 class="heading-large">
+Sample Post to create licence of this type
+</h2>
 
+<pre>
+  POST /API/1.0/org/{{orgId}}/licencetype/{{typeId}}/licence
+  {
+    "licence_ref":"LICENCE REF",
+    "licence_start_dt":"2017-01-01T00:00:00.000Z",
+    "licence_end_dt":"2018-01-01T00:00:00.000Z",
+    "licence_status_id":"1",
+    "licence_type_id":"{{typeId}}",
+    "licence_org_id":"{{orgId}}",
+    "attributes":{
+      {{#each this.data}}
+      {{#each this.attributedata}}
+      "{{this.type_field_alias}}":
+      "{{this.field_nm}}"
+
+      {{#unless @last}}, {{/unless}}
+        {{/each}}
+        {{/each}}
+    }
+
+}
+</PRE>
 
     </div>
   </div>

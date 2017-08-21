@@ -7,5 +7,6 @@ module.exports = [
   { method: 'GET', path: '/admin/fields', handler: Admin.fields },
   { method: 'GET', path: '/admin/organisation', handler: Admin.organisations },
   { method: 'GET', path: '/admin/organisation/{orgId}/licencetypes', handler: Admin.organisationLicenceTypes },
-  { method: 'GET', path: '/admin/organisation/{orgId}/licencetypes/{typeId}', handler: Admin.organisationLicenceType }
+  { method: 'GET', path: '/admin/organisation/{orgId}/licencetypes/{typeId}', handler: Admin.organisationLicenceType },
+  { method: 'POST', path: '/admin/organisation/{orgId}/licencetypes/{typeId}/field', handler: Admin.addFieldToOrganisationLicenceType }
 ]

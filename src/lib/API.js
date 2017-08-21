@@ -171,9 +171,9 @@ function createLicence (request, reply) {
     reject(['cannot post existing licence id'])
   } else if (typeof payload.licence_ref === 'undefined') {
     reject(['licence_ref must be defined'])
-  } else if (typeof payload.licence_type_id === 'undefined') {
+  } else if (typeof request.params.typeId === 'undefined') {
     reject(['licence_type_id must be defined'])
-  } else if (typeof payload.licence_org_id === 'undefined') {
+  } else if (typeof request.params.orgId === 'undefined') {
     reject(['licence_org_id must be defined'])
   } else {
 //    console.log('primary fields validated')
@@ -380,9 +380,9 @@ function putLicence (request, reply) {
       reject(['requires existing licence id'])
     } else if (typeof payload.licence_ref === 'undefined') {
       reject(['licence_ref must be defined'])
-    } else if (typeof payload.licence_type_id === 'undefined') {
+    } else if (typeof request.params.typeId === 'undefined') {
       reject(['licence_type_id must be defined'])
-    } else if (typeof payload.licence_org_id === 'undefined') {
+    } else if (typeof request.params.orgId === 'undefined') {
       reject(['licence_org_id must be defined'])
     } else {
       // 2. get secondary attributes by licence_type_id (and verify licence_org_id is correct for licence_type_id)

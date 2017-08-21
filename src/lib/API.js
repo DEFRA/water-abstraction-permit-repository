@@ -300,6 +300,8 @@ function getLicence (request, reply) {
   // swanky query to get the licence data
   var query = `
   select l.*,a.* from
+  ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader} l
+  left outer join
   (
 	SELECT licence_id,array_to_json(array_agg(attributes)) as attributeData
 	from
@@ -313,15 +315,17 @@ function getLicence (request, reply) {
     tf.type_id=$2
         ) attributes
 	group by licence_id
-) a
-inner join ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader} l on a.licence_id = l.licence_id
+) a on a.licence_id = l.licence_id
 where l.licence_org_id = $1 and l.licence_type_id=$2
 `
+
+console.log(queryParams)
+
   DB.query(query, queryParams)
   .then((res) => {
     // set initial licence data
     var licenceData = {}
-
+    console.log(licenceData)
     licenceData.licence_id = res.data[0].licence_id
     licenceData.licence_ref = res.data[0].licence_ref
     licenceData.licence_start_dt = res.data[0].licence_start_dt

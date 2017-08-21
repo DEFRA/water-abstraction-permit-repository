@@ -72,7 +72,7 @@ function listLicenceTypes (request, reply) {
 // return all licence types for org
   var query = `SELECT type_nm,type_id from ${dbSchema.schemaName}.${dbSchema.tables.licenceType} where org_id=$1`
   var queryParams = [request.params.orgId]
-  console.log('*query params' + JSON.stringify(queryParams))
+
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -122,9 +122,6 @@ function getlicenceTypeFields (request, reply) {
 }
 
 function createlicenceTypeField (request, reply) {
-  console.log('inner params')
-  console.log(request.params)
-  console.log(request.payload)
 
   if (request.payload.is_required && request.payload.is_required == 1) {
 
@@ -141,12 +138,8 @@ function createlicenceTypeField (request, reply) {
     (type_id,field_id,is_required,is_public_domain,type_field_alias)
     values ($1,$2,$3,$4,$5)`
   var queryParams = [request.params.typeId, request.payload.field_id, request.payload.is_required, request.payload.is_public_domain, request.payload.type_field_alias]
-  console.log(queryParams)
-  console.log(query)
   DB.query(query, queryParams)
   .then((res) => {
-    console.log('db response')
-    console.log(res)
     reply(res)
   })
 }
@@ -205,14 +198,10 @@ function createLicence (request, reply) {
       // build structure containing all attributes so we can verify against payload attributes...
     var returnedAttributeDefinition = res.data[0].attributedata
     var attributeDefinitions = {}
-
-//      console.log(returnedAttributeDefinition)
-
     for (attribute in returnedAttributeDefinition) {
       var thisAttribute = returnedAttributeDefinition[attribute]
       attributeDefinitions[thisAttribute.type_field_alias] = thisAttribute
     }
-//      console.log(attributeDefinitions)
 
     // 3. iterate over the secondary attributes and check they exist...
     var searchKey = ''
@@ -220,31 +209,21 @@ function createLicence (request, reply) {
     // check for missing required fileds
 
     for (secondaryAttribute in attributeDefinitions) {
-//        console.log('*** ' + secondaryAttribute)
-//        console.log(payload.attributes[secondaryAttribute])
-//        console.log(attributeDefinitions[secondaryAttribute])
       if (attributeDefinitions[secondaryAttribute].is_required == 1 && typeof payload.attributes[secondaryAttribute] === 'undefined') {
-//          console.log('required attribute ' + secondaryAttribute + ' was not supplied')
         errors.push('required attribute ' + secondaryAttribute + ' was not supplied')
         foundErrors = true
         break
       }
     }
 
-    console.log('attributeDefinitions')
-    console.log('+++++++++++++')
-    console.log(attributeDefinitions)
 
     for (secondaryAttribute in payload.attributes) {
-//        console.log('*** ' + secondaryAttribute)
-//        console.log(payload.attributes[secondaryAttribute])
-//        console.log(attributeDefinitions[secondaryAttribute])
       if (typeof attributeDefinitions[secondaryAttribute] === 'undefined') {
-//          console.log('unknown attribute ' + secondaryAttribute)
+
         errors.push('unknown attribute: ' + secondaryAttribute)
         foundErrors = true
       } else if (attributeDefinitions[secondaryAttribute].is_required == 1 && typeof payload.attributes[secondaryAttribute] === 'undefined') {
-//          console.log('required attribute ' + secondaryAttribute + ' was not supplied')
+
         errors.push('required attribute ' + secondaryAttribute + ' was not supplied')
         foundErrors = true
 
@@ -254,14 +233,12 @@ function createLicence (request, reply) {
         foundErrors = true
       } else {
         searchKey += '|' + payload.attributes[secondaryAttribute]
-//          console.log('validation passed for ' + secondaryAttribute)
+
       }
     }
     if (!foundErrors) {
       // 4. insert main row
 
-//        console.log('*****')
-//        console.log(JSON.stringify(payload))
 
       query = `
         INSERT INTO ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
@@ -270,25 +247,20 @@ function createLicence (request, reply) {
         ($1,$2,$3,$4,$5,to_date($6::text,'YYYY/MM/DD'),to_date($7::text,'YYYY/MM/DD'))
         RETURNING licence_id`
       var queryParams = [payload.licence_org_id, payload.licence_type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
-//        console.log(queryParams)
+
       DB.query(query, queryParams)
   .then((res) => {
-    console.log(res)
+
     if (res.error) {
       console.log(res.err)
       reject(err)
     } else {
       var licence_id = res.data[0].licence_id
-      console.log('no db error')
+
 
       var queryParams = []
       var query = ''
-//            console.log('--------------')
-//            console.log(attributeDefinitions)
       for (secondaryAttribute in payload.attributes) {
-//              console.log(secondaryAttribute)
-//              console.log('inserted as')
-//              console.log(payload.attributes[secondaryAttribute])
         query += `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceData} values
         (
           ${licence_id},
@@ -296,8 +268,6 @@ function createLicence (request, reply) {
           ${attributeDefinitions[secondaryAttribute].type_fields_id}
         );`
       }
-
-//            console.log(query)
       queryParams = []
 
       DB.query(query, queryParams)
@@ -325,8 +295,6 @@ function createLicence (request, reply) {
 
 function getLicence (request, reply) {
 // return specific licence for org & type
-  console.log('get licence')
-//  console.log(data)
   var queryParams = [request.params.orgId, request.params.typeId, request.params.licenceId]
   // swanky query to get the licence data
   var query = `
@@ -376,11 +344,7 @@ where l.licence_org_id = $1 and l.licence_type_id=$2
 
     DB.query(query, queryParams)
     .then((attributeDefinitionQuery) => {
-      console.log('attributeDefinitionQuery')
-      console.log(JSON.stringify(attributeDefinitionQuery))
       for (var attribute in attributeDefinitionQuery.data[0].attributedata) {
-        console.log(attribute)
-        console.log(JSON.stringify(attributeDefinitionQuery.data[0].attributedata[attribute]))
         licenceData.attributes[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = null
         licenceData.attributeDefinitions[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = attributeDefinitionQuery.data[0].attributedata[attribute]
       }
@@ -390,7 +354,6 @@ convert licence data to nice friendly format, separating core values (common to 
 **/
 
       for (attribute in res.data[0].attributedata) {
-        console.log('set ' + attribute + '=' + res.data[0].attributedata[attribute].licence_data_value)
         licenceData.attributes[res.data[0].attributedata[attribute].type_field_alias] = JSON.parse(res.data[0].attributedata[attribute].licence_data_value)
       }
       reply({error:null,data:licenceData})
@@ -422,7 +385,6 @@ function putLicence (request, reply) {
     } else if (typeof payload.licence_org_id === 'undefined') {
       reject(['licence_org_id must be defined'])
     } else {
-  //    console.log('primary fields validated')
       // 2. get secondary attributes by licence_type_id (and verify licence_org_id is correct for licence_type_id)
 
       var queryParams = [request.params.orgId, request.params.typeId]
@@ -444,46 +406,28 @@ function putLicence (request, reply) {
         // build structure containing all attributes so we can verify against payload attributes...
       var returnedAttributeDefinition = res.data[0].attributedata
       var attributeDefinitions = {}
-
-  //      console.log(returnedAttributeDefinition)
-
       for (attribute in returnedAttributeDefinition) {
         var thisAttribute = returnedAttributeDefinition[attribute]
         attributeDefinitions[thisAttribute.type_field_alias] = thisAttribute
       }
-  //      console.log(attributeDefinitions)
-
       // 3. iterate over the secondary attributes and check they exist...
       var searchKey = ''
 
       // check for missing required fileds
 
       for (secondaryAttribute in attributeDefinitions) {
-  //        console.log('*** ' + secondaryAttribute)
-  //        console.log(payload.attributes[secondaryAttribute])
-  //        console.log(attributeDefinitions[secondaryAttribute])
         if (attributeDefinitions[secondaryAttribute].is_required == 1 && typeof payload.attributes[secondaryAttribute] === 'undefined') {
-  //          console.log('required attribute ' + secondaryAttribute + ' was not supplied')
           errors.push('required attribute ' + secondaryAttribute + ' was not supplied')
           foundErrors = true
           break
         }
       }
 
-      console.log('attributeDefinitions')
-      console.log('+++++++++++++')
-      console.log(attributeDefinitions)
-
       for (secondaryAttribute in payload.attributes) {
-  //        console.log('*** ' + secondaryAttribute)
-  //        console.log(payload.attributes[secondaryAttribute])
-  //        console.log(attributeDefinitions[secondaryAttribute])
         if (typeof attributeDefinitions[secondaryAttribute] === 'undefined') {
-  //          console.log('unknown attribute ' + secondaryAttribute)
           errors.push('unknown attribute: ' + secondaryAttribute)
           foundErrors = true
         } else if (attributeDefinitions[secondaryAttribute].is_required == 1 && typeof payload.attributes[secondaryAttribute] === 'undefined') {
-  //          console.log('required attribute ' + secondaryAttribute + ' was not supplied')
           errors.push('required attribute ' + secondaryAttribute + ' was not supplied')
           foundErrors = true
 
@@ -493,14 +437,12 @@ function putLicence (request, reply) {
           foundErrors = true
         } else {
           searchKey += '|' + payload.attributes[secondaryAttribute]
-  //          console.log('validation passed for ' + secondaryAttribute)
+
         }
       }
       if (!foundErrors) {
         // 4. insert main row
 
-  //        console.log('*****')
-  //        console.log(JSON.stringify(payload))
 
         query = `
           UPDATE ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
@@ -512,10 +454,10 @@ function putLicence (request, reply) {
           licence_end_dt =$5
           where licence_id= $6 and licence_org_id=$7 and licence_type_id=$8`
         var queryParams = [payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt, request.params.licenceId, request.params.orgId, request.params.typeId]
-  //        console.log(queryParams)
+
         DB.query(query, queryParams)
     .then((res) => {
-      console.log(res)
+
       if (res.error) {
         console.log(res.err)
         reject(err)
@@ -525,15 +467,9 @@ function putLicence (request, reply) {
 
         var queryParams = []
         var query = ''
-  //            console.log('--------------')
-  //            console.log(attributeDefinitions)
   //TODO: AUDIT!!!
         query+=`delete from ${dbSchema.schemaName}.${dbSchema.tables.licenceData} where licence_id=${request.params.licenceId};`
         for (secondaryAttribute in payload.attributes) {
-  //              console.log(secondaryAttribute)
-  //              console.log('inserted as')
-  //              console.log(payload.attributes[secondaryAttribute])
-
 
 
           query += `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceData} values
@@ -544,7 +480,6 @@ function putLicence (request, reply) {
           );`
         }
 
-  //            console.log(query)
         queryParams = []
 
         DB.query(query, queryParams)
@@ -579,8 +514,27 @@ function reset (request, reply) {
   reply({})
 }
 
+function getToken(request,reply){
+  var key=process.env.JWT_SECRET
+  var JWT   = require('jsonwebtoken');
+  var obj   = { id:1,"name":"test" }; // object/info you want to sign
+  var token = JWT.sign(obj, key);
+  reply(token)
+
+/**
+
+http://127.0.0.1:8001/API/1.0/field?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6IkFudGhvbnkgVmFsaWQgVXNlciIsImlhdCI6MTQyNTQ3MzUzNX0.KA68l60mjiC8EXaC2odnjFwdIDxE__iDu5RwLdN1F2A
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6IkFudGhvbnkgVmFsaWQgVXNlciIsImlhdCI6MTQyNTQ3MzUzNX0.KA68l60mjiC8EXaC2odnjFwdIDxE__iDu5RwLdN1F2A
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzLCJuYW1lIjoiQ2hhcmxpZSIsImlhdCI6MTUwMzMxMjM5M30.SDdwAxmrNe4yGWKmIgNC80pWHLd9iTfDp89lHTybn04
+
+**/
+
+
+}
+
 module.exports = {
-  system: {getFields: getFields},
+  system: {getFields: getFields, getToken: getToken},
   org: {list: listOrgs, create: createOrg, delete: deleteOrg, get: getOrg, update: putOrg},
   licencetype: {
     list: listLicenceTypes,

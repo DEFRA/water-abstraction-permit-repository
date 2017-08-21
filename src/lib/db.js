@@ -9,10 +9,7 @@ const pool = new Pool({
 
 function promiseQuery (queryString, params) {
   return queryAsPromise = new Promise((resolve, reject) => {
-
-    console.log(queryString)
     query(queryString, params, (res) => {
-      console.log(res)
       resolve(res)
     })
   })

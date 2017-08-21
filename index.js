@@ -55,10 +55,40 @@ server.register(
 )
 **/
 
-server.register([require('inert'), require('vision')], (err) => {
+server.register([require('hapi-auth-jwt2'),require('inert'), require('vision')], (err) => {
   if (err) {
     throw err
   }
+
+
+  var people = { // our "users database"
+      1: {
+        id: 1,
+        name: 'Jen Jones'
+      }
+  };
+
+  // bring your own validation function
+  var validate = function (decoded, request, callback) {
+      console.log('CALL WITH TOKEN')
+      console.log(decoded)
+      // do your checks to see if the person is valid
+      if (!people[decoded.id]) {
+        return callback(null, false);
+      }
+      else {
+        return callback(null, true);
+      }
+  };
+
+  server.auth.strategy('jwt', 'jwt',
+      { key: process.env.JWT_SECRET,          // Never Share your secret key
+        validateFunc: validate,            // validate function defined above
+        verifyOptions: {} // pick a strong algorithm
+      });
+
+      server.auth.default('jwt');
+
   // load views
   server.views(require('./src/views'))
 

@@ -39,6 +39,12 @@ Database connection string
 
 `node index.js`
 
+## Security
+
+A valid JWT token is required for requests to the API. This should be appended to the URL in the format /API/1.0/org?token=[insert token here].
+
+Please note that a mechanism for obtaining the JWT token is not yet in place.
+
 ## Usage
 
 The following RESTful endpoints are exposed:

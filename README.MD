@@ -35,6 +35,9 @@ Database connection string
 
 `cacheKey=a-string-of-at-least-32-characters`
 
+### JWT_SECRET
+The secret key used to encrypt tokens
+
 ## Launching
 
 `node index.js`

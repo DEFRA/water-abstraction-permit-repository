@@ -18,6 +18,7 @@ function promiseQuery (queryString, params) {
 function query (queryString, params, cb) {
   pool.query(queryString, params)
     .then((res) => {
+//      console.log(res)
       cb({data: res.rows})
     }) // brianc
     .catch(err => {

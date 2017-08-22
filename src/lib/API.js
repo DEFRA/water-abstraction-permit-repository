@@ -122,7 +122,7 @@ function getlicenceTypeFields (request, reply) {
 }
 
 function createlicenceTypeField (request, reply) {
-
+  //TODO: deal with an array of fields being added...
   if (request.payload.is_required && request.payload.is_required == 1) {
 
   } else {
@@ -316,10 +316,10 @@ function getLicence (request, reply) {
         ) attributes
 	group by licence_id
 ) a on a.licence_id = l.licence_id
-where l.licence_org_id = $1 and l.licence_type_id=$2
+where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.params.licenceId}
 `
 
-console.log(queryParams)
+
 
   DB.query(query, queryParams)
   .then((res) => {
@@ -337,6 +337,7 @@ console.log(queryParams)
     licenceData.attributeDefinitions = {}
 
     // get ALL attributes from type definition
+    queryParams=[request.params.typeId];
     var query = `SELECT $1::int as type_id, array_to_json(array_agg(attributes)) as attributeData
   	from (
   select
@@ -345,10 +346,15 @@ console.log(queryParams)
   		inner join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id = f.field_id
           where tf.type_id=$1 ) attributes
           `
-    var queryParams = [request.params.typeId]
+          console.log(query)
+          console.log(JSON.stringify(queryParams))
+
 
     DB.query(query, queryParams)
     .then((attributeDefinitionQuery) => {
+
+      console.log(attributeDefinitionQuery)
+
       for (var attribute in attributeDefinitionQuery.data[0].attributedata) {
         licenceData.attributes[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = null
         licenceData.attributeDefinitions[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = attributeDefinitionQuery.data[0].attributedata[attribute]
@@ -458,10 +464,14 @@ function putLicence (request, reply) {
           licence_start_dt =$4,
           licence_end_dt =$5
           where licence_id= $6 and licence_org_id=$7 and licence_type_id=$8`
+
+
         var queryParams = [payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt, request.params.licenceId, request.params.orgId, request.params.typeId]
+
 
         DB.query(query, queryParams)
     .then((res) => {
+
 
       if (res.error) {
         console.log(res.err)

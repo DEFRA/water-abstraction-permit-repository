@@ -9,6 +9,10 @@ A simple admin UI is exposed at /admin
 
 This exposes a hierarchical view of the orgs/licence types/licences and enables additional attributes to be added to licence types
 
+## Prerequisitites
+
+Gulp (global)
+
 ## Installation
 
 ```
@@ -41,6 +45,12 @@ The secret key used to encrypt tokens
 ## Launching
 
 `node index.js`
+
+## On-Boarding
+
+TODO: How does a new department/organisation set up the permit repository
+
+TODO: How does a department/organisation create a new licence/permit type
 
 ## Security
 

@@ -8,7 +8,7 @@ const version = '1.0'
 
 
 module.exports = [
-  { method: 'POSt', path: '/API/' + version + '/token',  config:{ auth: false }, handler: API.system.getToken },
+  { method: 'POST', path: '/API/' + version + '/token',  config:{ auth: false }, handler: API.system.getToken },
   { method: 'GET', path: '/API/' + version + '/field', handler: API.system.getFields },
   { method: 'GET', path: '/API/' + version + '/org', handler: API.org.list },
   { method: 'POST', path: '/API/' + version + '/org', handler: API.org.create },
@@ -19,6 +19,8 @@ module.exports = [
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype', handler: API.licencetype.list },
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}', handler: API.licencetype.get },
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/field', handler: API.licencetype.getFields },
+  { method: 'POST', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/field', handler: API.licencetype.createField },
+
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence', handler: API.licence.list },
   { method: 'POST', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence', handler: API.licence.create },
   { method: 'GET', path: '/API/' + version + '/org/{orgId}/licencetype/{typeId}/licence/{licenceId}', handler: API.licence.get },

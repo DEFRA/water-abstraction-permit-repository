@@ -132,7 +132,7 @@ function createlicenceTypeField (request, reply) {
     var queryParams = []
 
     for (type in request.payload.types) {
-      var thisType=request.payload.types[type]
+      var thisType = request.payload.types[type]
       console.log(thisType)
       if (thisType.is_required && thisType.is_required == 1) {
 
@@ -176,6 +176,7 @@ function createlicenceTypeField (request, reply) {
   console.log(queryParams)
   DB.query(query, queryParams)
   .then((res) => {
+    console.log(res)
     reply(res)
   })
 }

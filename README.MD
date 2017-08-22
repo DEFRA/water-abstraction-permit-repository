@@ -187,6 +187,63 @@ Create a licence type for organisation [org id]
 }
 ```
 
+### POST /API/1.0/[org id]/1/licencetype/[type id]/field
+
+Add a single field to licence type [type id] for organisation [org id].
+
+#### Example request
+
+```
+{
+	"field_id":"20",
+	"is_required":"0",
+	"is_public_domain":"1",
+	"type_field_alias":"test4"
+}
+```
+
+#### Example Response
+
+```
+{
+    "error": null,
+    "data": []
+}
+```
+
+Add a multiple fields to licence type [type id] for organisation [org id].
+
+#### Example request
+
+```
+{"types":
+  [
+    {
+    	"field_id":"20",
+    	"is_required":"0",
+    	"is_public_domain":"1",
+    	"type_field_alias":"test4"
+    },
+    {
+      "field_id":"20",
+      "is_required":"0",
+      "is_public_domain":"1",
+      "type_field_alias":"test5"
+    }
+  ]
+}
+```
+
+#### Example Response
+
+```
+{
+    "error": null,
+    "data": []
+}
+```
+
+
 ### GET /API/1.0/org/[org id]/licencetype/[type id]
 
 Returns custom attribute definition of a licence of type [type id] for organisation [org id]

@@ -19,10 +19,10 @@ function query (queryString, params, cb) {
   pool.query(queryString, params)
     .then((res) => {
 //      console.log(res)
-      cb({data: res.rows})
+      cb({data: res.rows, error: null})
     }) // brianc
     .catch(err => {
-      cb({error: err.stack})
+      cb({error: err.stack, data: null})
     })
 }
 

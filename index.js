@@ -96,6 +96,7 @@ server.register([require('hapi-auth-jwt2'),require('inert'), require('vision')],
   server.route(require('./src/routes/public'))
   server.route(require('./src/routes/API'))
   server.route(require('./src/routes/admin'))
+  server.route(require('./src/routes/tactical'))
 })
 
 

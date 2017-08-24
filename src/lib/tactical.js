@@ -99,6 +99,13 @@ function getUser (request, reply) {
     })
 }
 
+
+
+function userLicencesWrapper (request,reply, cb) {
+  getUserLicences(request.payload.user,(licences)=>{
+    reply(licences)
+  })
+}
 function getUserLicences (user, cb) {
   /**
     tactical function to represent the end result of getting a list of licences available to a user id...
@@ -170,6 +177,6 @@ function getUserLicences (user, cb) {
 
 module.exports = {
     IDM:{getUser:getUser},
-    CRM:{getUserLicences:getUserLicences},
+    CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp
 }

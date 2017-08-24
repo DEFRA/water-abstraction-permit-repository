@@ -140,8 +140,8 @@ function getUserLicences (user, cb) {
         console.log(availableLicences)
         var query = `select
         o.org_nm,t.type_nm,l.* from permit.licence l
-        join org o on l.licence_org_id=o.org_id
-        join type t on l.licence_type_id = t.type_id where l.licence_id in (${availableLicences.join(",")})`
+        join permit.org o on l.licence_org_id=o.org_id
+        join permit.type t on l.licence_type_id = t.type_id where l.licence_id in (${availableLicences.join(",")})`
         var queryParams = [];
 
         console.log(query)

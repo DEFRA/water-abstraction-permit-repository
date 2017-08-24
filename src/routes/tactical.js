@@ -15,7 +15,6 @@ console.log(Tactical)
 
 
 module.exports = [
-  { method: 'POST', path: '/API/' + version + '/tactical/user/login',  config:{ auth: false }, handler: Tactical.IDM.getUser },
-  { method: 'POST', path: '/API/' + version + '/tactical/user/licences',  config:{ auth: false }, handler: Tactical.CRM.getUserLicences },
-  { method: 'GET', path: '/API/' + version + '/tactical/setup',  config:{ auth: false }, handler: Tactical.setup },
+  { method: 'POST', path: '/API/' + version + '/tactical/user/login',  config:{  }, handler: Tactical.IDM.getUser },
+  { method: 'POST', path: '/API/' + version + '/tactical/user/licences',  config:{ }, handler: Tactical.CRM.getUserLicences }
 ]

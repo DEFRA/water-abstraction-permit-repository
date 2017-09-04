@@ -200,7 +200,7 @@ function createLicence (request, reply) {
   var errors = []
 
   function reject (msg) {
-    reply({'error': msg})
+    reply({'error': msg}).code(500)
   }
   // convert incoming JSON to series of queries...
 

@@ -297,10 +297,14 @@ function createLicence (request, reply) {
         query += `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceData} values
         (
           ${licence_id},
-          '${JSON.stringify(payload.attributes[secondaryAttribute])}',
+          '${JSON.stringify(payload.attributes[secondaryAttribute].toString().replace(/'/g, "''"))}',
           ${attributeDefinitions[secondaryAttribute].type_fields_id}
         );`
       }
+
+// var b = a.replace(/'/g, '''');
+
+
       queryParams = []
 
       console.log(query);

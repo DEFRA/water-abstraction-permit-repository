@@ -10,7 +10,8 @@ const dbSchema = {
     licenceHeader: 'licence',
     licenceData: 'licence_data',
     licenceType: 'type',
-    licenceDef: 'type_fields'
+    licenceDef: 'type_fields',
+    licenceShortcode: 'licence_shortcode'
   }
 
 }
@@ -281,7 +282,7 @@ function createLicence (request, reply) {
         RETURNING licence_id`
       var queryParams = [request.params.orgId, request.params.typeId, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
-      console.log(query);
+      console.log(query)
 
       DB.query(query, queryParams)
   .then((res) => {
@@ -304,10 +305,9 @@ function createLicence (request, reply) {
 
 // var b = a.replace(/'/g, '''');
 
-
       queryParams = []
 
-      console.log(query);
+      console.log(query)
 
       DB.query(query, queryParams)
   .then((res) => {
@@ -566,6 +566,54 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzLCJuYW1lIjoiQ2hhcmxpZSIsImlhdCI
 **/
 }
 
+function createShortcode (request, reply) {
+  var shortcode = Helpers.createGUID()
+  query = `
+    insert into  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
+    (licence_id,shortcode,issued_dt) values ($1,$2,current_timestamp)`
+
+  var queryParams = [request.params.licenceId, shortcode]
+  DB.query(query, queryParams)
+.then((res) => {
+  if (res.error) {
+    console.log(res.error)
+    reject(res.error)
+  } else {
+    console.log('no db error')
+    reply({error: null, data: {shortcode: shortcode}})
+  }
+})
+}
+
+function useShortcode (request, reply) {
+  query = `
+    select * from  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
+    where shortcode=$1 and user_id is null;
+    `
+
+  var queryParams = [request.params.shortcode]
+  DB.query(query, queryParams)
+  .then((res) => {
+    console.log(res)
+    if (res.data[0]) {
+      query = `
+        update  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
+        set user_id=${request.payload.user_id} where shortcode='${request.params.shortcode}';
+        insert into ${dbSchema.schemaName}.user_licence (licence_id,user_id) values (${res.data[0].licence_id},${request.payload.user_id})
+        `
+
+      var queryParams = []
+      DB.query(query, queryParams)
+      .then((res) => {
+        console.log(res)
+        reply(res)
+      })
+    } else {
+      reply({error: 'Shortcode not found or already used'}).code(500)
+    }
+  })
+}
+
 module.exports = {
   system: {getFields: getFields, getToken: getToken},
   org: {list: listOrgs, create: createOrg, delete: deleteOrg, get: getOrg, update: putOrg},
@@ -586,5 +634,9 @@ module.exports = {
   },
   general: {
     reset: reset
+  },
+  shortcode: {
+    create: createShortcode,
+    use: useShortcode
   }
 }

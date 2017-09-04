@@ -8,6 +8,29 @@ console.log('ADMIN JS')
 
 console.log(API)
 
+
+function upload(request,reply){
+fs=require('fs');
+
+  console.log('upload called')
+
+             console.log('path : ' + request.payload.path);
+             //   request.payload["fileUpload"].pipe(fs.createWriteStream("test"));
+             console.log(__dirname +'/upload.csv');
+             fs.rename(request.payload.path, __dirname +'/../assets/upload.csv', function (err) {
+                     if (err) {
+                             reply({err:err});
+                     } else {
+                       reply({result:'yay'});
+                     }
+
+                 });
+
+
+
+
+};
+
 function index (request, reply) {
   var viewContext = View.contextDefaults(request)
   viewContext.pageTitle = 'GOV.UK - Admin'
@@ -83,6 +106,7 @@ function addFieldToOrganisationLicenceType (request, reply) {
 }
 
 module.exports = {
+  upload: upload,
   index: index,
   fields: fields,
   organisations: organisations,

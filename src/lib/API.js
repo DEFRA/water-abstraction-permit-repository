@@ -281,6 +281,8 @@ function createLicence (request, reply) {
         RETURNING licence_id`
       var queryParams = [request.params.orgId, request.params.typeId, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
+      console.log(query);
+
       DB.query(query, queryParams)
   .then((res) => {
     if (res.error) {
@@ -300,6 +302,8 @@ function createLicence (request, reply) {
         );`
       }
       queryParams = []
+
+      console.log(query);
 
       DB.query(query, queryParams)
   .then((res) => {

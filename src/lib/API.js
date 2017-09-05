@@ -11,7 +11,8 @@ const dbSchema = {
     licenceData: 'licence_data',
     licenceType: 'type',
     licenceDef: 'type_fields',
-    licenceShortcode: 'licence_shortcode'
+    licenceShortcode: 'licence_shortcode',
+    licenceUsers: 'user_licence'
   }
 
 }
@@ -47,7 +48,7 @@ function createOrg (request, reply) {
 function getOrg (request, reply) {
 // return specified org
   var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.organisations} where org_id = $1`
-  var queryParams = [request.params.orgId]
+  var queryParams = [request.params.org_id]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -57,7 +58,7 @@ function getOrg (request, reply) {
 function putOrg (request, reply) {
 // update specified org
   var query = `update ${dbSchema.schemaName}.${dbSchema.tables.organisations} set org_nm = $2 where org_id = $1`
-  var queryParams = [request.params.orgId, request.payload.org_nm]
+  var queryParams = [request.params.org_id, request.payload.org_nm]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -72,7 +73,7 @@ function deleteOrg (request, reply) {
 function listLicenceTypes (request, reply) {
 // return all licence types for org
   var query = `SELECT type_nm,type_id from ${dbSchema.schemaName}.${dbSchema.tables.licenceType} where org_id=$1`
-  var queryParams = [request.params.orgId]
+  var queryParams = [request.params.org_id]
 
   DB.query(query, queryParams)
   .then((res) => {
@@ -84,7 +85,7 @@ function createLicenceType (request, reply) {
 // return all licence types for org
 
   var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceType} (type_nm,org_id) values ($1,$2) RETURNING type_id`
-  var queryParams = [request.payload.type_nm, request.params.orgId]
+  var queryParams = [request.payload.type_nm, request.params.org_id]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -100,7 +101,7 @@ function getLicenceType (request, reply) {
 		        inner join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id = f.field_id
             where tf.type_id=$1
     ) attributes`
-  var queryParams = [request.params.typeId]
+  var queryParams = [request.params.type_id]
 
   DB.query(query, queryParams)
   .then((res) => {
@@ -115,7 +116,7 @@ function getlicenceTypeFields (request, reply) {
   var query = `SELECT tf.*,f.field_nm from ${dbSchema.schemaName}.${dbSchema.tables.licenceDef} tf
     join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id=f.field_id
     where type_id=$1`
-  var queryParams = [request.params.typeId]
+  var queryParams = [request.params.type_id]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -150,7 +151,7 @@ function createlicenceTypeField (request, reply) {
       query += `insert into
         ${dbSchema.schemaName}.${dbSchema.tables.licenceDef}
         (type_id,field_id,is_required,is_public_domain,type_field_alias)
-        values (${request.params.typeId},${thisType.field_id},${thisType.is_required}::bit(1),${thisType.is_public_domain}::bit(1),'${thisType.type_field_alias}');`
+        values (${request.params.type_id},${thisType.field_id},${thisType.is_required}::bit(1),${thisType.is_public_domain}::bit(1),'${thisType.type_field_alias}');`
     }
   } else {
     console.log('basic add single field type')
@@ -169,7 +170,7 @@ function createlicenceTypeField (request, reply) {
       ${dbSchema.schemaName}.${dbSchema.tables.licenceDef}
       (type_id,field_id,is_required,is_public_domain,type_field_alias)
       values ($1,$2,$3,$4,$5)`
-    var queryParams = [request.params.typeId, request.payload.field_id, request.payload.is_required, request.payload.is_public_domain,
+    var queryParams = [request.params.type_id, request.payload.field_id, request.payload.is_required, request.payload.is_public_domain,
       request.payload.type_field_alias]
   }
 
@@ -184,7 +185,7 @@ function createlicenceTypeField (request, reply) {
 
 function listLicences (request, reply) {
 // return licence summaries for org & type
-  var queryParams = [request.params.orgId, request.params.typeId]
+  var queryParams = [request.params.org_id, request.params.type_id]
   var query = `SELECT licence_id, licence_ref, licence_search_key
   from ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
   where licence_org_id=$1 and licence_type_id=$2`
@@ -210,17 +211,17 @@ function createLicence (request, reply) {
     reject(['cannot post existing licence id'])
   } else if (typeof payload.licence_ref === 'undefined') {
     reject(['licence_ref must be defined'])
-  } else if (typeof request.params.typeId === 'undefined') {
+  } else if (typeof request.params.type_id === 'undefined') {
     reject(['licence_type_id must be defined'])
-  } else if (typeof request.params.orgId === 'undefined') {
+  } else if (typeof request.params.org_id === 'undefined') {
     reject(['licence_org_id must be defined'])
   } else {
 //    console.log('primary fields validated')
     // 2. get secondary attributes by licence_type_id (and verify licence_org_id is correct for licence_type_id)
 
-    var queryParams = [request.params.orgId, request.params.typeId]
+    var queryParams = [request.params.org_id, request.params.type_id]
 
-    // this query will only return records where type_id is defined for orgId
+    // this query will only return records where type_id is defined for org_id
     var query = `SELECT array_to_json(array_agg(attributes)) as attributeData
     from (
       select
@@ -280,7 +281,7 @@ function createLicence (request, reply) {
         VALUES
         ($1,$2,$3,$4,$5,to_date($6::text,'YYYY/MM/DD'),to_date($7::text,'YYYY/MM/DD'))
         RETURNING licence_id`
-      var queryParams = [request.params.orgId, request.params.typeId, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
+      var queryParams = [request.params.org_id, request.params.type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
       console.log(query)
 
@@ -332,7 +333,7 @@ function createLicence (request, reply) {
 
 function getLicence (request, reply) {
 // return specific licence for org & type
-  var queryParams = [request.params.orgId, request.params.typeId, request.params.licenceId]
+  var queryParams = [request.params.org_id, request.params.type_id, request.params.licence_id]
   // swanky query to get the licence data
   var query = `
   select l.*,a.* from
@@ -352,7 +353,7 @@ function getLicence (request, reply) {
         ) attributes
 	group by licence_id
 ) a on a.licence_id = l.licence_id
-where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.params.licenceId}
+where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.params.licence_id}
 `
 
   DB.query(query, queryParams)
@@ -371,7 +372,7 @@ where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.
     licenceData.attributeDefinitions = {}
 
     // get ALL attributes from type definition
-    queryParams = [request.params.typeId]
+    queryParams = [request.params.type_id]
     var query = `SELECT $1::int as type_id, array_to_json(array_agg(attributes)) as attributeData
   	from (
   select
@@ -415,20 +416,20 @@ function putLicence (request, reply) {
     // convert incoming JSON to series of queries...
 
     // 1. check primary attributes
-  if (typeof request.params.licenceId === 'undefined') {
+  if (typeof request.params.licence_id === 'undefined') {
     reject(['requires existing licence id'])
   } else if (typeof payload.licence_ref === 'undefined') {
     reject(['licence_ref must be defined'])
-  } else if (typeof request.params.typeId === 'undefined') {
+  } else if (typeof request.params.type_id === 'undefined') {
     reject(['licence_type_id must be defined'])
-  } else if (typeof request.params.orgId === 'undefined') {
+  } else if (typeof request.params.org_id === 'undefined') {
     reject(['licence_org_id must be defined'])
   } else {
       // 2. get secondary attributes by licence_type_id (and verify licence_org_id is correct for licence_type_id)
 
-    var queryParams = [request.params.orgId, request.params.typeId]
+    var queryParams = [request.params.org_id, request.params.type_id]
 
-      // this query will only return records where type_id is defined for orgId
+      // this query will only return records where type_id is defined for org_id
     var query = `SELECT array_to_json(array_agg(attributes)) as attributeData
       from (
         select
@@ -491,7 +492,7 @@ function putLicence (request, reply) {
           licence_end_dt =$5
           where licence_id= $6 and licence_org_id=$7 and licence_type_id=$8`
 
-        var queryParams = [payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt, request.params.licenceId, request.params.orgId, request.params.typeId]
+        var queryParams = [payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt, request.params.licence_id, request.params.org_id, request.params.type_id]
 
         DB.query(query, queryParams)
     .then((res) => {
@@ -499,13 +500,13 @@ function putLicence (request, reply) {
         console.log(res.err)
         reject(err)
       } else {
-        var licence_id = request.params.licenceId
+        var licence_id = request.params.licence_id
         console.log('no db error')
 
         var queryParams = []
         var query = ''
   // TODO: AUDIT!!!
-        query += `delete from ${dbSchema.schemaName}.${dbSchema.tables.licenceData} where licence_id=${request.params.licenceId};`
+        query += `delete from ${dbSchema.schemaName}.${dbSchema.tables.licenceData} where licence_id=${request.params.licence_id};`
         for (secondaryAttribute in payload.attributes) {
           query += `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceData} values
           (
@@ -572,7 +573,7 @@ function createShortcode (request, reply) {
     insert into  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
     (licence_id,shortcode,issued_dt) values ($1,$2,current_timestamp)`
 
-  var queryParams = [request.params.licenceId, shortcode]
+  var queryParams = [request.params.licence_id, shortcode]
   DB.query(query, queryParams)
 .then((res) => {
   if (res.error) {
@@ -592,10 +593,13 @@ function useShortcode (request, reply) {
     `
 
   var queryParams = [request.params.shortcode]
+  console.log(query)
+  console.log(queryParams)
   DB.query(query, queryParams)
   .then((res) => {
     console.log(res)
     if (res.data[0]) {
+      console.log(request.payload)
       query = `
         update  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
         set user_id=${request.payload.user_id} where shortcode='${request.params.shortcode}';
@@ -603,6 +607,8 @@ function useShortcode (request, reply) {
         `
 
       var queryParams = []
+      console.log(query)
+      console.log(queryParams)
       DB.query(query, queryParams)
       .then((res) => {
         console.log(res)
@@ -611,6 +617,65 @@ function useShortcode (request, reply) {
     } else {
       reply({error: 'Shortcode not found or already used'}).code(500)
     }
+  })
+}
+
+function searchLicence (searchString, cb) {
+// return licence summaries for org & type
+  var queryParams = [`%${searchString}%`]
+  queryParams.push(parseInt(searchString) || 0)
+  var query = `SELECT licence_id, licence_ref, licence_search_key
+  from ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
+  where licence_ref like $1 or licence_search_key like $1 or licence_id=$2`
+  console.log(query)
+  console.log(queryParams)
+  DB.query(query, queryParams)
+  .then((res) => {
+    console.log(res)
+    cb(res)
+  })
+}
+
+function licenceShortcodes (licence_id, cb) {
+  var queryParams = [licence_id]
+  var query = `SELECT *
+  from ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
+  where licence_id = $1 and user_id is null`
+  DB.query(query, queryParams)
+  .then((res) => {
+    console.log(res)
+    cb(res)
+  })
+}
+
+function licenceAddshortcode (licence_id, cb) {
+  var shortcode = Helpers.createGUID()
+  query = `
+      insert into  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
+      (licence_id,shortcode,issued_dt,expiry_dt) values ($1,$2,CURRENT_DATE,CURRENT_DATE + INTERVAL '7 day')`
+
+  var queryParams = [licence_id, shortcode]
+  DB.query(query, queryParams)
+  .then((res) => {
+    if (res.error) {
+      console.log(res.error)
+      cb(res.error, null)
+    } else {
+      console.log('no db error')
+      cb(null, {})
+    }
+  })
+}
+
+function licenceUsers (licence_id, cb) {
+  var queryParams = [licence_id]
+  var query = `SELECT distinct user_id
+  from ${dbSchema.schemaName}.${dbSchema.tables.licenceUsers}
+  where licence_id = $1`
+  DB.query(query, queryParams)
+  .then((res) => {
+    console.log(res)
+    cb(res)
   })
 }
 
@@ -629,7 +694,11 @@ module.exports = {
     list: listLicences,
     create: createLicence,
     get: getLicence,
-    update: putLicence
+    update: putLicence,
+    search: searchLicence,
+    shortcodes: licenceShortcodes,
+    users: licenceUsers,
+    addshortcode: licenceAddshortcode
 
   },
   general: {

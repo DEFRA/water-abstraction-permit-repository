@@ -1,0 +1,75 @@
+{{> styles}}
+<main id="content">
+  {{>element-phase-tag}}
+  <nav>
+    <div class="breadcrumbs">
+      <ol>
+        <li><a href="/">Your services</a></li>
+        <li><a href="/admin">admin</a></li>
+        <li><a href="/admin/findlicence">users</a></li>
+        <li><a href="/{{user_id}}">{{user_id}}</a></li>
+      </ol>
+    </div>
+  </nav>
+  <div class="grid-row">
+    <div class="column-full">
+      <h1 class="heading-xlarge">
+        Permit Repository Admin
+      </h1>
+      <h1 class="heading-large">
+      View User
+      </h1>
+      <h1 class="heading-medium">
+      Licences
+      </h1> The following licences are available to this user.
+
+
+      <br>
+      <table>
+        <tr>
+          <th>&nbsp;</th>
+          <th></th>
+          <th></th>
+        </tr>
+        {{#each licences.data}}
+        <tr>
+          <td><a href="/admin/licence/{{licence_id}}">{{licence_id}}</a></td>
+          <td>{{licence_ref}}</td>
+          <td>{{licence_search_key}}</td>
+
+
+
+        </tr>
+        {{/each}}
+      </table>
+    </div>
+  </div>
+</main>
+{{> footerjs}} {{> debug}}
+
+
+<script language="javascript">
+  $("#licencesearch").bind("keyup change", doFind);
+
+  function doFind() {
+    var val = $('#licencesearch').val()
+    console.log(val)
+    url = '/admin/findlicence/' + val
+    $.ajax({
+      url: url,
+      success: function(res, err) {
+        var html = '<table>';
+        for (r in res.data) {
+          if (res.data[r]) {
+            html += `<tr><td><a href="/admin/licence/${res.data[r].licence_id}">${res.data[r].licence_id}</a></td><td>${res.data[r].licence_ref}</td><td>${res.data[r].licence_search_key}<br>`;
+          }
+
+        }
+        html += '</table>'
+        $("#results").html(html)
+        console.log(err)
+      }
+    });
+
+  }
+</script>

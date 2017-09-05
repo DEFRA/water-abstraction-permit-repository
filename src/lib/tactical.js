@@ -79,6 +79,11 @@ function getUser (request, reply) {
           sessionCookie.user=res.data[0];
           data.licences=licences;
           data.sessionCookie=encryptToken(sessionCookie);
+
+          var authSession=sessionCookie.user;
+          request.auth.session.set(user);
+
+
           reply(data);
 
         })
@@ -88,6 +93,7 @@ function getUser (request, reply) {
         data.sessionGuid=null
         data.licences=[];
         data.message="login not found";
+
           reply(data);
       }
 //      .state('data', { firstVisit: false });
@@ -175,8 +181,43 @@ function getUserLicences (user, cb) {
 }
 
 
+
+
+
+
+function login (user,pass,cb) {
+  /**
+    tactical function to represent the end result of authorising a user via Verify...
+
+    input: username and password
+    output: user id
+  **/
+  var query = `select * from permit.users where user_name=$1 and password=$2 and admin=1`
+  var queryParams = [user,pass]
+  console.log(query);
+  console.log(queryParams);
+
+  DB.query(query, queryParams)
+    .then((res) => {
+
+      console.log(res);
+      if(res.data[0]){
+        cb (null,res.data[0])
+      } else {
+        cb(true,null)
+      }
+    })
+}
+
+
+
+
+
 module.exports = {
+    login:login,
     IDM:{getUser:getUser},
     CRM:{getUserLicences:userLicencesWrapper},
-    setup:setUp
+    setup:setUp,
+    getUserLicences
+:getUserLicences
 }

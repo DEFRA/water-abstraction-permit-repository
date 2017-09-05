@@ -11,10 +11,11 @@ placeholder for CRM
 const Tactical= require('../lib/tactical')
 const version = '1.0'
 
-console.log(Tactical)
+
 
 
 module.exports = [
-  { method: 'POST', path: '/API/' + version + '/tactical/user/login',  config:{  }, handler: Tactical.IDM.getUser },
-  { method: 'POST', path: '/API/' + version + '/tactical/user/licences',  config:{ }, handler: Tactical.CRM.getUserLicences }
+  { method: 'POST', path: '/API/' + version + '/tactical/user/login',  config:{ auth: false }, handler: Tactical.IDM.getUser },
+  { method: 'POST', path: '/API/' + version + '/tactical/user/licences',  config:{ auth: false }, handler: Tactical.CRM.getUserLicences },
+  { method: 'GET', path: '/logout',  config:{ }, handler: function(request,reply){reply('You are logged out now').code(401)} }
 ]

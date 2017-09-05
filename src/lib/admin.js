@@ -3,6 +3,8 @@ const Helpers = require('./helpers')
 const View = require('./view')
 const Session = require('./session')
 const API = require('./API')
+const Tactical = require('./tactical')
+
 
 console.log('ADMIN JS')
 
@@ -66,7 +68,7 @@ function organisationLicenceTypes (request, reply) {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
     viewContext.data = data.data
-    viewContext.orgId = request.params.orgId
+    viewContext.org_id = request.params.org_id
     viewContext.debug.data = viewContext.data.data
     reply.view('water/admin/organisationLicenceTypes', viewContext)
   })
@@ -84,8 +86,8 @@ function organisationLicenceType (request, reply) {
 
     viewContext.debug.data = data.data
     viewContext.data = data.data
-    viewContext.orgId = request.params.orgId
-    viewContext.typeId = request.params.typeId
+    viewContext.org_id = request.params.org_id
+    viewContext.type_id = request.params.type_id
 //    viewContext.debug.data = data
 
     API.system.getFields({}, (fields) => {
@@ -101,7 +103,57 @@ function addFieldToOrganisationLicenceType (request, reply) {
   console.log(request.params)
   console.log(request.payload)
   API.licencetype.createField(request, (data) => {
-    reply('<script>location.href=\'/admin/organisation/' + request.params.orgId + '/licencetypes/' + request.params.typeId + '/\'</script>')
+    reply('<script>location.href=\'/admin/organisation/' + request.params.org_id + '/licencetypes/' + request.params.type_id + '/\'</script>')
+  })
+}
+
+function findlicenceform(request,reply){
+  var viewContext = View.contextDefaults(request)
+  viewContext.pageTitle = 'GOV.UK - Admin'
+  reply.view('water/admin/search', viewContext)
+}
+
+function doFindlicence(request,reply){
+  API.licence.search(request.params.search,(d)=>{
+      reply(d)
+  })
+}
+
+function viewLicence(request,reply){
+  var viewContext = View.contextDefaults(request)
+  viewContext.licence_id=request.params.licence_id
+  API.licence.short
+codes(request.params.licence_id,(shortcodes)=>{
+    viewContext.shortCodes=shortcodes
+      API.licence.users(request.params.licence_id,(users)=>{
+            viewContext.users=users
+            viewContext.debug={shortCodes:shortcodes,users:users}
+            reply.view('water/admin/viewlicence', viewContext)
+          })
+  })
+
+
+}
+
+function addShortcode(request,reply){
+    API.licence.addshortcode(request.params.licence_id,(res)=>{
+      reply.redirect('/admin/licence/'+request.params.licence_id)
+    });
+
+}
+
+function users(request,reply){
+  reply({toDO:''})
+}
+
+function user(request,reply){
+  var viewContext = View.contextDefaults(request)
+  viewContext.user_id=request.params.user_id
+  Tactical.getUserLicences({user_id:request.params.user_id},(licences)=>{
+    console.log(licences)
+    viewContext.licences=licences
+            reply.view('water/admin/viewuser', viewContext)
+
   })
 }
 
@@ -112,5 +164,12 @@ module.exports = {
   organisations: organisations,
   organisationLicenceTypes: organisationLicenceTypes,
   organisationLicenceType: organisationLicenceType,
-  addFieldToOrganisationLicenceType: addFieldToOrganisationLicenceType
+  addFieldToOrganisationLicenceType: addFieldToOrganisationLicenceType,
+  findlicence:findlicenceform,
+  doFindlicence:doFindlicence,
+  viewlicence:viewLicence,
+  addShortcode:addShortcode,
+  users:users,
+  user:user
+
 }

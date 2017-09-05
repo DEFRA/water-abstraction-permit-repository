@@ -9,6 +9,8 @@ const Helpers = require('../lib/helpers')
 handlebars.registerHelper("equal", require("handlebars-helper-equal"))
 
 
+
+
 handlebars.registerHelper( 'concat', function(){
   var arg = Array.prototype.slice.call(arguments,0);
   arg.pop();

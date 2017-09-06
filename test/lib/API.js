@@ -61,7 +61,7 @@ describe('API.org.list ', () => {
 describe('API.org.get ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        API.org.get({params:{orgId:1}}, (response) => {
+        API.org.get({params:{org_id:1}}, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
           savedData.testOrg=response;
@@ -130,7 +130,7 @@ describe('API.org.delete ', () => {
 describe('API.licenceType.list ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{orgId:savedData.testOrg.data[0].org_id}};
+        var request={params:{org_id:savedData.testOrg.data[0].org_id}};
         API.licencetype.list(request, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
@@ -148,7 +148,7 @@ describe('API.licenceType.list ', () => {
 describe('API.licenceType.create ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{orgId:savedData.testOrg.data[0].org_id},payload:{type_nm:'test licence type'}};
+        var request={params:{org_id:savedData.testOrg.data[0].org_id},payload:{type_nm:'test licence type'}};
         API.licencetype.create(request, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
@@ -167,7 +167,7 @@ describe('API.licenceType.create ', () => {
 describe('API.licenceType.get ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id}};
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id}};
         API.licencetype.get(request, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
@@ -185,7 +185,7 @@ describe('API.licenceType.get ', () => {
 describe('API.licenceType.get ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{typeId:savedData.licenceType.data[0].type_id}};
+        var request={params:{type_id:savedData.licenceType.data[0].type_id}};
         API.licencetype.getFields(request, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
@@ -206,7 +206,7 @@ describe('API.licenceType.get ', () => {
 describe('API.licence.list ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id}};
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id}};
         API.licence.list(request, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
@@ -224,7 +224,7 @@ describe('API.licence.list ', () => {
 describe('API.licence.get ', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id,licenceId:savedData.testLicenceList.data[0].licence_id}}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id,licence_id:savedData.testLicenceList.data[0].licence_id}}
         API.licence.get(request, (response) => {
           savedData.testLicence=response;
           expect(response).to.exist()
@@ -243,7 +243,7 @@ describe('API.licence.get ', () => {
 describe('API.licence.create ', () => {
   it('should be rejected', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         API.licence.create(request, (response) => {
           expect(response.error).to.exist()
           expect(response.error).to.be.a.array()
@@ -261,7 +261,7 @@ describe('API.licence.create ', () => {
 describe('API.licence.update ', () => {
   it('should be updated', (done) => {
         // make API call to self to test functionality end-to-end
-        var request={params:{licenceId:savedData.testLicenceList.data[0].licence_id, orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{licence_id:savedData.testLicenceList.data[0].licence_id, org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         API.licence.update(request, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
@@ -281,7 +281,7 @@ describe('API.licence.create ', () => {
         // make API call to self to test functionality end-to-end
 
 
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         delete request.payload.licence_id
         delete request.payload.licence_ref
         API.licence.create(request, (response) => {
@@ -305,7 +305,7 @@ describe('API.licence.create ', () => {
         // make API call to self to test functionality end-to-end
 
 
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         delete request.payload.licence_type_id
         request.payload.licence_ref='test'
         API.licence.create(request, (response) => {
@@ -329,7 +329,7 @@ describe('API.licence.create ', () => {
         // make API call to self to test functionality end-to-end
 
 
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         delete request.payload.licence_org_id
         request.payload.licence_type_id=1
         console.log(request)
@@ -354,7 +354,7 @@ describe('API.licence.create ', () => {
   it('should be created', (done) => {
         // make API call to self to test functionality end-to-end
         console.log(JSON.stringify(savedData.testLicence))
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         delete request.payload.licence_id
         request.payload.licence_org_id=savedData.testOrg.data[0].org_id
         console.log(request.params)
@@ -377,7 +377,7 @@ describe('API.licence.create ', () => {
         // make API call to self to test functionality end-to-end
 
 
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         delete request.payload.attributes.LicenceHolder
         request.payload.licence_type_id=1
         console.log(request)
@@ -402,7 +402,7 @@ describe('API.licence.create ', () => {
         // make API call to self to test functionality end-to-end
 
 
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         request.payload.attributes.extraField='bob'
         request.payload.attributes.LicenceHolder='test'
         console.log(request)
@@ -427,7 +427,7 @@ describe('API.licence.create ', () => {
         // make API call to self to test functionality end-to-end
 
 
-        var request={params:{orgId:savedData.testOrg.data[0].org_id,typeId:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
+        var request={params:{org_id:savedData.testOrg.data[0].org_id,type_id:savedData.licenceType.data[0].type_id},payload:savedData.testLicence}
         delete request.payload.attributes.extraField
         request.payload.attributes.FlowConditions='not an array'
         console.log(request)

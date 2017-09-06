@@ -12,7 +12,7 @@
   <div class="grid-row">
     <div class="column-full">
       <h1 class="heading-xlarge">
-        Permit Repository - Organisation {{orgId}} Licence Types
+        Permit Repository - Organisation {{org_id}} Licence Types
       </h1>
 
 
@@ -20,7 +20,7 @@
         <ul class="list list-bullet">
         {{#each data}}
 
-          {{>element-li-link uri=(concat '/admin/organisation/' ../orgId '/licencetypes/' type_id) title=(concat type_id ':' this.type_nm)}}
+          {{>element-li-link uri=(concat '/admin/organisation/' ../org_id '/licencetypes/' type_id) title=(concat type_id ':' this.type_nm)}}
 
         {{/each}}
       </ul>

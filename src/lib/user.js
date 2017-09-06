@@ -1,8 +1,10 @@
 const fs = require('fs')
 
-
-
-function authenticateUser (id,password) {
+function authenticateUser (id, password) {
+  API.user.login(id, password, (data) => {
+    cb(data)
+  })
+/**
   if (id==='demouser' && password==='password'){
   var user={status:true,user:{name:'Demo User',userid:1},message:null}
   } else {
@@ -10,8 +12,8 @@ function authenticateUser (id,password) {
   }
 
   return user
+  **/
 }
-
 
 module.exports = {
   authenticate: authenticateUser

@@ -5,8 +5,7 @@ const Hapi = require('hapi')
 const Tactical = require('./src/lib/tactical.js')
 const serverOptions = {connections: {router: {stripTrailingSlash: true}}}
 const server = new Hapi.Server(serverOptions)
-
-const Helpers = require('./src/lib/Helpers.js')
+const Helpers = require('./src/lib/helpers.js')
 
 server.connection({ port: process.env.PORT || 8000 })
 

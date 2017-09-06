@@ -238,6 +238,5 @@ module.exports = {
     IDM:{getUser:getUser},
     CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp,
-    getUserLicences
-:getUserLicences
+    getUserLicences:getUserLicences
 }

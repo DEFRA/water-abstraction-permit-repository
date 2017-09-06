@@ -6,7 +6,7 @@ const Tactical = require('./src/lib/tactical.js')
 const serverOptions = {connections: {router: {stripTrailingSlash: true}}}
 const server = new Hapi.Server(serverOptions)
 
-const Bcrypt = require('bcrypt')
+const Helpers = require('./src/lib/Helpers.js')
 
 server.connection({ port: process.env.PORT || 8000 })
 
@@ -60,35 +60,15 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
     throw err
   }
 
-  // bring your own validation function
-  var validateJWT = function (decoded, request, callback) {
-    console.log('CALL WITH TOKEN')
-    console.log(decoded)
-      // TODO: JWT tokens to DB...
-      // do your checks to see if the person is valid
-    if (!decoded.id) {
-      return callback(null, false)
-    } else {
-      return callback(null, true)
-    }
-  }
 
-  const validateBasic = function (request, username, password, callback) {
-    // basic login for admin function UI
-    const user = Tactical.login(username, password, (error, user) => {
-      if (error) {
-        return callback(null, false)
-      } else {
-        callback(null, true, { id: user.id, name: user.name })
-      }
-    })
-  }
 
-  server.auth.strategy('simple', 'basic', { validateFunc: validateBasic })
+
+
+  server.auth.strategy('simple', 'basic', { validateFunc: Helpers.validateBasic })
 
   server.auth.strategy('jwt', 'jwt',
     { key: process.env.JWT_SECRET,          // Never Share your secret key
-      validateFunc: validateJWT,            // validate function defined above
+      validateFunc: Helpers.validateJWT,            // validate function defined above
       verifyOptions: {} // pick a strong algorithm
     })
 
@@ -102,6 +82,8 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
   server.route(require('./src/routes/API'))
   server.route(require('./src/routes/admin'))
   server.route(require('./src/routes/tactical'))
+  server.route(require('./src/routes/idm_mock'))
+
 })
 
 // Start the server

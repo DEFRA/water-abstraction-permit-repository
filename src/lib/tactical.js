@@ -1,7 +1,11 @@
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./db')
+const IDM = require('./IDM')
 
+/**
+this file provides tactical functions that may not exist in the final product
+**/
 
 
 
@@ -58,35 +62,62 @@ function getUser (request, reply) {
     input: username and password
     output: user id
   **/
-  var query = `select * from permit.users where user_name=$1 and password=$2`
-  var queryParams = [request.payload.username,request.payload.password]
+  var query = `select * from permit.users where user_name=$1`
+
+
+
+  //
+
+  var queryParams = [request.payload.username]
   console.log(query);
   console.log(queryParams);
 
   DB.query(query, queryParams)
-    .then((res) => {
+    .then((UserRes) => {
+      console.log('now verify password hash')
+      console.log(UserRes.data)
+      if (UserRes.data[0]){
+        var thisUser=UserRes.data[0]
 
-      console.log(res);
-      if(res.data[0]){
+      Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
+        console.log("password is valid?")
+        console.log(err)
+        console.log(PasswordRes)
+
+
+
         console.log(request.state)
 
 
-        getUserLicences(res.data[0],(licences)=>{
+        getUserLicences(thisUser,(licences)=>{
           var data={};
           var sessionCookie={}
           data.sessionGuid=Helpers.createGUID()
           sessionCookie.userGuid=Helpers.createGUID()
-          sessionCookie.user=res.data[0];
+          sessionCookie.user=thisUser;
           data.licences=licences;
           data.sessionCookie=encryptToken(sessionCookie);
 
           var authSession=sessionCookie.user;
-          request.auth.session.set(user);
+          console.log('here?')
+
 
 
           reply(data);
 
         })
+
+
+      });
+
+
+
+
+
+
+
+
+
 
       } else {
                   var data={};
@@ -109,6 +140,7 @@ function getUser (request, reply) {
 
 function userLicencesWrapper (request,reply, cb) {
   getUserLicences(request.payload.user,(licences)=>{
+    console.log('did this')
     reply(licences)
   })
 }
@@ -185,24 +217,12 @@ function getUserLicences (user, cb) {
 
 
 
-function login (user,pass,cb) {
-  /**
-    tactical function to represent the end result of authorising a user via Verify...
-
-    input: username and password
-    output: user id
-  **/
-  var query = `select * from permit.users where user_name=$1 and password=$2 and admin=1`
-  var queryParams = [user,pass]
-  console.log(query);
-  console.log(queryParams);
-
-  DB.query(query, queryParams)
-    .then((res) => {
-
+function login (user_name,password,cb) {
+  IDM.loginAdministrator(user_name,password,(err,res)=>{
+      console.log(err);
       console.log(res);
-      if(res.data[0]){
-        cb (null,res.data[0])
+      if(!err){
+        cb (null,res)
       } else {
         cb(true,null)
       }

@@ -5,35 +5,8 @@ const Session = require('./session')
 const API = require('./API')
 const Tactical = require('./tactical')
 
-
-console.log('ADMIN JS')
-
-console.log(API)
-
-
-function upload(request,reply){
-fs=require('fs');
-
-  console.log('upload called')
-
-             console.log('path : ' + request.payload.path);
-             //   request.payload["fileUpload"].pipe(fs.createWriteStream("test"));
-             console.log(__dirname +'/upload.csv');
-             fs.rename(request.payload.path, __dirname +'/../assets/upload.csv', function (err) {
-                     if (err) {
-                             reply({err:err});
-                     } else {
-                       reply({result:'yay'});
-                     }
-
-                 });
-
-
-
-
-};
-
 function index (request, reply) {
+  //view the admin page
   var viewContext = View.contextDefaults(request)
   viewContext.pageTitle = 'GOV.UK - Admin'
   console.log('*** adminIndex ***')
@@ -41,6 +14,7 @@ function index (request, reply) {
 }
 
 function fields (request, reply) {
+  //view the system fields page
   var viewContext = {}
   var uri = request.connection.info.protocol + '://' + request.info.host + '/API/1.0/field'
   console.log(uri)
@@ -55,6 +29,7 @@ function fields (request, reply) {
 }
 
 function organisations (request, reply) {
+  //view the organisations page
   API.org.list(request, (data) => {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
@@ -63,6 +38,7 @@ function organisations (request, reply) {
   })
 }
 function organisationLicenceTypes (request, reply) {
+  //view the organisation licence types page
   var viewContext = {}
   API.licencetype.list(request, (data) => {
     var viewContext = View.contextDefaults(request)
@@ -75,6 +51,7 @@ function organisationLicenceTypes (request, reply) {
 }
 
 function organisationLicenceType (request, reply) {
+  //view organisation licence types page
   var viewContext = {}
   API.licencetype.get(request, (data) => {
     var viewContext = View.contextDefaults(request)
@@ -88,7 +65,6 @@ function organisationLicenceType (request, reply) {
     viewContext.data = data.data
     viewContext.org_id = request.params.org_id
     viewContext.type_id = request.params.type_id
-//    viewContext.debug.data = data
 
     API.system.getFields({}, (fields) => {
       viewContext.fields = fields.data
@@ -100,8 +76,6 @@ function organisationLicenceType (request, reply) {
 }
 
 function addFieldToOrganisationLicenceType (request, reply) {
-  console.log(request.params)
-  console.log(request.payload)
   API.licencetype.createField(request, (data) => {
     reply('<script>location.href=\'/admin/organisation/' + request.params.org_id + '/licencetypes/' + request.params.type_id + '/\'</script>')
   })
@@ -122,8 +96,7 @@ function doFindlicence(request,reply){
 function viewLicence(request,reply){
   var viewContext = View.contextDefaults(request)
   viewContext.licence_id=request.params.licence_id
-  API.licence.short
-codes(request.params.licence_id,(shortcodes)=>{
+  API.licence.shortcodes(request.params.licence_id,(shortcodes)=>{
     viewContext.shortCodes=shortcodes
       API.licence.users(request.params.licence_id,(users)=>{
             viewContext.users=users
@@ -148,6 +121,10 @@ function users(request,reply){
 
 function user(request,reply){
   var viewContext = View.contextDefaults(request)
+
+
+
+
   viewContext.user_id=request.params.user_id
   Tactical.getUserLicences({user_id:request.params.user_id},(licences)=>{
     console.log(licences)
@@ -158,7 +135,6 @@ function user(request,reply){
 }
 
 module.exports = {
-  upload: upload,
   index: index,
   fields: fields,
   organisations: organisations,

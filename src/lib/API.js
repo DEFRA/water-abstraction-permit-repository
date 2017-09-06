@@ -17,6 +17,27 @@ const dbSchema = {
 
 }
 
+function makeURIRequest (uri, cb) {
+  httpRequest(uri+'?token='+process.env.JWT_TOKEN, function (error, response, body) {
+    var data = JSON.parse(body)
+    cb(data)
+  })
+}
+
+function makeURIPostRequest(uri,data,cb){
+  console.log('make http post')
+  httpRequest.post({
+            url: uri+'?token='+process.env.JWT_TOKEN,
+            form: data
+        },
+        function (err, httpResponse, body) {
+            console.log('got http post')
+//            console.log(err, body);
+            cb({err:err,data:body})
+
+        });
+}
+
 function getFields (request, reply) {
   var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.systemFields}`
   var queryParams = []
@@ -702,7 +723,10 @@ module.exports = {
 
   },
   general: {
-    reset: reset
+    reset: reset,
+    makeURIRequest:makeURIRequest,
+    makeURIPostRequest:makeURIPostRequest
+
   },
   shortcode: {
     create: createShortcode,

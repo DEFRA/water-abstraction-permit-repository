@@ -229,6 +229,48 @@ function login (user_name,password,cb) {
     })
 }
 
+function generateSearchKeys (request,reply) {
+  var query = `select * from permit.licence_data`
+  var queryParams = [];
+  DB.query(query, queryParams)
+    .then((res) => {
+      for (d in res.data){
+        searchKey=[]
+        dataObj=JSON.parse(res.data[d].licence_data_value)
+        searchKey.push(dataObj.name)
+        searchKey.push(dataObj.address)
+        searchKey.push(dataObj.postCode)
+
+      for (p in dataObj.purposes){
+        var purpose=dataObj.purposes[p]
+        searchKey.push(purpose.primaryCode)
+        searchKey.push(purpose.secondaryCode)
+        searchKey.push(purpose.description)
+                for (po in purpose.points){
+
+        searchKey.push(purpose.points[po].name)
+        searchKey.push(purpose.points[po].ngr1)
+        searchKey.push(purpose.points[po].meansOfAbstraction)
+
+                }
+
+      }
+
+
+        var query = `update permit.licence set licence_search_key=$1 where licence_id=$2`
+        var queryParams = [searchKey.join('|'),res.data[d].licence_id];
+        console.log(queryParams)
+        DB.query(query, queryParams)
+          .then((res) => {
+            console.log(res)
+          })
+
+//        console.log(JSON.parse(res.data[d].licence_data_value))
+        //licence_data_value
+      }
+      reply({ok:true})
+  })
+}
 
 
 
@@ -238,5 +280,6 @@ module.exports = {
     IDM:{getUser:getUser},
     CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp,
-    getUserLicences:getUserLicences
+    getUserLicences:getUserLicences,
+    generateSearchKeys:generateSearchKeys
 }

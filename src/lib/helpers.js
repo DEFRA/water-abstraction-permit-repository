@@ -27,40 +27,11 @@ function compareHash(string1,string2,cb){
   })
 }
 
-function validateBasic (request, user_name, password, callback) {
-  // basic login for admin function UI
-
-  console.log(user_name)
-  console.log(password)
-
-  const user = Tactical.login(user_name, password, (error, user) => {
-    if (error) {
-      return callback(null, false)
-    } else {
-      callback(null, true, { id: user.user_id, name: user.user_name })
-    }
-  })
-}
-
-function validateJWT(decoded, request, callback){
-  // bring your own validation function
-    console.log('CALL WITH TOKEN')
-    console.log(decoded)
-      // TODO: JWT tokens to DB...
-      // do your checks to see if the person is valid
-    if (!decoded.id) {
-      return callback(null, false)
-    } else {
-      return callback(null, true)
-    }
-  }
 
 module.exports = {
   createGUID:createGUID,
   createHash:createHash,
-  compareHash:compareHash,
-  validateBasic:validateBasic,
-  validateJWT:validateJWT
+  compareHash:compareHash
 
 
 

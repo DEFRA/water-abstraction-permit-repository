@@ -61,13 +61,43 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
 
 
 
+  function validateBasic (request, user_name, password, callback) {
+    // basic login for admin function UI
+
+    console.log(user_name)
+    console.log(password)
+
+    console.log(Tactical)
 
 
-  server.auth.strategy('simple', 'basic', { validateFunc: Helpers.validateBasic })
+    const user = Tactical.login(user_name, password, (error, user) => {
+      if (error) {
+        return callback(null, false)
+      } else {
+        callback(null, true, { id: user.user_id, name: user.user_name })
+      }
+    })
+  }
+
+  function validateJWT(decoded, request, callback){
+    // bring your own validation function
+      console.log('CALL WITH TOKEN')
+      console.log(decoded)
+        // TODO: JWT tokens to DB...
+        // do your checks to see if the person is valid
+      if (!decoded.id) {
+        return callback(null, false)
+      } else {
+        return callback(null, true)
+      }
+    }
+
+
+  server.auth.strategy('simple', 'basic', { validateFunc: validateBasic })
 
   server.auth.strategy('jwt', 'jwt',
     { key: process.env.JWT_SECRET,          // Never Share your secret key
-      validateFunc: Helpers.validateJWT,            // validate function defined above
+      validateFunc: validateJWT,            // validate function defined above
       verifyOptions: {} // pick a strong algorithm
     })
 

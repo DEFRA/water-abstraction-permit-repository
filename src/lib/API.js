@@ -647,7 +647,7 @@ function searchLicence (searchString, cb) {
   queryParams.push(parseInt(searchString) || 0)
   var query = `SELECT licence_id, licence_ref, licence_search_key
   from ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
-  where licence_ref like $1 or licence_search_key like $1 or licence_id=$2`
+  where lower(licence_ref) like lower($1) or lower(licence_search_key) like lower($1) or licence_id=$2`
   console.log(query)
   console.log(queryParams)
   DB.query(query, queryParams)

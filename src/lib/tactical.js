@@ -160,7 +160,8 @@ function getUserLicences (user, cb) {
     .then((res) => {
       console.log('got user licences')
       console.log(res)
-      if(res.data[0].licence_id==0){
+      if(res.data[0]
+        && res.data[0].licence_id==0){
 
         var query = `select
         o.org_nm,t.type_nm,l.* from permit.licence l

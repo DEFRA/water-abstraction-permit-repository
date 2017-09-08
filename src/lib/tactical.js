@@ -2,6 +2,7 @@ const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./db')
 const IDM = require('./IDM')
+const Boom = require('Boom')
 
 /**
 this file provides tactical functions that may not exist in the final product
@@ -63,11 +64,6 @@ function getUser (request, reply) {
     output: user id
   **/
   var query = `select * from permit.users where user_name=$1`
-
-
-
-  //
-
   var queryParams = [request.payload.username]
   console.log(query);
   console.log(queryParams);
@@ -84,10 +80,7 @@ function getUser (request, reply) {
         console.log(err)
         console.log(PasswordRes)
 
-
-
         console.log(request.state)
-
 
         getUserLicences(thisUser,(licences)=>{
           var data={};
@@ -101,38 +94,12 @@ function getUser (request, reply) {
           var authSession=sessionCookie.user;
           console.log('here?')
 
-
-
           reply(data);
-
         })
-
-
       });
-
-
-
-
-
-
-
-
-
-
       } else {
-                  var data={};
-        data.sessionGuid=null
-        data.licences=[];
-        data.message="login not found";
-
-          reply(data);
+        reply(Boom.unauthorized());
       }
-//      .state('data', { firstVisit: false });
-
-
-
-
-
     })
 }
 
@@ -160,7 +127,8 @@ function getUserLicences (user, cb) {
     .then((res) => {
       console.log('got user licences')
       console.log(res)
-      if(res.data[0].licence_id==0){
+      if(res.data[0]
+        && res.data[0].licence_id==0){
 
         var query = `select
         o.org_nm,t.type_nm,l.* from permit.licence l

@@ -2,7 +2,7 @@ const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./db')
 const IDM = require('./IDM')
-const Boom = require('Boom')
+const Boom = require('boom')
 
 /**
 this file provides tactical functions that may not exist in the final product

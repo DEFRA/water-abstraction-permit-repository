@@ -78,28 +78,32 @@ function getUser (request, reply) {
         var thisUser=UserRes.data[0]
         console.log(request.payload.password)
         console.log(thisUser.password)
-      Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
-        console.log("password is valid?")
-        console.log(err)
-        console.log(PasswordRes)
+        Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
+          console.log("password is valid?")
+          console.log(err)
+          console.log(PasswordRes)
 
-        console.log(request.state)
+          console.log(request.state)
 
-        getUserLicences(thisUser,(licences)=>{
-          var data={};
-          var sessionCookie={}
-          data.sessionGuid=Helpers.createGUID()
-          sessionCookie.userGuid=Helpers.createGUID()
-          sessionCookie.user=thisUser;
-          data.licences=licences;
-          data.sessionCookie=encryptToken(sessionCookie);
+          if (PasswordRes) {
+            getUserLicences(thisUser,(licences)=>{
+              var data={};
+              var sessionCookie={}
+              data.sessionGuid=Helpers.createGUID()
+              sessionCookie.userGuid=Helpers.createGUID()
+              sessionCookie.user=thisUser;
+              data.licences=licences;
+              data.sessionCookie=encryptToken(sessionCookie);
 
-          var authSession=sessionCookie.user;
-          console.log('here?')
+              var authSession=sessionCookie.user;
+              console.log('here?')
 
-          reply(data);
+              reply(data);
+            })
+          } else {
+            reply(Boom.unauthorized());
+          }
         })
-      });
       } else {
         reply(Boom.unauthorized());
       }

@@ -141,6 +141,7 @@ function getUserLicences (user, cb) {
         var queryParams = []
         DB.query(query, queryParams)
           .then((res) => {
+            console.log('response from o.org_nm,t.type_nm,l.* from permit.licence l')
               cb(res)
         })
 
@@ -153,6 +154,7 @@ function getUserLicences (user, cb) {
           }
         }
 
+        console.log('availableLicences')
         console.log(availableLicences)
         var query = `select
         o.org_nm,t.type_nm,l.* from permit.licence l

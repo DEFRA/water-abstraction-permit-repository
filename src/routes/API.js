@@ -9,7 +9,7 @@ const version = '1.0'
 module.exports = [
 
   { method: 'POST', path: '/API/' + version + '/org/{org_id}/licencetype/{type_id}/licence/{licence_id}/shortcode', handler: API.shortcode.create },
-  { method: 'PUT', path: '/API/' + version + '/shortcode/{shortcode}', handler: API.shortcode.use },
+  { method: 'POST', path: '/API/' + version + '/shortcode/{shortcode}', handler: API.shortcode.use },
   { method: 'POST', path: '/API/' + version + '/token', config: { auth: false }, handler: API.system.getToken },
   { method: 'GET', path: '/API/' + version + '/field', handler: API.system.getFields },
   { method: 'GET', path: '/API/' + version + '/org', handler: API.org.list },

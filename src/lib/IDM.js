@@ -101,6 +101,7 @@ function getUser(request,reply){
       } else {
         var user=res.data[0];
         delete user.password
+        console.log('got the user')
       reply(user)
       }
 

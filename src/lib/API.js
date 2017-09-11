@@ -1,6 +1,8 @@
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./db')
+const Tactical = require('./tactical')
+
 
 const dbSchema = {
   schemaName: 'permit',
@@ -608,6 +610,13 @@ function createShortcode (request, reply) {
 }
 
 function useShortcode (request, reply) {
+
+  console.log('sessioncookie')
+  console.log(request.payload.sessionCookie)
+
+  var userData=Tactical.decryptToken(request.payload.sessionCookie)
+
+
   query = `
     select * from  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
     where shortcode=$1 and user_id is null;
@@ -620,11 +629,17 @@ function useShortcode (request, reply) {
   .then((res) => {
     console.log(res)
     if (res.data[0]) {
-      console.log(request.payload)
+      console.log('user id')
+      console.log(userData)
+      console.log(userData.user.user_id)
+      console.log('licence id')
+      console.log(res.data[0].licence_id)
+      var user_id=userData.user.user_id
+      var licence_id=res.data[0].licence_id
       query = `
         update  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
-        set user_id=${request.payload.user_id} where shortcode='${request.params.shortcode}';
-        insert into ${dbSchema.schemaName}.user_licence (licence_id,user_id) values (${res.data[0].licence_id},${request.payload.user_id})
+        set user_id=${userData.user.user_id} where shortcode='${request.params.shortcode}';
+        insert into ${dbSchema.schemaName}.user_licence (licence_id,user_id) values (${licence_id},${user_id})
         `
 
       var queryParams = []
@@ -633,9 +648,12 @@ function useShortcode (request, reply) {
       DB.query(query, queryParams)
       .then((res) => {
         console.log(res)
-        reply(res)
+        var response={licence_id:licence_id}
+        console.log(response)
+        reply(response)
       })
     } else {
+      console.log('shortcode already used')
       reply({error: 'Shortcode not found or already used'}).code(500)
     }
   })

@@ -22,6 +22,9 @@ function createHash(string,cb){
 }
 
 function compareHash(string1,string2,cb){
+  console.log('bcrypt compare')
+  console.log(string1)
+  console.log(string2)
   bcrypt.compare(string1,string2, (err, res)=> {
     cb(err,res)
   })

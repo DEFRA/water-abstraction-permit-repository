@@ -19,7 +19,9 @@ function encryptToken (data) {
 function decryptToken(token){
   var key = process.env.JWT_SECRET
   var JWT = require('jsonwebtoken')
-  var data = JWT.descrypt(token, key)
+  var data = JWT.decode(token, key)
+  console.log('token decoded')
+  console.log(data)
   return(data)
 }
 
@@ -78,7 +80,8 @@ function getUser (request, reply) {
       console.log(UserRes.data)
       if (UserRes.data[0]){
         var thisUser=UserRes.data[0]
-
+        console.log(request.payload.password)
+        console.log(thisUser.password)
       Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
         console.log("password is valid?")
         console.log(err)
@@ -101,6 +104,9 @@ function getUser (request, reply) {
           var authSession=sessionCookie.user;
           console.log('here?')
 
+
+          console.log('user licences return data')
+          console.log(JSON.stringify(data))
 
 
           reply(data);
@@ -281,5 +287,7 @@ module.exports = {
     CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp,
     getUserLicences:getUserLicences,
-    generateSearchKeys:generateSearchKeys
+    generateSearchKeys:generateSearchKeys,
+    encryptToken:encryptToken,
+    decryptToken:decryptToken
 }

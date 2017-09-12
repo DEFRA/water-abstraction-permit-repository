@@ -78,38 +78,58 @@ function getUser (request, reply) {
         var thisUser=UserRes.data[0]
         console.log(request.payload.password)
         console.log(thisUser.password)
-        Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
-          console.log("password is valid?")
-          console.log(err)
-          console.log(PasswordRes)
 
+      Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
+        console.log("password is valid?")
+        console.log(err)
+        console.log(PasswordRes)
+        if(!PasswordRes){
+                  reply(Boom.unauthorized());
+        } else {
           console.log(request.state)
 
-          if (PasswordRes) {
-            getUserLicences(thisUser,(licences)=>{
-              var data={};
-              var sessionCookie={}
-              data.sessionGuid=Helpers.createGUID()
-              sessionCookie.userGuid=Helpers.createGUID()
-              sessionCookie.user=thisUser;
-              data.licences=licences;
-              data.sessionCookie=encryptToken(sessionCookie);
+          getUserLicences(thisUser,(licences)=>{
+            var data={};
+            var sessionCookie={}
+            data.sessionGuid=Helpers.createGUID()
+            sessionCookie.userGuid=Helpers.createGUID()
+            sessionCookie.user=thisUser;
+            data.licences=licences;
+            data.sessionCookie=encryptToken(sessionCookie);
 
-              var authSession=sessionCookie.user;
-              console.log('here?')
+            var authSession=sessionCookie.user;
+            console.log('here?')
 
-              reply(data);
-            })
-          } else {
-            reply(Boom.unauthorized());
-          }
-        })
+            reply(data);
+          })
+        }
+
+
+      });
       } else {
         reply(Boom.unauthorized());
       }
     })
 }
 
+
+function getUsers (cb) {
+  /**
+    tactical function to represent the end result of authorising a user via Verify...
+
+    input: username and password
+    output: user id
+  **/
+  var query = `select * from permit.users`
+  var queryParams = []
+  console.log(query);
+  console.log(queryParams);
+
+  DB.query(query, queryParams)
+    .then((UserRes) => {
+      cb(UserRes.data)
+    })
+}
 
 
 function userLicencesWrapper (request,reply, cb) {
@@ -254,7 +274,7 @@ function generateSearchKeys (request,reply) {
 
 module.exports = {
     login:login,
-    IDM:{getUser:getUser},
+    IDM:{getUser:getUser,getUsers:getUsers},
     CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp,
     getUserLicences:getUserLicences,

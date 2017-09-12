@@ -100,7 +100,7 @@ function getUser (request, reply) {
             console.log('here?')
 
             reply(data);
-          })  
+          })
         }
 
 
@@ -112,7 +112,7 @@ function getUser (request, reply) {
 }
 
 
-function getUsers (request, reply) {
+function getUsers (cb) {
   /**
     tactical function to represent the end result of authorising a user via Verify...
 
@@ -120,13 +120,13 @@ function getUsers (request, reply) {
     output: user id
   **/
   var query = `select * from permit.users`
-  var queryParams = [request.payload.username]
+  var queryParams = []
   console.log(query);
   console.log(queryParams);
 
   DB.query(query, queryParams)
     .then((UserRes) => {
-      reply(UserRes.data[0])
+      cb(UserRes.data)
     })
 }
 

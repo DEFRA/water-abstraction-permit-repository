@@ -7,7 +7,7 @@
         <li><a href="/">Your services</a></li>
         <li><a href="/admin">admin</a></li>
         <li><a href="/admin/users">users</a></li>
-        <li><a href="/{{user_id}}">{{user_id}}</a></li>
+
       </ol>
     </div>
   </nav>
@@ -17,25 +17,25 @@
         Permit Repository Admin
       </h1>
       <h1 class="heading-large">
-      View User
+      View Users
       </h1>
       <h1 class="heading-medium">
-      Licences
-      </h1> The following licences are available to this user.
+      Users
+    </h1> The following users are available.
 
 
       <br>
       <table>
         <tr>
-          <th>&nbsp;</th>
-          <th></th>
-          <th></th>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Is Admin</th>
         </tr>
-        {{#each licences.data}}
+        {{#each users}}
         <tr>
-          <td><a href="/admin/licence/{{licence_id}}">{{licence_id}}</a></td>
-          <td>{{licence_ref}}</td>
-          <td>{{licence_search_key}}</td>
+          <td><a href="/admin/users/{{user_id}}">{{user_id}}</a></td>
+          <td>{{user_name}}</td>
+          <td>{{admin}}</td>
 
 
 

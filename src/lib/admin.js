@@ -116,8 +116,13 @@ function addShortcode(request,reply){
 }
 
 function users(request,reply){
+  var viewContext = View.contextDefaults(request)
+
   Tactical.IDM.getUsers((users)=>{
     console.log(users)
+    viewContext.users=users
+    reply.view('water/admin/viewusers', viewContext)
+
   })
 }
 

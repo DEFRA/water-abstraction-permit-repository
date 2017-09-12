@@ -116,7 +116,9 @@ function addShortcode(request,reply){
 }
 
 function users(request,reply){
-  reply({toDO:''})
+  Tactical.IDM.getUsers((users)=>{
+    console.log(users)
+  })
 }
 
 function user(request,reply){

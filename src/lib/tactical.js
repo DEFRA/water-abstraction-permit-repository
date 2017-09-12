@@ -82,23 +82,28 @@ function getUser (request, reply) {
         console.log("password is valid?")
         console.log(err)
         console.log(PasswordRes)
+        if(!PasswordRes){
+                  reply(Boom.unauthorized());
+        } else {
+          console.log(request.state)
 
-        console.log(request.state)
+          getUserLicences(thisUser,(licences)=>{
+            var data={};
+            var sessionCookie={}
+            data.sessionGuid=Helpers.createGUID()
+            sessionCookie.userGuid=Helpers.createGUID()
+            sessionCookie.user=thisUser;
+            data.licences=licences;
+            data.sessionCookie=encryptToken(sessionCookie);
 
-        getUserLicences(thisUser,(licences)=>{
-          var data={};
-          var sessionCookie={}
-          data.sessionGuid=Helpers.createGUID()
-          sessionCookie.userGuid=Helpers.createGUID()
-          sessionCookie.user=thisUser;
-          data.licences=licences;
-          data.sessionCookie=encryptToken(sessionCookie);
+            var authSession=sessionCookie.user;
+            console.log('here?')
 
-          var authSession=sessionCookie.user;
-          console.log('here?')
+            reply(data);
+          })  
+        }
 
-          reply(data);
-        })
+
       });
       } else {
         reply(Boom.unauthorized());
@@ -106,6 +111,24 @@ function getUser (request, reply) {
     })
 }
 
+
+function getUsers (request, reply) {
+  /**
+    tactical function to represent the end result of authorising a user via Verify...
+
+    input: username and password
+    output: user id
+  **/
+  var query = `select * from permit.users`
+  var queryParams = [request.payload.username]
+  console.log(query);
+  console.log(queryParams);
+
+  DB.query(query, queryParams)
+    .then((UserRes) => {
+      reply(UserRes.data[0])
+    })
+}
 
 
 function userLicencesWrapper (request,reply, cb) {
@@ -250,7 +273,7 @@ function generateSearchKeys (request,reply) {
 
 module.exports = {
     login:login,
-    IDM:{getUser:getUser},
+    IDM:{getUser:getUser,getUsers:getUsers},
     CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp,
     getUserLicences:getUserLicences,

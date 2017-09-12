@@ -78,6 +78,7 @@ function getUser (request, reply) {
         var thisUser=UserRes.data[0]
         console.log(request.payload.password)
         console.log(thisUser.password)
+
       Helpers.compareHash(request.payload.password, thisUser.password,(err,PasswordRes)=>{
         console.log("password is valid?")
         console.log(err)

@@ -23,9 +23,18 @@ function createHash(string,cb){
 
 function compareHash(string1,string2,cb){
   console.log('bcrypt compare')
-  console.log(string1)
-  console.log(string2)
+  console.log('atring 1 ='+string1)
+  console.log('atring 2 ='+string2)
   bcrypt.compare(string1,string2, (err, res)=> {
+    console.log('bcrypt compare')
+    console.log(err)
+    console.log(res)
+    if(res){
+      console.log('password OK, authorised!')
+    } else {
+      console.log('password FAIL, unauthorised!')      
+    }
+    console.log('-----')
     cb(err,res)
   })
 }

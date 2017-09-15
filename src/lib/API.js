@@ -124,6 +124,7 @@ function getLicenceType (request, reply) {
 		        inner join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id = f.field_id
             where tf.type_id=$1
     ) attributes`
+
   var queryParams = [request.params.type_id]
 
   DB.query(query, queryParams)
@@ -381,50 +382,56 @@ where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.
 
   DB.query(query, queryParams)
   .then((res) => {
-    // set initial licence data
-    var licenceData = {}
-    console.log(licenceData)
-    licenceData.licence_id = res.data[0].licence_id
-    licenceData.licence_ref = res.data[0].licence_ref
-    licenceData.licence_start_dt = res.data[0].licence_start_dt
-    licenceData.licence_end_dt = res.data[0].licence_end_dt
-    licenceData.licence_status_id = res.data[0].licence_status_id
-    licenceData.licence_type_id = res.data[0].licence_type_id
-    licenceData.licence_org_id = res.data[0].licence_org_id
-    licenceData.attributes = {}
-    licenceData.attributeDefinitions = {}
+    if(res.data[0]){
+      // set initial licence data
+      var licenceData = {}
+      console.log(licenceData)
+      licenceData.licence_id = res.data[0].licence_id
+      licenceData.licence_ref = res.data[0].licence_ref
+      licenceData.licence_start_dt = res.data[0].licence_start_dt
+      licenceData.licence_end_dt = res.data[0].licence_end_dt
+      licenceData.licence_status_id = res.data[0].licence_status_id
+      licenceData.licence_type_id = res.data[0].licence_type_id
+      licenceData.licence_org_id = res.data[0].licence_org_id
+      licenceData.attributes = {}
+      licenceData.attributeDefinitions = {}
 
-    // get ALL attributes from type definition
-    queryParams = [request.params.type_id]
-    var query = `SELECT $1::int as type_id, array_to_json(array_agg(attributes)) as attributeData
-  	from (
-  select
-  		tf.type_fields_id,tf.field_id,tf.type_field_alias,f.field_definition,tf.is_required,tf.is_public_domain,f.field_nm
-  		from ${dbSchema.schemaName}.${dbSchema.tables.licenceDef} tf
-  		inner join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id = f.field_id
-          where tf.type_id=$1 ) attributes
-          `
-    console.log(query)
-    console.log(JSON.stringify(queryParams))
+      // get ALL attributes from type definition
+      queryParams = [request.params.type_id]
+      var query = `SELECT $1::int as type_id, array_to_json(array_agg(attributes)) as attributeData
+      from (
+    select
+        tf.type_fields_id,tf.field_id,tf.type_field_alias,f.field_definition,tf.is_required,tf.is_public_domain,f.field_nm
+        from ${dbSchema.schemaName}.${dbSchema.tables.licenceDef} tf
+        inner join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id = f.field_id
+            where tf.type_id=$1 ) attributes
+            `
+      console.log(query)
+      console.log(JSON.stringify(queryParams))
 
-    DB.query(query, queryParams)
-    .then((attributeDefinitionQuery) => {
-      console.log(attributeDefinitionQuery)
+      DB.query(query, queryParams)
+      .then((attributeDefinitionQuery) => {
+        console.log(attributeDefinitionQuery)
 
-      for (var attribute in attributeDefinitionQuery.data[0].attributedata) {
-        licenceData.attributes[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = null
-        licenceData.attributeDefinitions[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = attributeDefinitionQuery.data[0].attributedata[attribute]
-      }
+        for (var attribute in attributeDefinitionQuery.data[0].attributedata) {
+          licenceData.attributes[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = null
+          licenceData.attributeDefinitions[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = attributeDefinitionQuery.data[0].attributedata[attribute]
+        }
 
-/**
-convert licence data to nice friendly format, separating core values (common to all licences regardless of type) and licence/org type specific attributes
-**/
+  /**
+  convert licence data to nice friendly format, separating core values (common to all licences regardless of type) and licence/org type specific attributes
+  **/
 
-      for (attribute in res.data[0].attributedata) {
-        licenceData.attributes[res.data[0].attributedata[attribute].type_field_alias] = JSON.parse(res.data[0].attributedata[attribute].licence_data_value)
-      }
-      reply({error: null, data: licenceData})
+        for (attribute in res.data[0].attributedata) {
+          licenceData.attributes[res.data[0].attributedata[attribute].type_field_alias] = JSON.parse(res.data[0].attributedata[attribute].licence_data_value)
+        }
+        reply({error: null, data: licenceData})
     })
+    } else {
+      reply({error: 'licence not found', data: null}).code(404)
+    }
+
+
   })
 }
 

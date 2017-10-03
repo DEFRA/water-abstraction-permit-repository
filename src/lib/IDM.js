@@ -36,6 +36,25 @@ function createUser (request,reply) {
   });
 }
 
+function updatePassword (request,reply) {
+  /**
+  Expects
+  payload
+    .username (string)
+    .password (string)
+  **/
+  Helpers.createHash(request.payload.password, (err, hashedPW)=> {
+    var query = `update permit.users set password = $1 where user_name = $2`
+    var queryParams = [hashedPW,request.payload.username]
+    DB.query(query, queryParams)
+      .then((res) => {
+        //res.err = null if no error
+        //res.data
+        reply(res)
+      })
+  });
+}
+
 function loginUser(request,reply){
     var query = `select user_id,password from permit.users where user_name=$1`
     var queryParams = [request.payload.user_name]
@@ -120,6 +139,7 @@ function addLicenceToUser(request,reply){
 
 /**
 { method: 'POST', path: '/idm/' + version + '/tactical/user/{user_id}', handler: IDM.createUser },
+{ method: 'PUT', path: '/idm/' + version + '/tactical/user/{user_id}', handler: IDM.updatePassword },
 { method: 'POST', path: '/idm/' + version + '/tactical/user/login',   handler: IDM.loginUser },
 { method: 'POST', path: '/idm/' + version + '/tactical/user/{user_id}', handler: IDM.getUser },
 { method: 'POST', path: '/idm/' + version + '/tactical/user/{user_id}/addLicence', handler: IDM.addLicenceToUser }
@@ -127,6 +147,7 @@ function addLicenceToUser(request,reply){
 
 module.exports = {
   createUser:createUser,
+  updatePassword:updatePassword,
   loginUser:loginUser,
   loginAdministrator:loginAdministrator,
   getUser:getUser,

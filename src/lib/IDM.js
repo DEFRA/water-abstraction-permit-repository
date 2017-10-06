@@ -36,7 +36,7 @@ function createUser (request,reply) {
   });
 }
 
-function updatePassword (request,reply) {
+function updatePassword (request, reply) {
   /**
   Expects
   payload
@@ -44,8 +44,8 @@ function updatePassword (request,reply) {
     .password (string)
   **/
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
-    var query = `update permit.users set password = $1 where user_name = $2`
-    var queryParams = [hashedPW,request.payload.username]
+    var query = `update permit.users set password = $1, reset_guid = NULL where user_name = $2`
+    var queryParams = [hashedPW, request.payload.username]
     DB.query(query, queryParams)
       .then((res) => {
         //res.err = null if no error
@@ -53,6 +53,60 @@ function updatePassword (request,reply) {
         reply(res)
       })
   });
+}
+
+function changePasswordWithResetLink (request, reply) {
+  /**
+  Expects
+  payload
+    .resetGuid (string)
+    .password (string)
+  **/
+  Helpers.createHash(request.payload.password, (err, hashedPW)=> {
+    var query = `update permit.users set password = $1, reset_guid = NULL where reset_guid = $2`
+    var queryParams = [hashedPW, request.payload.resetGuid]
+    DB.query(query, queryParams)
+      .then((res) => {
+        reply(res)
+      })
+  });
+}
+
+function resetPassword (request, reply) {
+  /**
+  Expects
+  payload
+    .emailAddress (string)
+  **/
+  var resetGuid = Helpers.createGUID()
+  console.log('resetGuid: '  + resetGuid)
+  var query = `update permit.users set reset_guid = $1 where user_name = $2`
+  var queryParams = [resetGuid, request.payload.emailAddress]
+  DB.query(query, queryParams)
+    .then((res) => {
+      console.log(res)
+      reply(res)
+    })
+}
+
+function getResetPasswordGuid (request,reply) {
+  /**
+  Expects
+  payload
+    .emailAddress (string)
+  **/
+  var query = `select reset_guid from permit.users where user_name = $1`
+  var queryParams = [request.query.emailAddress]
+  DB.query(query, queryParams)
+    .then((res) => {
+      if(res.err) {
+        reply(res.err).code(500)
+      } else if (!res.data || !res.data[0]){
+        reply({err:'Reset GUID not found for user'}).code(500)
+      } else {
+        reply(res.data[0])
+      }
+    })
 }
 
 function loginUser(request,reply){
@@ -137,20 +191,15 @@ function addLicenceToUser(request,reply){
 
 }
 
-/**
-{ method: 'POST', path: '/idm/' + version + '/tactical/user/{user_id}', handler: IDM.createUser },
-{ method: 'PUT', path: '/idm/' + version + '/tactical/user/{user_id}', handler: IDM.updatePassword },
-{ method: 'POST', path: '/idm/' + version + '/tactical/user/login',   handler: IDM.loginUser },
-{ method: 'POST', path: '/idm/' + version + '/tactical/user/{user_id}', handler: IDM.getUser },
-{ method: 'POST', path: '/idm/' + version + '/tactical/user/{user_id}/addLicence', handler: IDM.addLicenceToUser }
-**/
-
 module.exports = {
-  createUser:createUser,
-  updatePassword:updatePassword,
-  loginUser:loginUser,
-  loginAdministrator:loginAdministrator,
-  getUser:getUser,
-  addLicenceToUser:addLicenceToUser,
-  loginError:loginError
+  createUser: createUser,
+  updatePassword: updatePassword,
+  resetPassword: resetPassword,
+  getResetPasswordGuid: getResetPasswordGuid,
+  changePasswordWithResetLink: changePasswordWithResetLink,
+  loginUser: loginUser,
+  loginAdministrator: loginAdministrator,
+  getUser: getUser,
+  addLicenceToUser: addLicenceToUser,
+  loginError: loginError
 }

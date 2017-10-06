@@ -59,29 +59,17 @@ function changePasswordWithResetLink (request, reply) {
   /**
   Expects
   payload
-    .username (string)
     .resetGuid (string)
     .password (string)
   **/
-  var query = `select reset_guid from permit.users where user_name = $1`
-  var queryParams = [request.payload.username]
-  DB.query(query, queryParams)
-    .then((res) => {
-      console.log(res.data)
-      if(res.err) {
-        reply(res.err).code(500)
-      } else if (!res.data || !res.data[0]) {
-        reply({err:'Reset GUID not found for user'}).code(500)
-      } else {
-        var resetGuid = res.data[0].reset_guid
-        console.log(resetGuid)
-        if (resetGuid != request.payload.resetGuid) {
-          reply({err:'Invalid reset GUID'}).code(500)
-        } else {
-          updatePassword(request, reply)
-        }
-      }
-    })
+  Helpers.createHash(request.payload.password, (err, hashedPW)=> {
+    var query = `update permit.users set password = $1, reset_guid = NULL where reset_guid = $2`
+    var queryParams = [hashedPW, request.payload.resetGuid]
+    DB.query(query, queryParams)
+      .then((res) => {
+        reply(res)
+      })
+  });
 }
 
 function resetPassword (request, reply) {
@@ -96,8 +84,6 @@ function resetPassword (request, reply) {
   var queryParams = [resetGuid, request.payload.emailAddress]
   DB.query(query, queryParams)
     .then((res) => {
-      //res.err = null if no error
-      //res.data
       console.log(res)
       reply(res)
     })

@@ -1,0 +1,32 @@
+{{> styles}}
+<main id="content">
+  {{>element-phase-tag}}
+  <nav>
+    <div class="breadcrumbs">
+      <ol>
+        <li><a href="/">Your services</a></li>
+        <li><a href="/admin">admin</a></li>
+        <li>crm</li>
+      </ol>
+    </div>
+  </nav>
+  <div class="grid-row">
+    <div class="column-full">
+      <h1 class="heading-xlarge">
+        Permit Repository Admin / CRM
+      </h1>
+
+
+      <ul class="list list-bullet">
+        {{>element-li-link uri='/admin/crm/entities?entity_type=regime' title='Regimes'}}
+        {{>element-li-link uri='/admin/crm/entities?entity_type=company' title='Companies'}}
+        {{>element-li-link uri='/admin/crm/entities?entity_type=individual' title='Individuals'}}
+        {{>element-li-link uri='/admin/crm/entities/newRegime' title='New regime'}}
+        {{>element-li-link uri='/admin/crm/entities/newCompany' title='New company'}}
+        {{>element-li-link uri='/admin/crm/entities/newIndividual' title='New individual'}}
+      </ul>
+    </div>
+  </div>
+</main>
+{{> footerjs}}
+{{> debug}}

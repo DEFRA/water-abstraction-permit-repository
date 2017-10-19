@@ -116,7 +116,7 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
   server.route(require('./src/routes/admin'))
   server.route(require('./src/routes/tactical'))
   server.route(require('./src/routes/idm_mock'))
-
+  server.route(require('./src/routes/crm_tactical'))
 })
 
 // Start the server

@@ -1,0 +1,265 @@
+{{> styles}}
+<main id="content">
+  {{>element-phase-tag}}
+  <nav>
+    <div class="breadcrumbs">
+      <ol>
+        <li><a href="/">Your services</a></li>
+        <li><a href="/admin">admin</a></li>
+        <li><a href="/admin/crm">crm</a></li>
+        <li><a href="/admin/crm/entities">entities</a>
+        <li><a href="/admin/crm/entities/{{entity.entity_id}}">{{entities.entity.entity_type}}: {{entities.entity.entity_nm}}</a>
+
+        </li>
+      </ol>
+    </div>
+  </nav>
+  <div class="grid-row">
+    <div class="column-full">
+      <h1 class="heading-xlarge">
+        Permit Repository Admin / CRM / Entities
+      </h1>
+
+
+<hr>
+<h1 class="heading-medium">
+Permits
+</h1>
+<table>
+  <tr>
+  <th>header id
+  </th>
+  <th>system
+  </th>
+  <th>permit id
+  </th>
+  <th>external_id
+  </th>
+  <td>
+  </td>
+  </tr>
+{{#each entities.documentAssociations}}
+<tr>
+<td>{{document_id}}
+</td>
+<td>{{system_id}}
+</td>
+<td>{{system_internal_id}}
+</td>
+<td>{{system_external_id}}
+</td>
+<td>{{metadata.Name}}
+</td>
+</tr>
+
+
+
+
+
+
+
+
+{{/each}}
+</table>
+<h1 class="heading-medium">
+Associations
+</h1>
+{{#each entities.entityAssociations}}
+
+{{entity_up_type}}: <a href='/admin/crm/entities/{{entity_up_id}}'>
+  {{entity_up_nm}}
+</a>
+&nbsp;
+&gt;&gt;
+&nbsp;
+{{entity_down_type}}: <a href='/admin/crm/entities/{{entity_down_id}}'>
+{{entity_down_nm}}
+</a>
+
+
+<hr>
+{{/each}}
+
+
+{{#each entities.documentAssociations}}
+<a href='/admin/crm/entities/{{entity_id}}'>{{entity_id}}</a>
+
+{{document_id}}
+{{system_id}}
+{{system_internal_id}}
+{{system_external_id}}
+{{system_external_id}}
+{{metadata}}
+<hr>
+{{/each}}
+
+<br>
+<form method="post" action="associate">
+Associate Entity {{entities.entity.entity_nm}}
+<input type="hidden" name="entity1" id="entity1" value="{{entities.entity.entity_type}}|{{entities.entity.entity_id}}"/>
+as
+<select name='associationType'>
+<option value='up'>Upstream</option>
+<option value='down'>Downstream</option>
+</select>
+ of
+
+<select id="entities" name="entity2">
+</select>
+<div id="entitySearch">
+  <div id="fuzzNameContainer">
+    <span class="fuzzName"></span>
+    <span class="fuzzArrow"></span>
+  </div>
+  <div id="fuzzDropdownContainer">
+    <input type="text" value="" class="entitySearchBox" placeholder="search.." />
+    <span class="entitySearchIcon"></span>
+    <ul id="entityResults">
+    </ul>
+  </div>
+</div>
+<button type="submit">Associate</button>
+</form>
+
+<script >
+
+(function() {
+  var runMyCode = function($) {
+    // jquery-dependent code here
+    $.ajax({url: "/admin/crm/allentities", success: function(result){
+        console.log(result)
+        var options = $("#entities");
+        $.each(result, function() {
+          var optVal=this.entity_type+'|'+this.entity_id
+          var optString=this.entity_type+': '+this.entity_nm+' '+this.entity_id
+            options.append($("<option />").val(optVal).text(optString));
+        });
+        $('#entities').fuzzyDropdown({
+          mainContainer: '#entitySearch',
+          enableBrowserDefaultScroll: true
+        });
+    }});
+
+
+  };
+
+  var timer = function() {
+    if (window.jQuery ) {
+      runMyCode(window.jQuery);
+    } else {
+      console.log('wait...')
+      window.setTimeout(timer, 100);
+    }
+  };
+  timer();
+})();
+
+
+
+</script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+#fuzzSearch {
+  width: 50%;
+}
+#fuzzNameContainer {
+  height: 40px;
+  padding: 4px 10px;
+  border: 1px solid #999;
+  box-shadow: inset 0 0 2px 0px #333;
+  width: 100%;
+  cursor: pointer;
+  line-height: 1.9em;
+}
+.fuzzName {
+  display: inline-block;
+  width: 96%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fuzzArrow {
+  width: 0;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+  border-width: 7px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  top: -3px;
+  -webkit-transition: all 0.1s ease-in;
+  transition: all 0.1s ease-in;
+}
+.fuzzArrow:hover {
+  border-top-color: #888;
+}
+.fuzzArrow.fuzzArrowUp {
+  border-color: transparent transparent #333 transparent;
+  top: -11px;
+}
+#fuzzDropdownContainer {
+  display: none;
+  width: 100%;
+  margin: 0 0 5px 0;
+  border: 1px solid #999;
+  padding: 12px 4px 4px;
+  position: relative;
+}
+.fuzzMagicBox {
+  width: 99%;
+  height: 26px;
+  margin: 0 auto;
+}
+.fuzzSearchIcon {
+  width: 20px;
+  height: 30px;
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  top: -20px;
+  left: 95%;
+}
+.fuzzSearchIcon:before, .fuzzSearchIcon:after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 5px;
+}
+.fuzzSearchIcon:before {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #aaa;
+}
+.fuzzSearchIcon:after {
+  height: 7px;
+  border-right: 1px solid #aaa;
+  top: 9px;
+  -webkit-transform: rotate(-32deg);
+  -ms-transform: rotate(-32deg);
+}
+#fuzzResults {
+  cursor: pointer;
+}
+#fuzzResults li:hover {
+  color: #aaa;
+}
+#fuzzResults li.selected {
+  color: #aaa;
+}
+#fuzzResults li {
+  list-style: none;
+  margin: 20px 0;
+}
+</style>
+
+
+
+    </div>
+  </div>
+</main>
+{{> footerjs}}
+{{> debug}}

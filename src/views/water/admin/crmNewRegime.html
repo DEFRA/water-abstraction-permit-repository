@@ -1,0 +1,36 @@
+{{> styles}}
+<main id="content">
+  {{>element-phase-tag}}
+  <nav>
+    <div class="breadcrumbs">
+      <ol>
+        <li><a href="/">Your services</a></li>
+        <li><a href="/admin">admin</a></li>
+        <li><a href="/admin/crm">crm</a></li>
+
+        <li>New Regime
+        </li>
+      </ol>
+    </div>
+  </nav>
+  <div class="grid-row">
+    <div class="column-full">
+      <h1 class="heading-xlarge">
+        Permit Repository Admin / CRM / New Regime
+      </h1>
+
+      <form method="post" action="/admin/crm/entities/new">
+        Regime Name: <input type="text" name="entity_nm"/><br/>
+        <input type="hidden" name="entity_type" value="regime"/>
+        <input type="hidden" name="entity_definition" value="{}"/>
+
+        <button type="submit">Create Regime</button>
+      </form>
+
+
+
+    </div>
+  </div>
+</main>
+{{> footerjs}}
+{{> debug}}

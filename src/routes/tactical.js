@@ -15,8 +15,8 @@ const version = '1.0'
 
 
 module.exports = [
-  { method: 'POST', path: '/API/' + version + '/tactical/user/login',  config:{ auth: false }, handler: Tactical.IDM.getUser },
-  { method: 'POST', path: '/API/' + version + '/tactical/user/licences',  config:{ auth: false }, handler: Tactical.CRM.getUserLicences },
-  { method: 'GET', path: '/logout',  config:{ }, handler: function(request,reply){reply('You are logged out now').code(401)} },
-  { method: 'GET', path: '/searchKeys',  config:{ auth: false }, handler: Tactical.generateSearchKeys }
+  { method: 'POST', path: '/API/' + version + '/tactical/user/login',  config:{ auth: false,description:'TODO:' }, handler: Tactical.IDM.getUser },
+  { method: 'POST', path: '/API/' + version + '/tactical/user/licences',  config:{ auth: false,description:'TODO:' }, handler: Tactical.CRM.getUserLicences },
+  { method: 'GET', path: '/logout',  config:{description:'TODO:' }, handler: function(request,reply){reply('You are logged out now').code(401)} },
+  { method: 'GET', path: '/searchKeys',  config:{ auth: false ,description:'TODO:'}, handler: Tactical.generateSearchKeys }
 ]

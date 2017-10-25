@@ -1,5 +1,5 @@
 var bcrypt = require('bcrypt');
-var Tactical = require('./tactical.js');
+
 
 
 
@@ -32,20 +32,35 @@ function compareHash(string1,string2,cb){
     if(res){
       console.log('password OK, authorised!')
     } else {
-      console.log('password FAIL, unauthorised!')      
+      console.log('password FAIL, unauthorised!')
     }
     console.log('-----')
     cb(err,res)
   })
 }
 
+function encryptToken (data) {
+  var key = process.env.JWT_SECRET
+  var JWT = require('jsonwebtoken')
+  var token = JWT.sign(data, key)
+  return(token)
+}
+
+function decryptToken(token){
+  var key = process.env.JWT_SECRET
+  var JWT = require('jsonwebtoken')
+  var data = JWT.decode(token, key)
+  console.log('token decoded')
+  console.log(data)
+  return(data)
+}
+
 
 module.exports = {
   createGUID:createGUID,
   createHash:createHash,
-  compareHash:compareHash
-
-
-
+  compareHash:compareHash,
+  encryptToken:encryptToken,
+  decryptToken:decryptToken
 
 }

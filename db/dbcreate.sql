@@ -75,7 +75,7 @@ CREATE TABLE licence (
     licence_ref_2 character varying(255),
     licence_status_id bigint,
     licence_type_id bigint NOT NULL,
-    licence_org_id bigint NOT NULL,
+    licence_regime_id bigint NOT NULL,
     licence_id bigint NOT NULL,
     licence_search_key text,
     is_public_domain bit(1),
@@ -156,8 +156,8 @@ ALTER SEQUENCE "licence_licenceID_seq" OWNED BY licence.licence_id;
 --
 
 CREATE TABLE org (
-    org_nm character varying,
-    org_id bigint NOT NULL
+    regime_nm character varying,
+    regime_id bigint NOT NULL
 );
 
 
@@ -184,7 +184,7 @@ ALTER TABLE "org_orgID_seq1" OWNER TO postgres;
 -- Name: org_orgID_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE "org_orgID_seq1" OWNED BY org.org_id;
+ALTER SEQUENCE "org_orgID_seq1" OWNED BY org.regime_id;
 
 
 --
@@ -233,7 +233,7 @@ ALTER SEQUENCE "status_statusID_seq" OWNED BY status.status_id;
 CREATE TABLE type (
     type_id integer NOT NULL,
     type_nm character varying,
-    org_id bigint
+    regime_id bigint
 );
 
 
@@ -330,10 +330,10 @@ ALTER TABLE ONLY licence_data ALTER COLUMN licence_data_id SET DEFAULT nextval('
 
 --
 -- TOC entry 2358 (class 2604 OID 24645)
--- Name: org org_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: org regime_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY org ALTER COLUMN org_id SET DEFAULT nextval('"org_orgID_seq1"'::regclass);
+ALTER TABLE ONLY org ALTER COLUMN regime_id SET DEFAULT nextval('"org_orgID_seq1"'::regclass);
 
 
 --
@@ -561,7 +561,7 @@ ALTER TABLE ONLY licence_data
 --
 
 ALTER TABLE ONLY org
-    ADD CONSTRAINT "orgID" PRIMARY KEY (org_id);
+    ADD CONSTRAINT "orgID" PRIMARY KEY (regime_id);
 
 
 --
@@ -611,11 +611,11 @@ ALTER TABLE ONLY licence_data
 
 --
 -- TOC entry 2376 (class 2606 OID 32812)
--- Name: licence org_id_constraint; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: licence regime_id_constraint; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY licence
-    ADD CONSTRAINT org_id_constraint FOREIGN KEY (licence_org_id) REFERENCES org(org_id);
+    ADD CONSTRAINT regime_id_constraint FOREIGN KEY (licence_regime_id) REFERENCES org(regime_id);
 
 
 --
@@ -638,11 +638,11 @@ ALTER TABLE ONLY type_fields
 
 --
 -- TOC entry 2378 (class 2606 OID 32822)
--- Name: type type_org_id_constraint; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: type type_regime_id_constraint; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY type
-    ADD CONSTRAINT type_org_id_constraint FOREIGN KEY (org_id) REFERENCES org(org_id);
+    ADD CONSTRAINT type_regime_id_constraint FOREIGN KEY (regime_id) REFERENCES org(regime_id);
 
 
 --

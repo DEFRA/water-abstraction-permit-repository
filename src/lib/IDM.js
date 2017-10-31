@@ -47,6 +47,8 @@ function updatePassword (request, reply) {
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
     var query = `update idm.users set password = $1, reset_guid = NULL where user_name = $2`
     var queryParams = [hashedPW, request.payload.username]
+    console.log(query)
+    console.log(queryParams)
     DB.query(query, queryParams)
       .then((res) => {
         //res.err = null if no error
@@ -63,9 +65,13 @@ function changePasswordWithResetLink (request, reply) {
     .resetGuid (string)
     .password (string)
   **/
+    console.log(request.payload)
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
+
     var query = `update idm.users set password = $1, reset_guid = NULL where reset_guid = $2`
     var queryParams = [hashedPW, request.payload.resetGuid]
+    console.log(query)
+    console.log(queryParams)
     DB.query(query, queryParams)
       .then((res) => {
         reply(res)

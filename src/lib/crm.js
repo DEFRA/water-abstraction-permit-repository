@@ -47,8 +47,13 @@ function getEntity(request, reply) {
   console.log(queryParams)
   DB.query(query, queryParams)
     .then((res) => {
-      responseData.entity = res.data;
-      var entityId=res.data[0].entity_id
+      if(res.data[0]){
+        responseData.entity = res.data;
+        var entityId=res.data[0].entity_id
+      } else {
+        responseData.entity = res.data;
+        var entityId=0
+      }
       console.log(res.data)
       //get upstream entities
       var query = `
@@ -74,9 +79,14 @@ where a.entity_down_id=$1
         select * from crm.document_header where owner_entity_id=$1
       `
           var queryParams = [entityId]
+          console.log(query)
+          console.log(queryParams)
           DB.query(query, queryParams)
             .then((res) => {
+              console.log('document headers')
+              console.log(res)
               responseData.documentAssociations = res.data;
+              console.log(responseData)
               return reply({
                 error: res.error,
                 data: responseData

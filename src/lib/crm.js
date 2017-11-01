@@ -337,7 +337,6 @@ function deleteDocumentHeader(request, reply) {
 }
 
 module.exports = {
-
   getAllEntities: getAllEntities,
   createNewEntity: createNewEntity,
   getEntity: getEntity,

@@ -87,18 +87,37 @@ function resetPassword (request, reply) {
   **/
   var resetGuid = Helpers.createGUID()
   console.log('resetGuid: '  + resetGuid)
+
+  //get the user info
+  var query = `select * from idm.users where user_name = $1`
+  var queryParams = [request.payload.emailAddress]
+  console.log(query)
+  console.log(queryParams)
+  DB.query(query, queryParams)
+    .then((res) => {
+      var firstname;
+/**
+console.log((res.data[0].user_data))
+console.log(JSON.parse(res.data[0].user_data).name)
+**/
+      try{
+        firstname=JSON.parse(res.data[0].user_data).firstname
+      }catch(e){
+        firstname='(User)'
+      }
+
+
   var query = `update idm.users set reset_guid = $1 where user_name = $2`
   var queryParams = [resetGuid, request.payload.emailAddress]
   DB.query(query, queryParams)
     .then((res) => {
       console.log(res)
 
-//waterabstraction-2232718f-fc58-4413-9e41-135496648da7-560a8a5d-0db4-42c9-946e-dbef158763e5
-      //process.env.NOTIFY_KEY
+
       var NotifyClient = require('notifications-node-client').NotifyClient,
 	     notifyClient = new NotifyClient(process.env.NOTIFY_KEY);
        var templateId='78261167-9e03-41a8-9292-cbed017d795a'
-       var personalisation={firstname:'*Firstname Here*','resetguid':resetGuid}
+       var personalisation={firstname:firstname,'resetguid':resetGuid}
        var emailAddress=request.payload.emailAddress
        notifyClient
        	.sendEmail(templateId, emailAddress, personalisation)
@@ -109,6 +128,11 @@ function resetPassword (request, reply) {
 
       reply(res)
     })
+
+  }).catch((e)=>{
+    console.log(e)
+  })
+
 }
 
 function getResetPasswordGuid (request,reply) {

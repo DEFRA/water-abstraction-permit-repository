@@ -1,14 +1,14 @@
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./db')
-const Tactical = require('./tactical')
+
 
 
 const dbSchema = {
   schemaName: 'permit',
   tables: {
     systemFields: 'field',
-    organisations: 'org',
+    regimes: 'regime',
     licenceHeader: 'licence',
     licenceData: 'licence_data',
     licenceType: 'type',
@@ -47,9 +47,9 @@ function getFields (request, reply) {
     .then((res) => { reply(res) })
 }
 
-function listOrgs (request, reply) {
-// list all orgs
-  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.organisations}`
+function listregimes (request, reply) {
+// list all regimes
+  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.regimes}`
   var queryParams = []
 
   DB.query(query, queryParams)
@@ -58,45 +58,45 @@ function listOrgs (request, reply) {
   })
 }
 
-function createOrg (request, reply) {
-  // create new org
-  var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.organisations} values ($1) RETURNING org_id`
-  var queryParams = [request.params.org_nm]
+function createRegime (request, reply) {
+  // create new regime
+  var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.regimes} values ($1) RETURNING regime_id`
+  var queryParams = [request.params.regime_nm]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
   })
 }
 
-function getOrg (request, reply) {
+function getRegime (request, reply) {
 // return specified org
-  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.organisations} where org_id = $1`
-  var queryParams = [request.params.org_id]
+  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.regimes} where regime_id = $1`
+  var queryParams = [request.params.regime_id]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
   })
 }
 
-function putOrg (request, reply) {
+function putRegime (request, reply) {
 // update specified org
-  var query = `update ${dbSchema.schemaName}.${dbSchema.tables.organisations} set org_nm = $2 where org_id = $1`
-  var queryParams = [request.params.org_id, request.payload.org_nm]
+  var query = `update ${dbSchema.schemaName}.${dbSchema.tables.regimes} set regime_nm = $2 where regime_id = $1`
+  var queryParams = [request.params.regime_id, request.payload.regime_nm]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
   })
 }
 
-function deleteOrg (request, reply) {
+function deleteRegime (request, reply) {
   // delete specified org]
   reply('org delete not in place')
 }
 
 function listLicenceTypes (request, reply) {
 // return all licence types for org
-  var query = `SELECT type_nm,type_id from ${dbSchema.schemaName}.${dbSchema.tables.licenceType} where org_id=$1`
-  var queryParams = [request.params.org_id]
+  var query = `SELECT type_nm,type_id from ${dbSchema.schemaName}.${dbSchema.tables.licenceType} where regime_id=$1`
+  var queryParams = [request.params.regime_id]
 
   DB.query(query, queryParams)
   .then((res) => {
@@ -107,8 +107,8 @@ function listLicenceTypes (request, reply) {
 function createLicenceType (request, reply) {
 // return all licence types for org
 
-  var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceType} (type_nm,org_id) values ($1,$2) RETURNING type_id`
-  var queryParams = [request.payload.type_nm, request.params.org_id]
+  var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceType} (type_nm,regime_id) values ($1,$2) RETURNING type_id`
+  var queryParams = [request.payload.type_nm, request.params.regime_id]
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -135,7 +135,7 @@ function getLicenceType (request, reply) {
 }
 
 function getlicenceTypeFields (request, reply) {
-// list all orgs
+// list all regimes
 
   var query = `SELECT tf.*,f.field_nm from ${dbSchema.schemaName}.${dbSchema.tables.licenceDef} tf
     join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id=f.field_id
@@ -209,10 +209,10 @@ function createlicenceTypeField (request, reply) {
 
 function listLicences (request, reply) {
 // return licence summaries for org & type
-  var queryParams = [request.params.org_id, request.params.type_id]
+  var queryParams = [request.params.regime_id, request.params.type_id]
   var query = `SELECT licence_id, licence_ref, licence_search_key
   from ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
-  where licence_org_id=$1 and licence_type_id=$2`
+  where licence_regime_id=$1 and licence_type_id=$2`
   DB.query(query, queryParams)
   .then((res) => {
     reply(res)
@@ -237,15 +237,15 @@ function createLicence (request, reply) {
     reject(['licence_ref must be defined'])
   } else if (typeof request.params.type_id === 'undefined') {
     reject(['licence_type_id must be defined'])
-  } else if (typeof request.params.org_id === 'undefined') {
-    reject(['licence_org_id must be defined'])
+  } else if (typeof request.params.regime_id === 'undefined') {
+    reject(['licence_regime_id must be defined'])
   } else {
 //    console.log('primary fields validated')
-    // 2. get secondary attributes by licence_type_id (and verify licence_org_id is correct for licence_type_id)
+    // 2. get secondary attributes by licence_type_id (and verify licence_regime_id is correct for licence_type_id)
 
-    var queryParams = [request.params.org_id, request.params.type_id]
+    var queryParams = [request.params.regime_id, request.params.type_id]
 
-    // this query will only return records where type_id is defined for org_id
+    // this query will only return records where type_id is defined for regime_id
     var query = `SELECT array_to_json(array_agg(attributes)) as attributeData
     from (
       select
@@ -253,7 +253,7 @@ function createLicence (request, reply) {
       from ${dbSchema.schemaName}.type_fields tf
       inner join ${dbSchema.schemaName}.field f on tf.field_id = f.field_id
       inner join ${dbSchema.schemaName}.type t on tf.type_id = t.type_id
-          where tf.type_id=$2 and t.org_id=$1
+          where tf.type_id=$2 and t.regime_id=$1
       ) attributes
           `
 
@@ -301,11 +301,11 @@ function createLicence (request, reply) {
 
       query = `
         INSERT INTO ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
-        (licence_org_id,licence_type_id,licence_ref,licence_status_id,licence_search_key,licence_start_dt,licence_end_dt)
+        (licence_regime_id,licence_type_id,licence_ref,licence_status_id,licence_search_key,licence_start_dt,licence_end_dt)
         VALUES
         ($1,$2,$3,$4,$5,to_date($6::text,'YYYY/MM/DD'),to_date($7::text,'YYYY/MM/DD'))
         RETURNING licence_id`
-      var queryParams = [request.params.org_id, request.params.type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
+      var queryParams = [request.params.regime_id, request.params.type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
       console.log(query)
 
@@ -357,7 +357,7 @@ function createLicence (request, reply) {
 
 function getLicence (request, reply) {
 // return specific licence for org & type
-  var queryParams = [request.params.org_id, request.params.type_id, request.params.licence_id]
+  var queryParams = [request.params.regime_id, request.params.type_id, request.params.licence_id]
   // swanky query to get the licence data
   var query = `
   select l.*,a.* from
@@ -377,7 +377,7 @@ function getLicence (request, reply) {
         ) attributes
 	group by licence_id
 ) a on a.licence_id = l.licence_id
-where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.params.licence_id}
+where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.params.licence_id}
 `
 
   DB.query(query, queryParams)
@@ -392,7 +392,7 @@ where l.licence_org_id = $1 and l.licence_type_id=$2 and l.licence_id=${request.
       licenceData.licence_end_dt = res.data[0].licence_end_dt
       licenceData.licence_status_id = res.data[0].licence_status_id
       licenceData.licence_type_id = res.data[0].licence_type_id
-      licenceData.licence_org_id = res.data[0].licence_org_id
+      licenceData.licence_regime_id = res.data[0].licence_regime_id
       licenceData.attributes = {}
       licenceData.attributeDefinitions = {}
 
@@ -452,14 +452,14 @@ function putLicence (request, reply) {
     reject(['licence_ref must be defined'])
   } else if (typeof request.params.type_id === 'undefined') {
     reject(['licence_type_id must be defined'])
-  } else if (typeof request.params.org_id === 'undefined') {
-    reject(['licence_org_id must be defined'])
+  } else if (typeof request.params.regime_id === 'undefined') {
+    reject(['licence_regime_id must be defined'])
   } else {
-      // 2. get secondary attributes by licence_type_id (and verify licence_org_id is correct for licence_type_id)
+      // 2. get secondary attributes by licence_type_id (and verify licence_regime_id is correct for licence_type_id)
 
-    var queryParams = [request.params.org_id, request.params.type_id]
+    var queryParams = [request.params.regime_id, request.params.type_id]
 
-      // this query will only return records where type_id is defined for org_id
+      // this query will only return records where type_id is defined for regime_id
     var query = `SELECT array_to_json(array_agg(attributes)) as attributeData
       from (
         select
@@ -467,7 +467,7 @@ function putLicence (request, reply) {
         from ${dbSchema.schemaName}.type_fields tf
         inner join ${dbSchema.schemaName}.field f on tf.field_id = f.field_id
         inner join ${dbSchema.schemaName}.type t on tf.type_id = t.type_id
-            where tf.type_id=$2 and t.org_id=$1
+            where tf.type_id=$2 and t.regime_id=$1
         ) attributes
             `
 
@@ -520,9 +520,9 @@ function putLicence (request, reply) {
           licence_search_key = $3,
           licence_start_dt =$4,
           licence_end_dt =$5
-          where licence_id= $6 and licence_org_id=$7 and licence_type_id=$8`
+          where licence_id= $6 and licence_regime_id=$7 and licence_type_id=$8`
 
-        var queryParams = [payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt, request.params.licence_id, request.params.org_id, request.params.type_id]
+        var queryParams = [payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt, request.params.licence_id, request.params.regime_id, request.params.type_id]
 
         DB.query(query, queryParams)
     .then((res) => {
@@ -621,7 +621,7 @@ function useShortcode (request, reply) {
   console.log('sessioncookie')
   console.log(request.payload.sessionCookie)
 
-  var userData=Tactical.decryptToken(request.payload.sessionCookie)
+  var userData=helpers.decryptToken(request.payload.sessionCookie)
 
 
   query = `
@@ -727,7 +727,7 @@ function licenceUsers (licence_id, cb) {
 
 module.exports = {
   system: {getFields: getFields, getToken: getToken},
-  org: {list: listOrgs, create: createOrg, delete: deleteOrg, get: getOrg, update: putOrg},
+  regime: {list: listregimes, create: createRegime, delete: deleteRegime, get: getRegime, update: putRegime},
   licencetype: {
     list: listLicenceTypes,
     create: createLicenceType,

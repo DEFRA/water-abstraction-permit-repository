@@ -92,6 +92,21 @@ function resetPassword (request, reply) {
   DB.query(query, queryParams)
     .then((res) => {
       console.log(res)
+
+//waterabstraction-2232718f-fc58-4413-9e41-135496648da7-560a8a5d-0db4-42c9-946e-dbef158763e5
+      //process.env.NOTIFY_KEY
+      var NotifyClient = require('notifications-node-client').NotifyClient,
+	     notifyClient = new NotifyClient(process.env.NOTIFY_KEY);
+       var templateId='78261167-9e03-41a8-9292-cbed017d795a'
+       var personalisation={firstname:'*Firstname Here*','resetguid':resetGuid}
+       var emailAddress=request.payload.emailAddress
+       notifyClient
+       	.sendEmail(templateId, emailAddress, personalisation)
+           .then(response => console.log(response))
+           .catch(err => console.error(err))
+       ;
+
+
       reply(res)
     })
 }

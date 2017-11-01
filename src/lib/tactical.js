@@ -1,7 +1,7 @@
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./db')
-const IDM = require('./IDM')
+//const IDM = require('./IDM')
 const Boom = require('boom')
 
 /**
@@ -10,21 +10,6 @@ this file provides tactical functions that may not exist in the final product
 
 
 
-function encryptToken (data) {
-  var key = process.env.JWT_SECRET
-  var JWT = require('jsonwebtoken')
-  var token = JWT.sign(data, key)
-  return(token)
-}
-
-function decryptToken(token){
-  var key = process.env.JWT_SECRET
-  var JWT = require('jsonwebtoken')
-  var data = JWT.decode(token, key)
-  console.log('token decoded')
-  console.log(data)
-  return(data)
-}
 
 
 function setUp(request, reply){
@@ -158,14 +143,14 @@ function getUserLicences (user, cb) {
         && res.data[0].licence_id==0){
 
         var query = `select
-        o.org_nm,t.type_nm,l.* from permit.licence l
-        join permit.org o on l.licence_org_id=o.org_id
+        o.regime_nm,t.type_nm,l.* from permit.licence l
+        join permit.org o on l.licence_regime_id=o.regime_id
         join permit.type t on l.licence_type_id = t.type_id
         `
         var queryParams = []
         DB.query(query, queryParams)
           .then((res) => {
-            console.log('response from o.org_nm,t.type_nm,l.* from permit.licence l')
+            console.log('response from o.regime_nm,t.type_nm,l.* from permit.licence l')
               cb(res)
         })
 
@@ -181,8 +166,8 @@ function getUserLicences (user, cb) {
         console.log('availableLicences')
         console.log(availableLicences)
         var query = `select
-        o.org_nm,t.type_nm,l.* from permit.licence l
-        join permit.org o on l.licence_org_id=o.org_id
+        o.regime_nm,t.type_nm,l.* from permit.licence l
+        join permit.org o on l.licence_regime_id=o.regime_id
         join permit.type t on l.licence_type_id = t.type_id where l.licence_id in (${availableLicences.join(",")})`
         var queryParams = [];
 
@@ -215,6 +200,7 @@ function getUserLicences (user, cb) {
 
 
 function login (user_name,password,cb) {
+/**
   IDM.loginAdministrator(user_name,password,(err,res)=>{
       console.log(err);
       console.log(res);
@@ -224,6 +210,8 @@ function login (user_name,password,cb) {
         cb(true,null)
       }
     })
+**/
+cb(true,'should be called via idm service')
 }
 
 function generateSearchKeys (request,reply) {
@@ -278,7 +266,5 @@ module.exports = {
     CRM:{getUserLicences:userLicencesWrapper},
     setup:setUp,
     getUserLicences:getUserLicences,
-    generateSearchKeys:generateSearchKeys,
-    encryptToken:encryptToken,
-    decryptToken:decryptToken
+    generateSearchKeys:generateSearchKeys
 }

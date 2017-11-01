@@ -12,7 +12,7 @@
   <div class="grid-row">
     <div class="column-full">
       <h1 class="heading-xlarge">
-        Permit Repository - Organisation {{org_id}} Licence Type {{type_id}}
+        Permit Repository - regime {{regime_id}} Licence Type {{type_id}}
       </h1>
 
 
@@ -47,7 +47,7 @@
           {{/each}}
           {{/each}}
 
-          <form method="post" action="/admin/organisation/{{org_id}}/licencetypes/{{type_id}}/field">
+          <form method="post" action="/admin/regime/{{regime_id}}/licencetypes/{{type_id}}/field">
             <tr>
               <td>&nbsp;</td>
               <td>Add Field:</td>
@@ -82,14 +82,14 @@ Sample Post to create licence of this type
 </h2>
 
 <pre>
-  POST /API/1.0/org/{{org_id}}/licencetype/{{type_id}}/licence
+  POST /API/1.0/org/{{regime_id}}/licencetype/{{type_id}}/licence
   {
     "licence_ref":"LICENCE REF",
     "licence_start_dt":"2017-01-01T00:00:00.000Z",
     "licence_end_dt":"2018-01-01T00:00:00.000Z",
     "licence_status_id":"1",
     "licence_type_id":"{{type_id}}",
-    "licence_org_id":"{{org_id}}",
+    "licence_regime_id":"{{regime_id}}",
     "attributes":{
       {{#each this.data}}
       {{#each this.attributedata}}

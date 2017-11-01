@@ -1,3 +1,4 @@
+//TODO: Replace all API calls with http API calls to water service
 const httpRequest = require('request')
 const Helpers = require('./helpers')
 const View = require('./view')
@@ -13,71 +14,108 @@ function index (request, reply) {
   reply.view('water/admin/index', viewContext)
 }
 
+function permitIndex (request, reply) {
+  //view the admin page
+  var viewContext = View.contextDefaults(request)
+  viewContext.pageTitle = 'GOV.UK - Admin'
+  console.log('*** adminIndex ***')
+  reply.view('water/admin/permitIndex', viewContext)
+}
+
+function idmIndex (request, reply) {
+  //view the admin page
+  var viewContext = View.contextDefaults(request)
+  viewContext.pageTitle = 'GOV.UK - Admin'
+  console.log('*** adminIndex ***')
+  reply.view('water/admin/idmIndex', viewContext)
+}
+
+function waterIndex (request, reply) {
+  //view the admin page
+  var viewContext = View.contextDefaults(request)
+  viewContext.pageTitle = 'GOV.UK - Admin'
+  console.log('*** adminIndex ***')
+  reply.view('water/admin/waterIndex', viewContext)
+}
+
 function fields (request, reply) {
   //view the system fields page
   var viewContext = {}
-  var uri = request.connection.info.protocol + '://' + request.info.host + '/API/1.0/field'
-  console.log(uri)
-  API.system.getFields({}, (data) => {
+  var uri = process.env.PERMIT_URI + 'API/1.0/field'
+  httpRequest(uri+'?token='+process.env.JWT_TOKEN, (error, response, body)=> {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
-    viewContext.data = data
+    viewContext.data = JSON.parse(body)
     viewContext.debug.data = viewContext.data
     console.log('*** adminIndex ***')
     reply.view('water/admin/fields', viewContext)
   })
+
 }
 
-function organisations (request, reply) {
-  //view the organisations page
-  API.org.list(request, (data) => {
+function regime (request, reply) {
+  //view the regimes page
+  var uri = process.env.PERMIT_URI + 'API/1.0/regime'
+  console.log(uri+'?token='+process.env.JWT_TOKEN)
+  httpRequest(uri+'?token='+process.env.JWT_TOKEN, (error, response, body) => {
     var viewContext = View.contextDefaults(request)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
-    viewContext.data = data
-    reply.view('water/admin/organisations', viewContext)
+    viewContext.data = JSON.parse(body)
+    viewContext.debug.regimes=viewContext.data
+    reply.view('water/admin/regimes', viewContext)
+
   })
+
 }
-function organisationLicenceTypes (request, reply) {
-  //view the organisation licence types page
+function regimeLicenceTypes (request, reply) {
+  //view the regime licence types page
   var viewContext = {}
-  API.licencetype.list(request, (data) => {
+
+  var uri = process.env.PERMIT_URI + 'API/1.0/regime/'+request.params.regime_id+'/licencetype'
+  console.log(uri)
+  httpRequest(uri+'?token='+process.env.JWT_TOKEN,  (error, response, body) => {
     var viewContext = View.contextDefaults(request)
+    console.log(body)
     viewContext.pageTitle = 'GOV.UK - Admin/Fields'
-    viewContext.data = data.data
-    viewContext.org_id = request.params.org_id
+    viewContext.data = JSON.parse(body).data
+    viewContext.regime_id = request.params.regime_id
     viewContext.debug.data = viewContext.data.data
-    reply.view('water/admin/organisationLicenceTypes', viewContext)
+    reply.view('water/admin/regimeLicenceTypes', viewContext)
+
   })
 }
 
-function organisationLicenceType (request, reply) {
-  //view organisation licence types page
-  var viewContext = {}
-  API.licencetype.get(request, (data) => {
-    var viewContext = View.contextDefaults(request)
-    viewContext.pageTitle = 'GOV.UK - Admin/Fields'
-    console.log(JSON.stringify(data.data))
+function regimeLicenceType (request, reply) {
+  //view regime licence types page
+  var viewContext = View.contextDefaults(request)
+  var uri = process.env.PERMIT_URI + 'API/1.0/regime/'+request.params.regime_id+'/licencetype/'+request.params.type_id
+  console.log(uri)
+  httpRequest(uri+'?token='+process.env.JWT_TOKEN,  (error, response, body) => {
+    console.log('got body')
+    console.log(body)
+    var data=JSON.parse(body)
     if (!data.data[0].attributedata) {
       data.data[0].attributedata = []
     }
 
     viewContext.debug.data = data.data
     viewContext.data = data.data
-    viewContext.org_id = request.params.org_id
+    viewContext.regime_id = request.params.regime_id
     viewContext.type_id = request.params.type_id
 
-    API.system.getFields({}, (fields) => {
-      viewContext.fields = fields.data
-      viewContext.debug.fields = fields
-//      reply(JSON.stringify(viewContext))
-      reply.view('water/admin/organisationLicenceType', viewContext)
+    httpRequest(uri+'?token='+process.env.JWT_TOKEN, (error, response, body)=> {
+      viewContext.fields = JSON.parse(body)
+      viewContext.debug.fields = viewContext.fields
+      reply.view('water/admin/regimeLicenceType', viewContext)
     })
   })
 }
 
-function addFieldToOrganisationLicenceType (request, reply) {
+//TODO: replace with http call to API and use 301...
+
+function addFieldToregimeLicenceType (request, reply) {
   API.licencetype.createField(request, (data) => {
-    reply('<script>location.href=\'/admin/organisation/' + request.params.org_id + '/licencetypes/' + request.params.type_id + '/\'</script>')
+    reply('<script>location.href=\'/admin/regime/' + request.params.regime_id + '/licencetypes/' + request.params.type_id + '/\'</script>')
   })
 }
 
@@ -156,7 +194,7 @@ function crmEntities(request,reply){
   var viewContext = View.contextDefaults(request)
   viewContext.pageTitle = 'GOV.UK - Admin'
 
-  URI='http://127.0.0.1:8001/crm/1.0/entity?entity_type='+request.query.entity_type+'&token='+process.env.JWT_TOKEN
+  URI=process.env.CRM_URI+'/1.0/entity?entity_type='+request.query.entity_type+'&token='+process.env.JWT_TOKEN
     httpRequest(URI, function (error, response, body) {
       var data = JSON.parse(body)
       viewContext.entities=data.data
@@ -177,7 +215,7 @@ function crmEntity(request,reply){
   console.log('get associations')
   console.log('get documents')
 
-  URI='http://127.0.0.1:8001/crm/1.0/entity/'+request.params.entity_id+'?token='+process.env.JWT_TOKEN
+  URI=process.env.CRM_URI+'/1.0/entity/'+request.params.entity_id+'?token='+process.env.JWT_TOKEN
     httpRequest(URI, function (error, response, body) {
       console.log('response from '+URI)
       console.log(body)
@@ -221,7 +259,7 @@ function crmDoNewEntity(request,reply){
   data.entity_type=request.payload.entity_type;
   data.entity_definition=request.payload.entity_definition;
   var method='post'
-      var URI='http://127.0.0.1:8001/crm/1.0/entity'
+      var URI=process.env.CRM_URI+'/1.0/entity'
     httpRequest({
               method: method,
               url: URI + '?token=' + process.env.JWT_TOKEN,
@@ -236,7 +274,7 @@ function crmDoNewEntity(request,reply){
 }
 
 function crmAllEntitiesJSON(request,reply){
-  URI='http://127.0.0.1:8001/crm/1.0/entity?token='+process.env.JWT_TOKEN
+  URI=process.env.CRM_URI+'/1.0/entity?token='+process.env.JWT_TOKEN
     httpRequest(URI, function (error, response, body) {
       console.log('response from '+URI)
       console.log(body)
@@ -268,7 +306,7 @@ function crmAssociateEntity(request,reply){
     data.inheritable=''
   }
   console.log(data)
-  var URI='http://127.0.0.1:8001/crm/1.0/entityAssociation'
+  var URI=process.env.CRM_URI+'/1.0/entityAssociation'
   var method='post'
     httpRequest({
               method: method,
@@ -289,10 +327,10 @@ function crmAssociateEntity(request,reply){
 module.exports = {
   index: index,
   fields: fields,
-  organisations: organisations,
-  organisationLicenceTypes: organisationLicenceTypes,
-  organisationLicenceType: organisationLicenceType,
-  addFieldToOrganisationLicenceType: addFieldToOrganisationLicenceType,
+  regimes: regime,
+  regimeLicenceTypes: regimeLicenceTypes,
+  regimeLicenceType: regimeLicenceType,
+  addFieldToregimeLicenceType: addFieldToregimeLicenceType,
   findlicence:findlicenceform,
   doFindlicence:doFindlicence,
   viewlicence:viewLicence,
@@ -308,5 +346,8 @@ module.exports = {
   crmDoNewEntity:crmDoNewEntity,
 
   crmAllEntitiesJSON:crmAllEntitiesJSON,
-  crmAssociateEntity:crmAssociateEntity
+  crmAssociateEntity:crmAssociateEntity,
+  permitIndex:permitIndex,
+  idmIndex:idmIndex,
+  waterIndex:waterIndex
 }

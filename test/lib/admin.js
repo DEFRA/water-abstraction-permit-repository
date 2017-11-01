@@ -24,10 +24,10 @@ var savedData={}
 
 
 // test system fields
-describe('API.organisations', () => {
+describe('API.regimes', () => {
   it('should return an object', (done) => {
         // make API call to self to test functionality end-to-end
-        API.organisations({}, (response) => {
+        API.regimes({}, (response) => {
           expect(response).to.exist()
           expect(response).to.be.a.object()
           done()

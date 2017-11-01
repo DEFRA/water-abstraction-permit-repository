@@ -48,9 +48,9 @@ The secret key used to encrypt tokens
 
 ## On-Boarding
 
-TODO: How does a new department/organisation set up the permit repository
+TODO: How does a new department/regime set up the permit repository
 
-TODO: How does a department/organisation create a new licence/permit type
+TODO: How does a department/regime create a new licence/permit type
 
 ## Security
 
@@ -64,7 +64,7 @@ The following RESTful endpoints are exposed:
 
 ### GET /API/1.0/org
 
-Returns a list of available organisations
+Returns a list of available regimes
 
 #### Example Response
 
@@ -73,8 +73,8 @@ Returns a list of available organisations
     "error": null,
     "data": [
         {
-            "org_nm": "Water Licencing",
-            "org_id": "1"
+            "regime_nm": "Water Licencing",
+            "regime_id": "1"
         }
     ]
 }
@@ -82,13 +82,13 @@ Returns a list of available organisations
 
 ### POST /API/1.0/org
 
-Create a new organisation
+Create a new regime
 
 #### Example Payload
 
 ```
 {
-            "org_nm": "New Org 1"
+            "regime_nm": "New Org 1"
 }
 ```
 
@@ -99,7 +99,7 @@ Create a new organisation
     "error": null,
     "data": [
         {
-            "org_id": "5"
+            "regime_id": "5"
         }
     ]
 }
@@ -130,7 +130,7 @@ Returns a list of available system level datatypes
 
 ### GET /API/1.0/org/[id]
 
-Returns organisation details
+Returns regime details
 
 #### Example Response
 
@@ -139,8 +139,8 @@ Returns organisation details
     "error": null,
     "data": [
         {
-            "org_nm": "Example Org",
-            "org_id": "1"
+            "regime_nm": "Example Org",
+            "regime_id": "1"
         }
     ]
 }
@@ -148,7 +148,7 @@ Returns organisation details
 
 ### GET /API/1.0/org/[org id]/licencetype
 
-Returns list of licence types for organisation [org id]
+Returns list of licence types for regime [org id]
 
 #### Example Response
 
@@ -166,7 +166,7 @@ Returns list of licence types for organisation [org id]
 
 ### POST /API/1.0/org/[org id]/licencetype
 
-Create a licence type for organisation [org id]
+Create a licence type for regime [org id]
 
 #### Example request
 
@@ -189,7 +189,7 @@ Create a licence type for organisation [org id]
 
 ### POST /API/1.0/[org id]/1/licencetype/[type id]/field
 
-Add a single field to licence type [type id] for organisation [org id].
+Add a single field to licence type [type id] for regime [org id].
 
 #### Example request
 
@@ -211,7 +211,7 @@ Add a single field to licence type [type id] for organisation [org id].
 }
 ```
 
-Add a multiple fields to licence type [type id] for organisation [org id].
+Add a multiple fields to licence type [type id] for regime [org id].
 
 #### Example request
 
@@ -246,7 +246,7 @@ Add a multiple fields to licence type [type id] for organisation [org id].
 
 ### GET /API/1.0/org/[org id]/licencetype/[type id]
 
-Returns custom attribute definition of a licence of type [type id] for organisation [org id]
+Returns custom attribute definition of a licence of type [type id] for regime [org id]
 
 #### Example Response
 
@@ -276,7 +276,7 @@ Returns custom attribute definition of a licence of type [type id] for organisat
 
 ### GET /API/1.0/org/[org id]/licencetype/[type id]/licence
 
-Returns list of licences of type [type id] for organisation [org id]
+Returns list of licences of type [type id] for regime [org id]
 
 #### Example Response
 
@@ -294,7 +294,7 @@ Returns list of licences of type [type id] for organisation [org id]
 
 ### POST /API/1.0/org/[org id]/licencetype/[type id]/licence
 
-Create a licence of type [type id] for organisation [org id]
+Create a licence of type [type id] for regime [org id]
 
 #### Example Request
 
@@ -320,7 +320,7 @@ Create a licence of type [type id] for organisation [org id]
 
 ### PUT /API/1.0/org/[org id]/licencetype/[type id]/licence/[licence id]
 
-Update a licence with ID [licence id] of type [type id] for organisation [org id]
+Update a licence with ID [licence id] of type [type id] for regime [org id]
 
 #### Example request
 
@@ -351,7 +351,7 @@ Update a licence with ID [licence id] of type [type id] for organisation [org id
 
 ### GET /API/1.0/org/[org id]/licencetype/[type id]/licence/[licence id]
 
-Returns detail of licence [licence id] of type [type id] for organisation [org id]
+Returns detail of licence [licence id] of type [type id] for regime [org id]
 
 #### Example Response
 
@@ -363,7 +363,7 @@ Returns detail of licence [licence id] of type [type id] for organisation [org i
     "licence_end_dt": "2018-01-01T00:00:00.000Z",
     "licence_status_id": "1",
     "licence_type_id": "1",
-    "licence_org_id": "1",
+    "licence_regime_id": "1",
     "attributes": {
         "Attribute1": "Attribute value"
     }

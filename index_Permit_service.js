@@ -1,13 +1,14 @@
+//provides permit API
 require('dotenv').config()
 
 const Hapi = require('hapi')
 
-const Tactical = require('./src/lib/tactical.js')
+
 const serverOptions = {connections: {router: {stripTrailingSlash: true}}}
 const server = new Hapi.Server(serverOptions)
 const Helpers = require('./src/lib/helpers.js')
 
-server.connection({ port: process.env.PORT || 8000 })
+server.connection({ port: process.env.PERMIT_PORT || 8000 })
 
 if (process.env.DATABASE_URL) {
   // get heroku db params from env vars
@@ -61,23 +62,7 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
 
 
 
-  function validateBasic (request, user_name, password, callback) {
-    // basic login for admin function UI
 
-    console.log(user_name)
-    console.log(password)
-
-    console.log(Tactical)
-
-
-    const user = Tactical.login(user_name, password, (error, user) => {
-      if (error) {
-        return callback(null, false)
-      } else {
-        callback(null, true, { id: user.user_id, name: user.user_name })
-      }
-    })
-  }
 
   function validateJWT(decoded, request, callback){
     // bring your own validation function
@@ -97,7 +82,7 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
     }
 
 
-  server.auth.strategy('simple', 'basic', { validateFunc: validateBasic })
+
 
   server.auth.strategy('jwt', 'jwt',
     { key: process.env.JWT_SECRET,          // Never Share your secret key
@@ -113,10 +98,9 @@ server.register([require('hapi-auth-basic'), require('hapi-auth-jwt2'), require(
   // load routes
   server.route(require('./src/routes/public'))
   server.route(require('./src/routes/API'))
-  server.route(require('./src/routes/admin'))
-  server.route(require('./src/routes/tactical'))
-  server.route(require('./src/routes/idm_mock'))
-  server.route(require('./src/routes/crm_tactical'))
+//  server.route(require('./src/routes/admin'))
+
+
 })
 
 // Start the server

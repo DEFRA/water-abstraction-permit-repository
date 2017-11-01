@@ -4,8 +4,9 @@ const DB = require('./db')
 
 
 
-function loginError(){
+function loginError(request,reply){
   reply({user_id:null,err:'Unknown user name or password'}).code(401)
+
 }
 
 
@@ -24,7 +25,7 @@ function createUser (request,reply) {
     .user_data (arbitrary object)
   **/
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
-    var query = `insert into permit.users (user_name,password,admin,user_data)
+    var query = `insert into idm.users (user_name,password,admin,user_data)
     values ($1,$2,$3,$4)`
     var queryParams = [request.payload.username,hashedPW,request.payload.admin,JSON.stringify(request.payload.user_data)]
     DB.query(query, queryParams)
@@ -44,8 +45,10 @@ function updatePassword (request, reply) {
     .password (string)
   **/
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
-    var query = `update permit.users set password = $1, reset_guid = NULL where user_name = $2`
+    var query = `update idm.users set password = $1, reset_guid = NULL where user_name = $2`
     var queryParams = [hashedPW, request.payload.username]
+    console.log(query)
+    console.log(queryParams)
     DB.query(query, queryParams)
       .then((res) => {
         //res.err = null if no error
@@ -62,9 +65,13 @@ function changePasswordWithResetLink (request, reply) {
     .resetGuid (string)
     .password (string)
   **/
+    console.log(request.payload)
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
-    var query = `update permit.users set password = $1, reset_guid = NULL where reset_guid = $2`
+
+    var query = `update idm.users set password = $1, reset_guid = NULL where reset_guid = $2`
     var queryParams = [hashedPW, request.payload.resetGuid]
+    console.log(query)
+    console.log(queryParams)
     DB.query(query, queryParams)
       .then((res) => {
         reply(res)
@@ -80,7 +87,7 @@ function resetPassword (request, reply) {
   **/
   var resetGuid = Helpers.createGUID()
   console.log('resetGuid: '  + resetGuid)
-  var query = `update permit.users set reset_guid = $1 where user_name = $2`
+  var query = `update idm.users set reset_guid = $1 where user_name = $2`
   var queryParams = [resetGuid, request.payload.emailAddress]
   DB.query(query, queryParams)
     .then((res) => {
@@ -95,7 +102,7 @@ function getResetPasswordGuid (request,reply) {
   payload
     .emailAddress (string)
   **/
-  var query = `select reset_guid from permit.users where user_name = $1`
+  var query = `select reset_guid from idm.users where user_name = $1`
   var queryParams = [request.query.emailAddress]
   DB.query(query, queryParams)
     .then((res) => {
@@ -110,7 +117,35 @@ function getResetPasswordGuid (request,reply) {
 }
 
 function loginUser(request,reply){
-    var query = `select user_id,password from permit.users where user_name=$1`
+    console.log(request.payload)
+    var query = `select user_id,password from idm.users where user_name=$1`
+    var queryParams = [request.payload.user_name]
+    console.log(query)
+    console.log(queryParams)
+
+    console.log(request.payload)
+    DB.query(query, queryParams)
+      .then((UserRes) => {
+        console.log('UserRes')
+        console.log(UserRes)
+        if(UserRes.data[0]){
+        Helpers.compareHash(request.payload.password, UserRes.data[0].password,(err,PasswordRes)=>{
+          console.log(err)
+          console.log(PasswordRes)
+          if(PasswordRes){
+            reply({user_id:UserRes.data[0].user_id,err:null})
+          } else {
+            loginError(request,reply)
+          }
+        });
+      } else {
+        loginError(request,reply)
+      }
+      })
+}
+
+function loginAdminUser(request,reply){
+    var query = `select user_id,password from idm.users where user_name=$1 and admin=1`
     var queryParams = [request.payload.user_name]
     console.log(request.payload)
     DB.query(query, queryParams)
@@ -124,17 +159,18 @@ function loginUser(request,reply){
           if(PasswordRes){
             reply({user_id:UserRes.data[0].user_id,err:null})
           } else {
-            loginError()
+            loginError(request,reply)
           }
         });
       } else {
-        loginError()
+        loginError(request,reply)
       }
       })
 }
 
+
 function loginAdministrator(user_name,password,cb){
-    var query = `select user_id,user_name,password from permit.users where user_name=$1 and admin=1`
+    var query = `select user_id,user_name,password from idm.users where user_name=$1 and admin=1`
     var queryParams = [user_name]
     DB.query(query, queryParams)
       .then((UserRes) => {
@@ -163,7 +199,7 @@ function loginAdministrator(user_name,password,cb){
 
 
 function getUser(request,reply){
-  var query = `select * from permit.users where user_id=$1`
+  var query = `select * from idm.users where user_id=$1`
   var queryParams = [request.params.user_id]
   DB.query(query, queryParams)
     .then((res) => {
@@ -182,13 +218,12 @@ function getUser(request,reply){
 }
 
 function addLicenceToUser(request,reply){
-  var query = `insert into permit.user_licence (user_id,licence_id) values ($1,$2)`
+  var query = `insert into idm.user_licence (user_id,licence_id) values ($1,$2)`
   var queryParams = [request.params.user_id,request.payload.licence_id]
   DB.query(query, queryParams)
     .then((res) => {
       reply(res)
     })
-
 }
 
 module.exports = {
@@ -198,6 +233,7 @@ module.exports = {
   getResetPasswordGuid: getResetPasswordGuid,
   changePasswordWithResetLink: changePasswordWithResetLink,
   loginUser: loginUser,
+  loginAdminUser:loginAdminUser,
   loginAdministrator: loginAdministrator,
   getUser: getUser,
   addLicenceToUser: addLicenceToUser,

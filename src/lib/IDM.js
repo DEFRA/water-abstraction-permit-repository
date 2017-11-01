@@ -68,7 +68,7 @@ function changePasswordWithResetLink (request, reply) {
     console.log(request.payload)
   Helpers.createHash(request.payload.password, (err, hashedPW)=> {
 
-    var query = `update idm.users set password = $1, reset_guid = NULL where reset_guid = $2`
+    var query = `update idm.users set password = $1, reset_guid = NULL, reset_required = NULL where reset_guid = $2`
     var queryParams = [hashedPW, request.payload.resetGuid]
     console.log(query)
     console.log(queryParams)
@@ -157,7 +157,7 @@ function getResetPasswordGuid (request,reply) {
 
 function loginUser(request,reply){
     console.log(request.payload)
-    var query = `select user_id,password from idm.users where user_name=$1`
+    var query = `select * from idm.users where user_name=$1`
     var queryParams = [request.payload.user_name]
     console.log(query)
     console.log(queryParams)
@@ -172,7 +172,7 @@ function loginUser(request,reply){
           console.log(err)
           console.log(PasswordRes)
           if(PasswordRes){
-            reply({user_id:UserRes.data[0].user_id,err:null,reset_required:UserRes.data[0].reset_required})
+            reply({user_id:UserRes.data[0].user_id,err:null,reset_required:UserRes.data[0].reset_required,reset_guid:UserRes.data[0].reset_guid})
           } else {
             loginError(request,reply)
           }

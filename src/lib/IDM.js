@@ -172,7 +172,7 @@ function loginUser(request,reply){
           console.log(err)
           console.log(PasswordRes)
           if(PasswordRes){
-            reply({user_id:UserRes.data[0].user_id,err:null})
+            reply({user_id:UserRes.data[0].user_id,err:null,reset_required:UserRes.data[0].reset_required})
           } else {
             loginError(request,reply)
           }

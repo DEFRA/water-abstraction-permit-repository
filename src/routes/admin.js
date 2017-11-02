@@ -8,6 +8,7 @@ const Admin= require('../lib/admin')
 
 
 module.exports = [
+  { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
   { method: 'GET', path: '/admin',  handler: Admin.index , config:{auth: 'simple',description:'Get Admin UI index'}},
   { method: 'GET', path: '/admin/permit',  handler: Admin.permitIndex , config:{auth: 'simple' ,description:'UI entry point for permit repo admin'}},
   { method: 'GET', path: '/admin/idm',  handler: Admin.idmIndex , config:{auth: 'simple' ,description:'UI entry point for IDM admin'}},

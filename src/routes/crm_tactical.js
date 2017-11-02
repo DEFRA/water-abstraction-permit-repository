@@ -10,6 +10,7 @@ const CRM = require('../lib/CRM')
 
 
 module.exports = [
+  { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
   { method: 'GET', path: '/crm/' + version + '/entity', handler: CRM.getAllEntities, config:{description:'Get all entities'} },
   {  method: 'POST', path: '/crm/' + version + '/entity', handler: CRM.createNewEntity , config:{description:'Create new entity'}},
   {  method: 'GET', path: '/crm/' + version + '/entity/{entity_id}', handler: CRM.getEntity ,config:{description:'Get specified entity'}},

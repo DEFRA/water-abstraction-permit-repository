@@ -8,6 +8,7 @@ const IDM = require('../lib/IDM')
 const version = '1.0'
 
 module.exports = [
+  { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
   { method: 'POST', path: '/idm/' + version + '/user', handler: IDM.createUser , config:{description:'Create a new user in IDM'}},
   { method: 'PUT', path: '/idm/' + version + '/user', handler: IDM.updatePassword , config:{description:'TODO:'}},
   { method: 'POST', path: '/idm/' + version + '/changePassword', handler: IDM.changePasswordWithResetLink, config:{description:'TODO:'} },

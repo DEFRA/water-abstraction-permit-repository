@@ -1,6 +1,6 @@
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
-const DB = require('./db')
+const DB = require('./connectors/db')
 
 
 

@@ -129,7 +129,6 @@ function getLicenceType (request, reply) {
 
   DB.query(query, queryParams)
   .then((res) => {
-    console.log(res)
     reply(res)
   })
 }
@@ -385,7 +384,6 @@ where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${reque
     if(res.data[0]){
       // set initial licence data
       var licenceData = {}
-      console.log(licenceData)
       licenceData.licence_id = res.data[0].licence_id
       licenceData.licence_ref = res.data[0].licence_ref
       licenceData.licence_start_dt = res.data[0].licence_start_dt
@@ -406,12 +404,10 @@ where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${reque
         inner join ${dbSchema.schemaName}.${dbSchema.tables.systemFields} f on tf.field_id = f.field_id
             where tf.type_id=$1 ) attributes
             `
-      console.log(query)
-      console.log(JSON.stringify(queryParams))
 
       DB.query(query, queryParams)
       .then((attributeDefinitionQuery) => {
-        console.log(attributeDefinitionQuery)
+
 
         for (var attribute in attributeDefinitionQuery.data[0].attributedata) {
           licenceData.attributes[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = null

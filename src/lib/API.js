@@ -239,7 +239,7 @@ function createLicence (request, reply) {
   } else if (typeof request.params.regime_id === 'undefined') {
     reject(['licence_regime_id must be defined'])
   } else {
-//    console.log('primary fields validated')
+    console.log('primary fields validated')
     // 2. get secondary attributes by licence_type_id (and verify licence_regime_id is correct for licence_type_id)
 
     var queryParams = [request.params.regime_id, request.params.type_id]
@@ -256,8 +256,13 @@ function createLicence (request, reply) {
       ) attributes
           `
 
+
+console.log(query)
+console.log(queryParams)
+
     DB.query(query, queryParams)
   .then((res) => {
+    console.log(res.data)
       // build structure containing all attributes so we can verify against payload attributes...
     var returnedAttributeDefinition = res.data[0].attributedata
     var attributeDefinitions = {}
@@ -307,13 +312,15 @@ function createLicence (request, reply) {
       var queryParams = [request.params.regime_id, request.params.type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
       console.log(query)
-
+      console.log(queryParams)
       DB.query(query, queryParams)
   .then((res) => {
     if (res.error) {
-      console.log(res.err)
-      reject(err)
+      console.log("ERROR 1")
+      console.log(res)
+      reject(res)
     } else {
+      console.log('here!!!')
       var licence_id = res.data[0].licence_id
 
       var queryParams = []
@@ -340,6 +347,7 @@ function createLicence (request, reply) {
       reject(res.error)
     } else {
       console.log('no db error')
+
       reply({error: null, data: {licence_id: licence_id}})
     }
   })

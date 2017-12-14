@@ -1,13 +1,8 @@
 
-# prototype-permit-repository
+# water-abstraction-permit-repository
 
 Data agnostic permit repository project for the GOV.UK Water Abstraction service, using the HAPI engine for Node.js + the Handlebars view engine, with a Postgres datastore.
 
-## Admin Interface
-
-A simple admin UI is exposed at /admin
-
-This exposes a hierarchical view of the orgs/licence types/licences and enables additional attributes to be added to licence types
 
 ## Prerequisitites
 

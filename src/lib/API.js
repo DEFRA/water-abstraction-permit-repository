@@ -239,7 +239,7 @@ function createLicence (request, reply) {
   } else if (typeof request.params.regime_id === 'undefined') {
     reject(['licence_regime_id must be defined'])
   } else {
-//    console.log('primary fields validated')
+    console.log('primary fields validated')
     // 2. get secondary attributes by licence_type_id (and verify licence_regime_id is correct for licence_type_id)
 
     var queryParams = [request.params.regime_id, request.params.type_id]
@@ -256,8 +256,13 @@ function createLicence (request, reply) {
       ) attributes
           `
 
+
+console.log(query)
+console.log(queryParams)
+
     DB.query(query, queryParams)
   .then((res) => {
+    console.log(res.data)
       // build structure containing all attributes so we can verify against payload attributes...
     var returnedAttributeDefinition = res.data[0].attributedata
     var attributeDefinitions = {}
@@ -292,32 +297,38 @@ function createLicence (request, reply) {
         errors.push('array attribute ' + secondaryAttribute + ' was not an array')
         foundErrors = true
       } else {
-        searchKey += '|' + payload.attributes[secondaryAttribute]
+        searchKey += '|' + JSON.stringify(payload.attributes[secondaryAttribute])
       }
     }
     if (!foundErrors) {
-      // 4. insert main row
-
       query = `
         INSERT INTO ${dbSchema.schemaName}.${dbSchema.tables.licenceHeader}
         (licence_regime_id,licence_type_id,licence_ref,licence_status_id,licence_search_key,licence_start_dt,licence_end_dt)
         VALUES
         ($1,$2,$3,$4,$5,to_date($6::text,'YYYY/MM/DD'),to_date($7::text,'YYYY/MM/DD'))
-        RETURNING licence_id`
+ON conflict
+(licence_regime_id, licence_type_id, licence_ref) DO UPDATE SET
+  licence_start_dt=EXCLUDED.licence_start_dt,
+  licence_end_dt=EXCLUDED.licence_end_dt,
+  licence_search_key=EXCLUDED.licence_search_key
+  RETURNING licence_id
+`
       var queryParams = [request.params.regime_id, request.params.type_id, payload.licence_ref, 1, searchKey, payload.licence_start_dt, payload.licence_end_dt]
 
       console.log(query)
-
+      console.log(queryParams)
       DB.query(query, queryParams)
   .then((res) => {
     if (res.error) {
-      console.log(res.err)
-      reject(err)
+      console.log("ERROR 1")
+      console.log(res)
+      reject(res)
     } else {
+      console.log('here!!!')
       var licence_id = res.data[0].licence_id
 
       var queryParams = []
-      var query = ''
+      var query = `delete from ${dbSchema.schemaName}.${dbSchema.tables.licenceData} where licence_id=${licence_id};`
       for (secondaryAttribute in payload.attributes) {
         query += `insert into ${dbSchema.schemaName}.${dbSchema.tables.licenceData} values
         (
@@ -340,6 +351,7 @@ function createLicence (request, reply) {
       reject(res.error)
     } else {
       console.log('no db error')
+
       reply({error: null, data: {licence_id: licence_id}})
     }
   })

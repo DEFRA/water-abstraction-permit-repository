@@ -1,5 +1,7 @@
 
 # water-abstraction-permit-repository
+[![Maintainability](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/maintainability)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/test_coverage)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/test_coverage)
 
 Data agnostic permit repository project for the GOV.UK Water Abstraction service, using the HAPI engine for Node.js + the Handlebars view engine, with a Postgres datastore.
 

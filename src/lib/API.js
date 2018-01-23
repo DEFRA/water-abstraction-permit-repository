@@ -47,51 +47,6 @@ function getFields (request, reply) {
     .then((res) => { reply(res) })
 }
 
-function listregimes (request, reply) {
-// list all regimes
-  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.regimes}`
-  var queryParams = []
-
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function createRegime (request, reply) {
-  // create new regime
-  var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.regimes} values ($1) RETURNING regime_id`
-  var queryParams = [request.params.regime_nm]
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function getRegime (request, reply) {
-// return specified org
-  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.regimes} where regime_id = $1`
-  var queryParams = [request.params.regime_id]
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function putRegime (request, reply) {
-// update specified org
-  var query = `update ${dbSchema.schemaName}.${dbSchema.tables.regimes} set regime_nm = $2 where regime_id = $1`
-  var queryParams = [request.params.regime_id, request.payload.regime_nm]
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function deleteRegime (request, reply) {
-  // delete specified org]
-  reply('org delete not in place')
-}
 
 function listLicenceTypes (request, reply) {
 // return all licence types for org
@@ -735,7 +690,7 @@ function licenceUsers (licence_id, cb) {
 
 module.exports = {
   system: {getFields: getFields, getToken: getToken},
-  regime: {list: listregimes, create: createRegime, delete: deleteRegime, get: getRegime, update: putRegime},
+  // regime: {list: listregimes, create: createRegime, delete: deleteRegime, get: getRegime, update: putRegime},
   licencetype: {
     list: listLicenceTypes,
     create: createLicenceType,

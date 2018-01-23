@@ -8,6 +8,7 @@ const version = '1.0'
 
 const {pool} = require('../lib/connectors/db.js');
 const RegimeApi = require('../lib/controllers/regime.js')({pool, version});
+const LicenceTypeApi = require('../lib/controllers/licence-type.js')({pool, version});
 
 module.exports = [
   { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
@@ -19,18 +20,16 @@ module.exports = [
 
 
   ...RegimeApi.getRoutes(),
+  ...LicenceTypeApi.getRoutes(),
+
+
   /*
-  { method: 'GET', path: '/API/' + version + '/regime', handler: API.regime.list , config:{description:'TODO:'}},
-  { method: 'POST', path: '/API/' + version + '/regime', handler: API.regime.create , config:{description:'TODO:'}},
-  { method: 'DELETE', path: '/API/' + version + '/regime/{regime_id}', handler: API.regime.delete , config:{description:'TODO:'}},
-  { method: 'GET', path: '/API/' + version + '/regime/{regime_id}', handler: API.regime.get , config:{description:'TODO:'}},
-  { method: 'PUT', path: '/API/' + version + '/regime/{regime_id}', handler: API.regime.update , config:{description:'TODO:'}},
-  */
-
-
   { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype', handler: API.licencetype.create , config:{description:'TODO:'}},
   { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype', handler: API.licencetype.list , config:{description:'TODO:'}},
   { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}', handler: API.licencetype.get , config:{description:'TODO:'}},
+  */
+
+
   { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.getFields , config:{description:'TODO:'}},
   { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.createField , config:{description:'TODO:'}},
   { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence', handler: API.licence.list , config:{description:'TODO:'}},

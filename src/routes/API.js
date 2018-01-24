@@ -10,10 +10,6 @@ const {pool} = require('../lib/connectors/db.js');
 
 const {RegimeApi, LicenceTypeApi, LicenceApi} = require('../lib/controllers')({pool, version});
 
-// const RegimeApi = require('../lib/controllers/regime.js')({pool, version});
-// const LicenceTypeApi = require('../lib/controllers/licence-type.js')({pool, version});
-// const LicenceApi = require('../lib/controller')
-
 module.exports = [
   { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
   // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence/{licence_id}/shortcode', handler: API.shortcode.create, config:{description:'TODO:'} },
@@ -25,16 +21,11 @@ module.exports = [
   ...LicenceTypeApi.getRoutes(),
   ...LicenceApi.getRoutes(),
 
-
-
-
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.getFields , config:{description:'TODO:'}},
   // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.createField , config:{description:'TODO:'}},
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence', handler: API.licence.list , config:{description:'TODO:'}},
   // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence', handler: API.licence.create , config:{description:'TODO:'}},
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence/{licence_id}', handler: API.licence.get , config:{description:'TODO:'}},
-
-
   // { method: 'GET', path: '/API/' + version + '/licence/{licence_id}', handler: API.licence.get , config:{description:'TODO:'}},
 { method: 'GET', path: '/API/' + version + '/reset', handler: API.general.reset }
 ]

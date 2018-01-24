@@ -4,8 +4,7 @@
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./connectors/db')
-
-
+const deepMap = require('deep-map');
 
 const dbSchema = {
   schemaName: 'permit',
@@ -324,6 +323,11 @@ ON conflict
   }
 }
 
+
+
+
+
+
 function getLicence (request, reply) {
 // return specific licence for org & type
   var queryParams = [request.params.regime_id, request.params.type_id, request.params.licence_id]
@@ -391,7 +395,13 @@ where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${reque
         for (attribute in res.data[0].attributedata) {
           licenceData.attributes[res.data[0].attributedata[attribute].type_field_alias] = JSON.parse(res.data[0].attributedata[attribute].licence_data_value)
         }
-        reply({error: null, data: licenceData})
+
+        // Reduce resolution of NGR references
+        const modifiedData = deepMap(licenceData, (val) => {
+          return typeof(val) === 'string' ? Helpers.reduceGridReferenceResolution(val) : val;
+        });
+
+        reply({error: null, data: modifiedData})
     })
     } else {
       reply({error: 'licence not found', data: null}).code(404)

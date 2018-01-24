@@ -1,6 +1,7 @@
 const HAPIRestAPI = require('hapi-pg-rest-api');
 const Joi = require('joi');
 
+
 module.exports = (config = {}) => {
   const {pool, version} = config;
   return new HAPIRestAPI({
@@ -13,6 +14,7 @@ module.exports = (config = {}) => {
 
     postSelect : (data) => {
       // @TODO filter out grid refs when licence data added with deep-map
+      return data;
     },
 
     validation : {

@@ -12,14 +12,16 @@ module.exports = (config = {}) => {
     connection : pool,
     primaryKeyAuto : true,
     primaryKeyGuid : false,
-
+    upsert : {
+      fields : ['licence_regime_id', 'licence_type_id', 'licence_ref'],
+      set : ['licence_status_id', 'licence_search_key', 'is_public_domain', 'licence_start_dt', 'licence_end_dt', 'licence_data_value']
+    },
     postSelect : (data) => {
       // @TODO filter out grid refs when licence data added with deep-map
       return deepMap(data, (val) => {
         return typeof(val) === 'string' ? reduceGridReferenceResolution(val) : val;
       });
     },
-
     validation : {
       licence_status_id : Joi.number(),
       licence_type_id : Joi.number(),
@@ -29,7 +31,8 @@ module.exports = (config = {}) => {
       is_public_domain : Joi.number(),
       licence_start_dt: Joi.string(),
       licence_end_dt: Joi.string(),
-      licence_ref: Joi.string()
+      licence_ref: Joi.string(),
+      licence_data_value: Joi.string()
     }
   });
 }

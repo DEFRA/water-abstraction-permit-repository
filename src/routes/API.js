@@ -16,12 +16,10 @@ const {RegimeApi, LicenceTypeApi, LicenceApi} = require('../lib/controllers')({p
 
 module.exports = [
   { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
-  { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence/{licence_id}/shortcode', handler: API.shortcode.create, config:{description:'TODO:'} },
-  { method: 'POST', path: '/API/' + version + '/shortcode/{shortcode}', handler: API.shortcode.use, config:{description:'TODO:'} },
+  // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence/{licence_id}/shortcode', handler: API.shortcode.create, config:{description:'TODO:'} },
+  // { method: 'POST', path: '/API/' + version + '/shortcode/{shortcode}', handler: API.shortcode.use, config:{description:'TODO:'} },
   { method: 'POST', path: '/API/' + version + '/token', config: { auth: false, description: 'Get JWT token' }, handler: API.system.getToken },
-  { method: 'GET', path: '/API/' + version + '/field', handler: API.system.getFields , config:{description:'TODO:'}},
-
-
+  // { method: 'GET', path: '/API/' + version + '/field', handler: API.system.getFields , config:{description:'TODO:'}},
 
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),
@@ -30,11 +28,8 @@ module.exports = [
 
 
 
-  { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.getFields , config:{description:'TODO:'}},
-  { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.createField , config:{description:'TODO:'}},
-
-
-
+  // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.getFields , config:{description:'TODO:'}},
+  // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.createField , config:{description:'TODO:'}},
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence', handler: API.licence.list , config:{description:'TODO:'}},
   // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence', handler: API.licence.create , config:{description:'TODO:'}},
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence/{licence_id}', handler: API.licence.get , config:{description:'TODO:'}},

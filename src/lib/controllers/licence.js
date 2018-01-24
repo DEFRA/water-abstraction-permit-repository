@@ -1,6 +1,7 @@
 const HAPIRestAPI = require('hapi-pg-rest-api');
 const Joi = require('joi');
-
+const {reduceGridReferenceResolution} = require('../helpers.js');
+const deepMap = require('deep-map');
 
 module.exports = (config = {}) => {
   const {pool, version} = config;
@@ -14,7 +15,9 @@ module.exports = (config = {}) => {
 
     postSelect : (data) => {
       // @TODO filter out grid refs when licence data added with deep-map
-      return data;
+      return deepMap(data, (val) => {
+        return typeof(val) === 'string' ? reduceGridReferenceResolution(val) : val;
+      });
     },
 
     validation : {

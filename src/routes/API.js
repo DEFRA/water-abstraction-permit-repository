@@ -10,6 +10,15 @@ const {pool} = require('../lib/connectors/db.js');
 
 const {RegimeApi, LicenceTypeApi, LicenceApi} = require('../lib/controllers')({pool, version});
 
+/**
+payload:{
+  maxBytes:10485760
+}
+**/
+
+var licenceRoutes=LicenceApi.getRoutes();
+licenceRoutes[2].config.payload={maxBytes:10485760}
+
 module.exports = [
   { method: 'GET', path: '/status', handler: function(request,reply){return reply('ok').code(200)}, config:{auth: false,description:'Get all entities'}},
   // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/licence/{licence_id}/shortcode', handler: API.shortcode.create, config:{description:'TODO:'} },
@@ -19,7 +28,7 @@ module.exports = [
 
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),
-  ...LicenceApi.getRoutes(),
+  ...licenceRoutes,
 
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.getFields , config:{description:'TODO:'}},
   // { method: 'POST', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.createField , config:{description:'TODO:'}},

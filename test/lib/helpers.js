@@ -6,7 +6,7 @@ const Code = require('code')
 
 const expect = Code.expect
 const Lab = require('lab')
-const lab = exports.lab = Lab.script()
+const lab = Lab.script()
 
 // use some BDD verbage instead of lab default
 const describe = lab.describe
@@ -17,19 +17,13 @@ const after = lab.after
 
 const Helpers = require('../../src/lib/helpers.js')
 
-// tests
-describe('Create guid', () => {
-  it('should return a guid', (done) => {
-        // make API call to self to test functionality end-to-end
-      expect(Helpers.createGUID()).to.be.a.string()
-      done()
-  })
+lab.experiment('Test helper functions', () => {
 
-  after((done) => {
-          // placeholder to do something post tests
-    done()
-  })
-})
+  lab.test('Return a GUID', async() => {
+      expect(Helpers.createGUID()).to.be.a.string();
+      expect(Helpers.createGUID()).to.have.length(36);
+      return;
+  });
+});
 
-
-// tests
+exports.lab = lab;

@@ -8,7 +8,7 @@ const version = '1.0'
 
 const {pool} = require('../lib/connectors/db.js');
 
-const {RegimeApi, LicenceTypeApi, LicenceApi} = require('../lib/controllers')({pool, version});
+const {RegimeApi, LicenceTypeApi, LicenceApi, LicenceExpiringApi} = require('../lib/controllers')({pool, version});
 
 /**
 payload:{
@@ -28,6 +28,7 @@ module.exports = [
 
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),
+  ...LicenceExpiringApi.getRoutes(),
   ...licenceRoutes,
 
   // { method: 'GET', path: '/API/' + version + '/regime/{regime_id}/licencetype/{type_id}/field', handler: API.licencetype.getFields , config:{description:'TODO:'}},

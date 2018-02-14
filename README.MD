@@ -1,5 +1,7 @@
 
 # water-abstraction-permit-repository
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/DEFRA/water-abstraction-permit-repository.svg)](https://greenkeeper.io/)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/maintainability)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/test_coverage)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/test_coverage)
 

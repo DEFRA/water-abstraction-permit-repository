@@ -10,7 +10,7 @@ module.exports = (config = {}) => {
     endpoint : '/API/' + version + '/expiring_licences',
     connection : pool,
         postSelect : (data) => {
-          const numMonths=12
+          const numMonths=4
           return data.filter((obj)=> {
             return obj.licence_end_dt, moment(obj.licence_end_dt).diff(moment(), 'months') < numMonths ;
           });

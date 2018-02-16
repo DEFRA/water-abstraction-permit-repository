@@ -9,12 +9,6 @@ module.exports = (config = {}) => {
     primaryKey : 'licence_id',
     endpoint : '/API/' + version + '/expiring_licences',
     connection : pool,
-        postSelect : (data) => {
-          const numMonths=4
-          return data.filter((obj)=> {
-            return obj.licence_end_dt, moment(obj.licence_end_dt).diff(moment(), 'months') < numMonths ;
-          });
-        },
     validation : {
       licence_id : Joi.number(),
       licence_ref : Joi.string(),

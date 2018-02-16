@@ -17,9 +17,15 @@ module.exports = (config = {}) => {
       set : ['licence_status_id', 'licence_search_key', 'is_public_domain', 'licence_start_dt', 'licence_end_dt', 'licence_data_value']
     },
     postSelect : (data) => {
-      // @TODO filter out grid refs when licence data added with deep-map
-      return deepMap(data, (val) => {
-        return typeof(val) === 'string' ? reduceGridReferenceResolution(val) : val;
+      return data.map(row => {
+        const {licence_data_value, ...rest} = row;
+
+        // Filter out grid refs when licence data added with deep-map
+        const filtered = deepMap(licence_data_value, (val) => {
+          return typeof(val) === 'string' ? reduceGridReferenceResolution(val) : val;
+        });
+
+        return {licence_data_value : filtered, ...rest};
       });
     },
     validation : {

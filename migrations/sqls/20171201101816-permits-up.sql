@@ -117,13 +117,15 @@ CREATE TABLE "licence_data" (
 -- ----------------------------
 -- Table structure for regime
 -- ----------------------------
-ALTER TABLE "regime" DROP CONSTRAINT if exists "orgID" CASCADE;
+
 
 CREATE TABLE if not exists "regime" (
   "regime_nm" varchar COLLATE "pg_catalog"."default",
   "regime_id" int8 NOT NULL DEFAULT nextval('permit_regime_id_seq'::regclass)
 )
 ;
+
+ALTER TABLE "regime" DROP CONSTRAINT if exists "orgID" CASCADE;
 
 
 ALTER TABLE "regime" DROP CONSTRAINT if exists "regime_id_idx" cascade;

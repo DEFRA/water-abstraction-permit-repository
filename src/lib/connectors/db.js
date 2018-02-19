@@ -8,7 +8,7 @@ const pool = new Pool({
 })
 
 function promiseQuery (queryString, params) {
-  return queryAsPromise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     query(queryString, params, (res) => {
       resolve(res)
     })
@@ -28,6 +28,7 @@ function query (queryString, params, cb) {
 
 module.exports = {
 
-  query: promiseQuery
+  query: promiseQuery,
+  pool
 
 }

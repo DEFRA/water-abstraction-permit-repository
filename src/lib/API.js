@@ -1,3 +1,6 @@
+
+/*
+
 const baseFilePath = __dirname + '/../public/data/licences/'
 const Helpers = require('./helpers')
 const DB = require('./connectors/db')
@@ -46,51 +49,6 @@ function getFields (request, reply) {
     .then((res) => { reply(res) })
 }
 
-function listregimes (request, reply) {
-// list all regimes
-  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.regimes}`
-  var queryParams = []
-
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function createRegime (request, reply) {
-  // create new regime
-  var query = `insert into ${dbSchema.schemaName}.${dbSchema.tables.regimes} values ($1) RETURNING regime_id`
-  var queryParams = [request.params.regime_nm]
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function getRegime (request, reply) {
-// return specified org
-  var query = `SELECT * from ${dbSchema.schemaName}.${dbSchema.tables.regimes} where regime_id = $1`
-  var queryParams = [request.params.regime_id]
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function putRegime (request, reply) {
-// update specified org
-  var query = `update ${dbSchema.schemaName}.${dbSchema.tables.regimes} set regime_nm = $2 where regime_id = $1`
-  var queryParams = [request.params.regime_id, request.payload.regime_nm]
-  DB.query(query, queryParams)
-  .then((res) => {
-    reply(res)
-  })
-}
-
-function deleteRegime (request, reply) {
-  // delete specified org]
-  reply('org delete not in place')
-}
 
 function listLicenceTypes (request, reply) {
 // return all licence types for org
@@ -430,9 +388,9 @@ where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${reque
           licenceData.attributeDefinitions[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = attributeDefinitionQuery.data[0].attributedata[attribute]
         }
 
-  /**
-  convert licence data to nice friendly format, separating core values (common to all licences regardless of type) and licence/org type specific attributes
-  **/
+
+  //convert licence data to nice friendly format, separating core values (common to all licences regardless of type) and licence/org type specific attributes
+
 
         for (attribute in res.data[0].attributedata) {
           licenceData.attributes[res.data[0].attributedata[attribute].type_field_alias] = JSON.parse(res.data[0].attributedata[attribute].licence_data_value)
@@ -586,6 +544,7 @@ function putLicence (request, reply) {
     })
   }
 }
+*/
 
 function reset (request, reply) {
   // reset all test data
@@ -614,6 +573,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzLCJuYW1lIjoiQ2hhcmxpZSIsImlhdCI
 
 **/
 }
+
+/*
 
 function createShortcode (request, reply) {
   var shortcode = Helpers.createGUID()
@@ -742,37 +703,38 @@ function licenceUsers (licence_id, cb) {
     cb(res)
   })
 }
+*/
 
 module.exports = {
-  system: {getFields: getFields, getToken: getToken},
-  regime: {list: listregimes, create: createRegime, delete: deleteRegime, get: getRegime, update: putRegime},
-  licencetype: {
-    list: listLicenceTypes,
-    create: createLicenceType,
-    get: getLicenceType,
-    getFields: getlicenceTypeFields,
-    createField: createlicenceTypeField
-
-  },
-  licence: {
-    list: listLicences,
-    create: createLicence,
-    get: getLicence,
-    update: putLicence,
-    search: searchLicence,
-    shortcodes: licenceShortcodes,
-    users: licenceUsers,
-    addshortcode: licenceAddshortcode
-
-  },
+  system: {getToken},
+  // regime: {list: listregimes, create: createRegime, delete: deleteRegime, get: getRegime, update: putRegime},
+  // licencetype: {
+  //   list: listLicenceTypes,
+  //   create: createLicenceType,
+  //   get: getLicenceType,
+  //   getFields: getlicenceTypeFields,
+  //   createField: createlicenceTypeField
+  //
+  // },
+  // licence: {
+  //   list: listLicences,
+  //   create: createLicence,
+  //   get: getLicence,
+  //   update: putLicence,
+  //   search: searchLicence,
+  //   shortcodes: licenceShortcodes,
+  //   users: licenceUsers,
+  //   addshortcode: licenceAddshortcode
+  //
+  // },
   general: {
     reset: reset,
-    makeURIRequest:makeURIRequest,
-    makeURIPostRequest:makeURIPostRequest
+    // makeURIRequest:makeURIRequest,
+    // makeURIPostRequest:makeURIPostRequest
 
   },
-  shortcode: {
-    create: createShortcode,
-    use: useShortcode
-  }
+  // shortcode: {
+  //   create: createShortcode,
+  //   use: useShortcode
+  // }
 }

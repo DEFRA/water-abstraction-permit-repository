@@ -3,8 +3,25 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/maintainability)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/test_coverage)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/test_coverage)
 
-Data agnostic permit repository project for the GOV.UK Water Abstraction service, using the HAPI engine for Node.js + the Handlebars view engine, with a Postgres datastore.
+The permit repository is a lightweight general purpose data store for licences and permits.
 
+The licences are organised in the following heirarchy:
+
+Regime > Licence Type > Licence
+
+These are:
+
+__Regime__: a high level means of grouping licences, e.g. ‘Water’ or ‘Waste’
+__Licence Type__: a means of grouping licences within a regime, e.g. ‘Water Abstraction Licence’, ‘Water Impoundment Licence’
+__Licence__: holds the licence data within a particular regime and licence type
+
+The store is developed in HAPI/NodeJS and backed by a Postgres SQL database.  All data is transferred via a REST API with JWT authentication.
+
+The REST API supports basic filtering and pagination operations on all endpoints.
+
+Licence data itself is stored as a blob of JSON data, together with start and expiry dates and reference number.
+
+Implementation of user interfaces, CRM, and access control is left open to the specific use case requirements.
 
 ## Prerequisitites
 
@@ -386,3 +403,9 @@ The following attribution statement MUST be cited in your products and applicati
 The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable information providers in the public sector to license the use and re-use of their information under a common open licence.
 
 It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.
+
+## Development Team
+
+This module was developed by the Water Resource Licensing Service team as part of a digital transformation project at [DEFRA](https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs), a department of the UK government
+
+To find out more about planned reforms to the abstraction licensing service, see the policy paper: [Water abstraction plan: Abstraction licensing service](https://www.gov.uk/government/publications/water-abstraction-plan-2017/water-abstraction-plan-abstraction-licensing-service)

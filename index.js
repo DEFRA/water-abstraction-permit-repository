@@ -44,7 +44,20 @@ server.register({
 
 
 
-server.register([ require('hapi-auth-jwt2'), require('inert'), require('vision')], (err) => {
+server.register([ {
+      register: require('node-hapi-airbrake-js'),
+      options: {
+        key: process.env.errbit_key,
+        host: process.env.errbit_server
+      }
+  },{
+    // Plugin to display the routes table to console at startup
+    // See https://www.npmjs.com/package/blipp
+    register: require('blipp'),
+    options: {
+      showAuth: true
+    }
+  },require('hapi-auth-jwt2'), require('inert'), require('vision')], (err) => {
   if (err) {
     throw err
   }

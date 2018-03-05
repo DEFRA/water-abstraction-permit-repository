@@ -2,7 +2,9 @@
 This component is one of 3 that combine to give you the ability to store a document or details of a permit or pass, to link those documents to users that can view and be able to have different access for internal and external users. With a front end it will enable most processes to capture, share and view details of permits and or licence style information
 
 __Permit Repository:__ https://github.com/DEFRA/water-abstraction-permit-repository
+
 __IDM:__ https://github.com/DEFRA/water-abstraction-tactical-idm
+
 __CRM:__ https://github.com/DEFRA/water-abstraction-tactical-crm
 
 # water-abstraction-permit-repository

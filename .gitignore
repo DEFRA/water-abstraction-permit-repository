@@ -4,3 +4,4 @@
 /public/
 /views/
 .env
+lcov.info

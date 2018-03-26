@@ -13,7 +13,7 @@ var licenceRoutes = LicenceApi.getRoutes();
 licenceRoutes[2].config.payload = {maxBytes: 10485760};
 
 module.exports = [
-  { method: 'GET', path: '/status', handler: function (request, reply) { return reply('ok').code(200); }, config: {auth: false, description: 'Get all entities'} },
+  { method: 'GET', path: '/status', handler: function (request, h) { return h.response('ok').code(200); }, config: {auth: false, description: 'Get all entities'} },
   { method: 'POST', path: '/API/' + version + '/token', config: { auth: false, description: 'Get JWT token' }, handler: API.system.getToken },
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),

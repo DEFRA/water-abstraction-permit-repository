@@ -1,13 +1,13 @@
-function reset (request, reply) {
-  reply({});
+function reset (request, h) {
+  return h.response({});
 }
 
-function getToken (request, reply) {
+function getToken (request, h) {
   var key = process.env.JWT_SECRET;
   var JWT = require('jsonwebtoken');
   var obj = { id: 1, 'name': 'test' }; // object/info you want to sign
   var token = JWT.sign(obj, key);
-  reply(token);
+  return h.response(token);
 }
 
 module.exports = {

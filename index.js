@@ -6,7 +6,7 @@ const Hapi = require('hapi')
 // create new server instance and connection information
 const server = new Hapi.Server({
   host: 'localhost',
-  port: 3000,
+  port: process.env.PORT,
   router: {stripTrailingSlash: true}
 });
 
@@ -74,6 +74,9 @@ async function start() {
   server.route(require('./src/routes/API'));
 
   await server.start();
+
+  console.log(`Server started on port ${ process.env.PORT }`);
+
   return server;
 }
 

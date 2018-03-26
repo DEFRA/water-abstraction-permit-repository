@@ -49,7 +49,6 @@ function getFields (request, reply) {
     .then((res) => { reply(res) })
 }
 
-
 function listLicenceTypes (request, reply) {
 // return all licence types for org
   var query = `SELECT type_nm,type_id from ${dbSchema.schemaName}.${dbSchema.tables.licenceType} where regime_id=$1`
@@ -213,7 +212,6 @@ function createLicence (request, reply) {
       ) attributes
           `
 
-
 console.log(query)
 console.log(queryParams)
 
@@ -323,11 +321,6 @@ ON conflict
   }
 }
 
-
-
-
-
-
 function getLicence (request, reply) {
 // return specific licence for org & type
   var queryParams = [request.params.regime_id, request.params.type_id, request.params.licence_id]
@@ -382,15 +375,12 @@ where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${reque
       DB.query(query, queryParams)
       .then((attributeDefinitionQuery) => {
 
-
         for (var attribute in attributeDefinitionQuery.data[0].attributedata) {
           licenceData.attributes[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = null
           licenceData.attributeDefinitions[attributeDefinitionQuery.data[0].attributedata[attribute].type_field_alias] = attributeDefinitionQuery.data[0].attributedata[attribute]
         }
 
-
   //convert licence data to nice friendly format, separating core values (common to all licences regardless of type) and licence/org type specific attributes
-
 
         for (attribute in res.data[0].attributedata) {
           licenceData.attributes[res.data[0].attributedata[attribute].type_field_alias] = JSON.parse(res.data[0].attributedata[attribute].licence_data_value)
@@ -406,7 +396,6 @@ where l.licence_regime_id = $1 and l.licence_type_id=$2 and l.licence_id=${reque
     } else {
       reply({error: 'licence not found', data: null}).code(404)
     }
-
 
   })
 }
@@ -554,15 +543,15 @@ function reset (request, reply) {
     reply(data)
   })
   */
-  reply({})
+  reply({});
 }
 
 function getToken (request, reply) {
-  var key = process.env.JWT_SECRET
-  var JWT = require('jsonwebtoken')
-  var obj = { id: 1, 'name': 'test' } // object/info you want to sign
-  var token = JWT.sign(obj, key)
-  reply(token)
+  var key = process.env.JWT_SECRET;
+  var JWT = require('jsonwebtoken');
+  var obj = { id: 1, 'name': 'test' }; // object/info you want to sign
+  var token = JWT.sign(obj, key);
+  reply(token);
 
 /**
 
@@ -601,7 +590,6 @@ function useShortcode (request, reply) {
   console.log(request.payload.sessionCookie)
 
   var userData=helpers.decryptToken(request.payload.sessionCookie)
-
 
   query = `
     select * from  ${dbSchema.schemaName}.${dbSchema.tables.licenceShortcode}
@@ -728,13 +716,13 @@ module.exports = {
   //
   // },
   general: {
-    reset: reset,
+    reset: reset
     // makeURIRequest:makeURIRequest,
     // makeURIPostRequest:makeURIPostRequest
 
-  },
+  }
   // shortcode: {
   //   create: createShortcode,
   //   use: useShortcode
   // }
-}
+};

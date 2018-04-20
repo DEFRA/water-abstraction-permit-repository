@@ -55,7 +55,7 @@
     "hapi-auth-basic": "^4.2.0",
     "hapi-auth-cookie": "^7.0.0",
     "hapi-auth-jwt2": "^8.0.1",
-    "hapi-pg-rest-api": "git+https://github.com/DEFRA/hapi-pg-rest-api.git#a8b0a2479279f5148f7f14ac94844ffcb94439e5",
+    "hapi-pg-rest-api": "https://github.com/DEFRA/hapi-pg-rest-api.git#a8b0a2479279f5148f7f14ac94844ffcb94439e5",
     "hoek": "^5.0.3",
     "inert": "^4.2.1",
     "joi": "^13.1.2",

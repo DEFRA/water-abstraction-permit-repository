@@ -5,3 +5,4 @@
 /views/
 .env
 lcov.info
+*.swp

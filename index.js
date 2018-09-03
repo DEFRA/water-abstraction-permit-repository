@@ -1,24 +1,11 @@
 // provides permit API
 require('dotenv').config();
+const config = require('./config');
 
 const Hapi = require('hapi');
 
 // create new server instance and connection information
-const server = new Hapi.Server({
-  port: process.env.PORT,
-  router: { stripTrailingSlash: true }
-});
-
-// server.connection({ port: process.env.PORT || 8000 })
-
-if (process.env.DATABASE_URL) {
-  var workingVariable = process.env.DATABASE_URL.replace('postgres://', '');
-  process.env.PGUSER = workingVariable.split('@')[0].split(':')[0];
-  process.env.PGPASSWORD = workingVariable.split('@')[0].split(':')[1];
-  process.env.PGHOST = workingVariable.split('@')[1].split(':')[0];
-  process.env.PSPORT = workingVariable.split('@')[1].split(':')[1].split('/')[0];
-  process.env.PGDATABASE = workingVariable.split('@')[1].split(':')[1].split('/')[1];
-}
+const server = new Hapi.Server(config.server);
 
 /**
  * Validate JWT token
@@ -52,9 +39,7 @@ async function start () {
   // Blipp - lists all routes
   await server.register({
     plugin: require('blipp'),
-    options: {
-      showAuth: true
-    }
+    options: config.blipp
   });
 
   // JWT auth

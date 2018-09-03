@@ -1,10 +1,13 @@
-
+const { pg } = require('../../../config');
 const { Pool } = require('pg');
 
-const pool = new Pool({
-  max: 2,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000
+const pool = new Pool(pg);
+
+pool.on('acquire', () => {
+  const { totalCount, idleCount, waitingCount } = pool;
+  if (totalCount === pg.max && idleCount === 0 && waitingCount > 0) {
+    console.log(`Pool low on connections::Total:${totalCount},Idle:${idleCount},Waiting:${waitingCount}`);
+  }
 });
 
 function promiseQuery (queryString, params) {
@@ -27,8 +30,6 @@ function query (queryString, params, cb) {
 }
 
 module.exports = {
-
   query: promiseQuery,
   pool
-
 };

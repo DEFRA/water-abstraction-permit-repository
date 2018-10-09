@@ -55,9 +55,10 @@ async function start () {
   // load routes
   server.route(require('./src/routes/API'));
 
-  await server.start();
-
-  console.log(`Server started on port ${process.env.PORT}`);
+  if (!module.parent) {
+    await server.start();
+    console.log(`Server started on port ${process.env.PORT}`);
+  }
 
   return server;
 }

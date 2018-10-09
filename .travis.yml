@@ -12,7 +12,8 @@ before_script:
   - npm run migrate
 script:
   - npm run lint
-  - npm run test && ./node_modules/.bin/codecov
+  - npm run test:travis
+  - npm run codecov
 env:
   global:
     - DATABASE_URL=postgres://postgres:@localhost:5432/travis_ci_test

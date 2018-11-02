@@ -15,12 +15,10 @@ const server = new Hapi.Server(config.server);
  */
 async function validate (decoded, request) {
   if (!decoded.id) {
-    console.log('boo... JWT failed');
+    server.log(['info'], 'JWT failed');
     return { isValid: false };
-  } else {
-    console.log('huzah... JWT OK');
-    return { isValid: true };
   }
+  return { isValid: true };
 }
 
 /**
@@ -57,7 +55,7 @@ async function start () {
 
   if (!module.parent) {
     await server.start();
-    console.log(`Server started on port ${process.env.PORT}`);
+    server.log(['info'], `Server started on port ${process.env.PORT}`);
   }
 
   return server;

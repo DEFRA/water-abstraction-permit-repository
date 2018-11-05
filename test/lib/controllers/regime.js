@@ -15,7 +15,7 @@ lab.experiment('Test POST regime creation', () => {
         regime_nm: 'Test regime'
       },
       headers: {
-        Authorization : process.env.JWT_TOKEN
+        Authorization: process.env.JWT_TOKEN
       }
     };
 
@@ -24,8 +24,6 @@ lab.experiment('Test POST regime creation', () => {
 
     // Check payload
     const payload = JSON.parse(res.payload);
-
-    console.log(payload);
 
     Code.expect(payload.error).to.equal(null);
     Code.expect(payload.data.regime_id).to.match(/^[0-9]+$/);
@@ -38,17 +36,13 @@ lab.experiment('Test POST regime creation', () => {
       method: 'DELETE',
       url: '/API/1.0/regime/' + regimeId,
       headers: {
-        Authorization : process.env.JWT_TOKEN
+        Authorization: process.env.JWT_TOKEN
       }
     };
 
     const res = await server.inject(request);
     Code.expect(res.statusCode).to.equal(200);
-
   });
-
-
-
 });
 
 exports.lab = lab;

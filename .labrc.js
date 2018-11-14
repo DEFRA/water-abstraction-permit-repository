@@ -2,5 +2,6 @@
 //
 // This is overridden if arguments are passed to lab via the command line.
 module.exports = {
+  globals: 'fetch,Response,Headers,Request',
   verbose: true
 };

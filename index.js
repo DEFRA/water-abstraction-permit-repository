@@ -1,11 +1,18 @@
 // provides permit API
 require('dotenv').config();
 const config = require('./config');
+const Good = require('good');
+const GoodWinston = require('good-winston');
 
 const Hapi = require('hapi');
 
 // create new server instance and connection information
 const server = new Hapi.Server(config.server);
+
+// Initialise logger
+const logger = require('./src/lib/logger');
+const goodWinstonStream = new GoodWinston({ winston: logger });
+logger.init(config.logger);
 
 /**
  * Validate JWT token
@@ -15,24 +22,22 @@ const server = new Hapi.Server(config.server);
  */
 async function validate (decoded, request) {
   if (!decoded.id) {
-    console.log('boo... JWT failed');
+    server.log(['info'], 'JWT failed');
     return { isValid: false };
-  } else {
-    console.log('huzah... JWT OK');
-    return { isValid: true };
   }
+  return { isValid: true };
 }
 
 /**
  * Async function to start HAPI server
  */
 async function start () {
-  // Node HAPI airbrake plugin
   await server.register({
-    plugin: require('node-hapi-airbrake'),
-    options: {
-      key: process.env.errbit_key,
-      host: process.env.errbit_server
+    plugin: Good,
+    options: { ...config.good,
+      reporters: {
+        winston: [goodWinstonStream]
+      }
     }
   });
 
@@ -57,11 +62,16 @@ async function start () {
 
   if (!module.parent) {
     await server.start();
-    console.log(`Server started on port ${process.env.PORT}`);
+    server.log(['info'], `Server started on port ${process.env.PORT}`);
   }
 
   return server;
 }
+
+process.on('unhandledRejection', (err) => {
+  logger.error(err);
+  process.exit(1);
+});
 
 start();
 

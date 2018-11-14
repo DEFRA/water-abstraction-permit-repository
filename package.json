@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "lab",
-    "test:travis": "lab -t 55 -m 0 --coverage-path ./src/ --ignore r -r lcov -o lcov.info -r console -o stdout",
+    "test:travis": "lab -t 55 -m 0 --coverage-path ./src/ -r lcov -o lcov.info -r console -o stdout",
     "test-cov-html": "lab -r html -o coverage.html",
     "migrate": "node scripts/create-schema && db-migrate up --verbose",
     "migrate:down": "db-migrate down --verbose",
@@ -37,10 +37,13 @@
     "standard": "^10.0.3"
   },
   "dependencies": {
+    "airbrake-js": "^1.6.0-beta.1",
     "blipp": "^3.0.0",
     "boom": "^7.2.0",
     "deep-map": "^1.5.0",
     "dotenv": "^4.0.0",
+    "good": "^8.1.1",
+    "good-winston": "^4.0.0",
     "hapi": "^17.2.3",
     "hapi-auth-jwt2": "^8.0.1",
     "hapi-pg-rest-api": "https://github.com/DEFRA/hapi-pg-rest-api.git#v4.0",
@@ -48,9 +51,9 @@
     "joi": "^13.1.2",
     "jsonwebtoken": "^8.0.0",
     "moment": "^2.20.1",
-    "node-hapi-airbrake": "^0.1.3",
     "path": "^0.12.7",
-    "pg": "^7.4.1"
+    "pg": "^7.4.1",
+    "request": "^2.88.0"
   },
   "standard": {
     "ignore": [

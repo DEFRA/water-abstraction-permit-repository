@@ -4,5 +4,6 @@
 /public/
 /views/
 .env
+coverage
 lcov.info
 *.swp

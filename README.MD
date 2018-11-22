@@ -43,27 +43,9 @@ npm install --only=dev
 gulp clean && gulp copy-govuk-files && gulp install-govuk-files && gulp copy-static-assets && gulp sass
 ```
 
-## Environment variables
+## Environment Variables
 
-A `.env` file should be created in the root directory with the following optional configuration variables
-
-### PORT
-Specify the port for the service to run on
-
-`PORT=[port]`
-
-### DATABASE_URL
-Database connection string
-
-`DATABASE_URL: postgres://[user]:[password]@[host]:[port]/[database]`
-
-### cacheKey
-32+ characters used to secure session variables
-
-`cacheKey=a-string-of-at-least-32-characters`
-
-### JWT_SECRET
-The secret key used to encrypt tokens
+The required environment variables for local development can be found in the [.env.example file](./.env.example).
 
 ## Launching
 

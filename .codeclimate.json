@@ -5,6 +5,7 @@
     "node_modules",
     "migrations",
     "db",
-    "scripts"
+    "scripts",
+    "src/lib/logger/vendor/winston-airbrake.js"
   ]
 }

@@ -1,17 +1,18 @@
 {
   "name": "water-abstraction",
-  "version": "1.0.0",
+  "version": "1.13.0",
   "description": "Web app for Water Abstraction Permit service",
   "main": "index.js",
   "scripts": {
     "test": "lab",
-    "test:travis": "lab -t 55 -m 0 --coverage-path ./src/ -r lcov -o lcov.info -r console -o stdout",
+    "test:travis": "lab -t 55 -m 0 --coverage-path ./src/ -r lcov -o coverage/lcov.info -r console -o stdout",
     "test-cov-html": "lab -r html -o coverage.html",
     "migrate": "node scripts/create-schema && db-migrate up --verbose",
     "migrate:down": "db-migrate down --verbose",
     "migrate:create": "db-migrate create --sql-file --",
     "lint": "eslint ./src/**/*.js",
-    "codecov": "codecov"
+    "codecov": "codecov",
+    "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md"
   },
   "engines": {
     "node": ">=8.0"
@@ -19,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "auto-changelog": "^1.10.2",
     "code": "^5.2.0",
     "codecov": "^3.0.4",
     "db-migrate": "^0.11.1",

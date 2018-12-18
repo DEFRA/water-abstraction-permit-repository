@@ -1,6 +1,6 @@
 const HAPIRestAPI = require('hapi-pg-rest-api');
 const Joi = require('joi');
-const { reduceGridReferenceResolution } = require('../helpers.js');
+const { reduceGridReferenceResolution, isWaterAbstractionLicence } = require('../helpers.js');
 const deepMap = require('deep-map');
 
 module.exports = (config = {}) => {
@@ -18,10 +18,14 @@ module.exports = (config = {}) => {
     },
     postSelect: (data) => {
       return data.map(row => {
-        const { licence_data_value, ...rest } = row;
+        if (!isWaterAbstractionLicence(row)) {
+          return row;
+        }
+
+        const { licence_data_value: licenceDataValue, ...rest } = row;
 
         // Filter out grid refs when licence data added with deep-map
-        const filtered = deepMap(licence_data_value, (val) => {
+        const filtered = deepMap(licenceDataValue, (val) => {
           return typeof (val) === 'string' ? reduceGridReferenceResolution(val) : val;
         });
 

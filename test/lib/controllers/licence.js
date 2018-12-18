@@ -101,10 +101,10 @@ lab.experiment('Test POST licence creation', () => {
 });
 
 lab.experiment('Test postSelect hook', () => {
-  const createData = (ngr) => {
+  const createData = (ngr, typeId = 8) => {
     return [{
       licence_regime_id: 1,
-      licence_type_id: 8,
+      licence_type_id: typeId,
       licence_data_value: `{ "key" : "Some text here with ${ngr} value" }`
     }];
   };
@@ -131,6 +131,12 @@ lab.experiment('Test postSelect hook', () => {
     const data = createData('SP12345 67890');
     const result = postSelect(data);
     expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
+  });
+
+  lab.test('It should not filter NGRs for non-abstraction licence types', async () => {
+    const data = createData('SP12345 67890', 9);
+    const result = postSelect(data);
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP12345 67890 value" }');
   });
 });
 

@@ -1,3 +1,5 @@
+const config = require('../../config');
+
 /**
  * Reduces the resolution of grid references in the supplied string
  * @param {String} str - contains National Grid references
@@ -14,6 +16,19 @@ function reduceGridReferenceResolution (str) {
   return newStr;
 }
 
+/**
+ * Checks if given DB row is a water abstraction licence
+ * @param {Object} row - from licences table
+ * @return {Boolean} returns true if a water abstraction licence
+ */
+const isWaterAbstractionLicence = (row) => {
+  const { regimeId, typeId } = config.licence;
+  const isRegime = parseInt(row.licence_regime_id) === parseInt(regimeId);
+  const isType = parseInt(row.licence_type_id) === parseInt(typeId);
+  return isRegime && isType;
+};
+
 module.exports = {
-  reduceGridReferenceResolution
+  reduceGridReferenceResolution,
+  isWaterAbstractionLicence
 };

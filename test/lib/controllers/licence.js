@@ -1,10 +1,12 @@
 const Lab = require('lab');
 
 const lab = Lab.script();
-const Code = require('code');
+const { expect } = require('code');
 const server = require('../../../index.js');
 
 let regimeId, licenceId;
+
+const { postSelect } = require('../../../src/lib/controllers/licence.js');
 
 lab.experiment('Test POST licence creation', () => {
   // Create regime for testing
@@ -38,7 +40,7 @@ lab.experiment('Test POST licence creation', () => {
     };
 
     const res = await server.inject(request);
-    Code.expect(res.statusCode).to.equal(200);
+    expect(res.statusCode).to.equal(200);
   });
 
   // Create regime for testing
@@ -53,7 +55,7 @@ lab.experiment('Test POST licence creation', () => {
 
     const res = await server.inject(request);
 
-    Code.expect(res.statusCode).to.equal(401);
+    expect(res.statusCode).to.equal(401);
   });
 
   lab.test('The API should create a new licence with POST', async () => {
@@ -73,13 +75,13 @@ lab.experiment('Test POST licence creation', () => {
     };
 
     const res = await server.inject(request);
-    Code.expect(res.statusCode).to.equal(201);
+    expect(res.statusCode).to.equal(201);
 
     // Check payload
     const payload = JSON.parse(res.payload);
 
-    Code.expect(payload.error).to.equal(null);
-    Code.expect(payload.data.licence_id).to.match(/^[0-9]+$/);
+    expect(payload.error).to.equal(null);
+    expect(payload.data.licence_id).to.match(/^[0-9]+$/);
 
     licenceId = payload.data.licence_id;
   });
@@ -94,7 +96,47 @@ lab.experiment('Test POST licence creation', () => {
     };
 
     const res = await server.inject(request);
-    Code.expect(res.statusCode).to.equal(200);
+    expect(res.statusCode).to.equal(200);
+  });
+});
+
+lab.experiment('Test postSelect hook', () => {
+  const createData = (ngr, typeId = 8) => {
+    return [{
+      licence_regime_id: 1,
+      licence_type_id: typeId,
+      licence_data_value: `{ "key" : "Some text here with ${ngr} value" }`
+    }];
+  };
+
+  lab.test('It should filter NGRs with spaces in licence_data_value', async () => {
+    const data = createData('SP 12345 67890');
+    const result = postSelect(data);
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
+  });
+
+  lab.test('It should filter NGRs without spaces in licence_data_value', async () => {
+    const data = createData('SP1234567890');
+    const result = postSelect(data);
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
+  });
+
+  lab.test('It should filter NGRs with initial space licence_data_value', async () => {
+    const data = createData('SP 1234567890');
+    const result = postSelect(data);
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
+  });
+
+  lab.test('It should filter NGRs with second space licence_data_value', async () => {
+    const data = createData('SP12345 67890');
+    const result = postSelect(data);
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
+  });
+
+  lab.test('It should not filter NGRs for non-abstraction licence types', async () => {
+    const data = createData('SP12345 67890', 9);
+    const result = postSelect(data);
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP12345 67890 value" }');
   });
 });
 

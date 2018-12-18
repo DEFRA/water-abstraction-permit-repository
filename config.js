@@ -28,6 +28,11 @@ module.exports = {
     router: {
       stripTrailingSlash: true
     }
+  },
+
+  licence: {
+    regimeId: 1,
+    typeId: 8
   }
 
 };

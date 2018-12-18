@@ -55,3 +55,5 @@ module.exports = (config = {}) => {
     }
   });
 };
+
+module.exports.postSelect = postSelect;

@@ -1,3 +1,5 @@
+const testMode = parseInt(process.env.TEST_MODE) === 1;
+
 module.exports = {
 
   blipp: {
@@ -10,7 +12,7 @@ module.exports = {
   },
 
   logger: {
-    level: 'info',
+    level: testMode ? 'info' : 'error',
     airbrakeKey: process.env.ERRBIT_KEY,
     airbrakeHost: process.env.ERRBIT_SERVER,
     airbrakeLevel: 'error'

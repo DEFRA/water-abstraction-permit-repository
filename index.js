@@ -10,7 +10,7 @@ const Hapi = require('hapi');
 const server = new Hapi.Server(config.server);
 
 // Initialise logger
-const logger = require('./src/lib/logger');
+const { logger } = require('@envage/water-abstraction-helpers');
 const goodWinstonStream = new GoodWinston({ winston: logger });
 logger.init(config.logger);
 

@@ -10,9 +10,8 @@ const Hapi = require('hapi');
 const server = new Hapi.Server(config.server);
 
 // Initialise logger
-const { logger } = require('@envage/water-abstraction-helpers');
+const { logger } = require('./src/logger');
 const goodWinstonStream = new GoodWinston({ winston: logger });
-logger.init(config.logger);
 
 /**
  * Validate JWT token

@@ -1,6 +1,6 @@
 const { pg } = require('../../../config');
 const { Pool } = require('pg');
-const logger = require('../logger');
+const { logger } = require('@envage/water-abstraction-helpers');
 
 const pool = new Pool(pg);
 

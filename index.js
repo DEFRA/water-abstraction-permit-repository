@@ -61,7 +61,7 @@ async function start () {
 
   if (!module.parent) {
     await server.start();
-    server.log(['info'], `Server started on port ${process.env.PORT}`);
+    server.log(['info'], `Server started on port ${config.server.port}`);
   }
 
   return server;

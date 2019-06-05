@@ -1,6 +1,6 @@
 const { pg } = require('../../../config');
 const { Pool } = require('pg');
-const { logger } = require('@envage/water-abstraction-helpers');
+const { logger } = require('../../logger');
 
 const pool = new Pool(pg);
 
@@ -11,25 +11,4 @@ pool.on('acquire', () => {
   }
 });
 
-function promiseQuery (queryString, params) {
-  return new Promise((resolve, reject) => {
-    query(queryString, params, (res) => {
-      resolve(res);
-    });
-  });
-}
-
-function query (queryString, params, cb) {
-  pool.query(queryString, params)
-    .then((res) => {
-      cb({data: res.rows, error: null});
-    })
-    .catch(err => {
-      cb({error: err.stack, data: null});
-    });
-}
-
-module.exports = {
-  query: promiseQuery,
-  pool
-};
+exports.pool = pool;

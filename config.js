@@ -26,7 +26,7 @@ module.exports = {
   },
 
   server: {
-    port: process.env.PORT,
+    port: 8004,
     router: {
       stripTrailingSlash: true
     }
@@ -36,5 +36,4 @@ module.exports = {
     regimeId: 1,
     typeId: 8
   }
-
 };

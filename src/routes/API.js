@@ -8,12 +8,18 @@ const version = '1.0';
 const { pool } = require('../lib/connectors/db.js');
 
 const { RegimeApi, LicenceTypeApi, LicenceApi, LicenceExpiringApi } = require('../lib/controllers')({ pool, version });
+const statusController = require('../lib/controllers/status');
 
-var licenceRoutes = LicenceApi.getRoutes();
+const licenceRoutes = LicenceApi.getRoutes();
 licenceRoutes[2].config.payload = { maxBytes: 10485760 };
 
 module.exports = [
-  { method: 'GET', path: '/status', handler: function (request, h) { return h.response('ok').code(200); }, config: { auth: false, description: 'Get all entities' } },
+  {
+    method: 'GET',
+    path: '/status',
+    handler: statusController.getStatus,
+    config: { auth: false, description: 'Get all entities' }
+  },
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),
   ...LicenceExpiringApi.getRoutes(),

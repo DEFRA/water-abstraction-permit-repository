@@ -18,7 +18,10 @@ module.exports = [
     method: 'GET',
     path: '/status',
     handler: statusController.getStatus,
-    config: { auth: false, description: 'Get all entities' }
+    config: {
+      auth: false,
+      description: 'Healthcheck endpoint for the load balancer to inspect'
+    }
   },
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),

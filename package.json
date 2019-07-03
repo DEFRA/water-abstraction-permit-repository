@@ -16,7 +16,9 @@
     "migrate:create": "db-migrate create --sql-file --",
     "lint": "eslint .",
     "codecov": "codecov",
-    "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md"
+    "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "engines": {
     "node": ">=8.0"
@@ -36,8 +38,7 @@
     "eslint-plugin-promise": "4.1.1",
     "eslint-plugin-standard": "4.0.0",
     "istanbul": "^0.4.5",
-    "lab": "^15.4.1",
-    "snyk": "1.165.0"
+    "lab": "^15.4.1"
   },
   "dependencies": {
     "@envage/water-abstraction-helpers": "^3.0.0",
@@ -56,6 +57,8 @@
     "moment": "^2.20.1",
     "path": "^0.12.7",
     "pg": "^7.11.0",
-    "request": "^2.88.0"
-  }
+    "request": "^2.88.0",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }

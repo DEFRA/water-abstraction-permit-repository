@@ -4,7 +4,7 @@ const config = require('./config');
 const Good = require('good');
 const GoodWinston = require('good-winston');
 
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 
 // create new server instance and connection information
 const server = new Hapi.Server(config.server);

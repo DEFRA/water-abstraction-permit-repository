@@ -1,5 +1,5 @@
 const HAPIRestAPI = require('hapi-pg-rest-api');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 module.exports = (config = {}) => {
   const { pool, version } = config;

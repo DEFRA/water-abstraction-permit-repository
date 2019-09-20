@@ -2,12 +2,11 @@
 API page, pending real back end - uses fs to read and write to lkocal json files...
 */
 
-// const API = require('../lib/API');
 const version = '1.0';
 
 const { pool } = require('../lib/connectors/db.js');
 
-const { RegimeApi, LicenceTypeApi, LicenceApi, LicenceExpiringApi } = require('../lib/controllers')({ pool, version });
+const { RegimeApi, LicenceTypeApi, LicenceApi } = require('../lib/controllers')({ pool, version });
 const statusController = require('../lib/controllers/status');
 
 const licenceRoutes = LicenceApi.getRoutes();
@@ -25,6 +24,5 @@ module.exports = [
   },
   ...RegimeApi.getRoutes(),
   ...LicenceTypeApi.getRoutes(),
-  ...LicenceExpiringApi.getRoutes(),
   ...licenceRoutes
 ];

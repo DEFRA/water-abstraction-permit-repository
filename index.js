@@ -33,7 +33,8 @@ async function validate (decoded, request) {
 async function start () {
   await server.register({
     plugin: Good,
-    options: { ...config.good,
+    options: {
+      ...config.good,
       reporters: {
         winston: [goodWinstonStream]
       }

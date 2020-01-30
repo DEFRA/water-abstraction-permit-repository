@@ -68,10 +68,19 @@ async function start () {
   return server;
 }
 
-process.on('unhandledRejection', (err) => {
-  logger.error(err);
+const processError = message => err => {
+  logger.error(message, err);
   process.exit(1);
-});
+};
+
+process
+  .on('unhandledRejection', processError('unhandledRejection'))
+  .on('uncaughtException', processError('uncaughtException'))
+  .on('SIGINT', async () => {
+    logger.info('stopping permit repo');
+    await server.stop();
+    return process.exit(0);
+  });
 
 start();
 

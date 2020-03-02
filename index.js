@@ -8,6 +8,7 @@ const Hapi = require('@hapi/hapi');
 
 // create new server instance and connection information
 const server = new Hapi.Server(config.server);
+const db = require('./src/lib/connectors/db');
 
 // Initialise logger
 const { logger } = require('./src/logger');
@@ -77,8 +78,14 @@ process
   .on('unhandledRejection', processError('unhandledRejection'))
   .on('uncaughtException', processError('uncaughtException'))
   .on('SIGINT', async () => {
-    logger.info('stopping permit repo');
+    logger.info('Stopping permit repo');
+
     await server.stop();
+    logger.info('1/2: Hapi server stopped');
+
+    await db.pool.end();
+    logger.info('2/2: Connection pool closed');
+
     return process.exit(0);
   });
 

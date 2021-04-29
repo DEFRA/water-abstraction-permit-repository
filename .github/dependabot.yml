@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  target-branch: develop
+  versioning-strategy: lockfile-only
+  ignore:
+  - dependency-name: "@envage/water-abstraction-helpers"
+    versions:
+    - 4.3.6
+    - 4.3.7

@@ -4,7 +4,7 @@ select
 hydrology_station_id as newguid,
 gauging_station_id as oldguid
 from
-water.gauging_stations) loop
+where hydrology_station_id is not null) loop
 update
 permit.licence
 set

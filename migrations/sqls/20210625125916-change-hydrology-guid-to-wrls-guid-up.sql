@@ -1,3 +1,6 @@
+-- Adds the water schema if missing so that the CI doesn't fail
+CREATE schema if not exists water;
+
 -- Adds the water.gauging_stations table so that the CI doesn't fail.
 CREATE TABLE if not exists water.gauging_stations (
 gauging_station_id uuid not NULL,

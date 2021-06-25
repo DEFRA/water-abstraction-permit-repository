@@ -1,3 +1,10 @@
+-- Adds the water.gauging_stations table so that the CI doesn't fail.
+CREATE TABLE if not exists water.gauging_stations (
+gauging_station_id uuid not NULL,
+hydrology_station_id uuid unique,
+PRIMARY KEY ("gauging_station_id")
+)
+
 do $$ declare gsRow record;
 begin for gsRow in (
 select

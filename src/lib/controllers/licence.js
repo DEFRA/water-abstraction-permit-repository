@@ -37,7 +37,16 @@ module.exports = (config = {}) => {
     primaryKeyGuid: false,
     upsert: {
       fields: ['licence_regime_id', 'licence_type_id', 'licence_ref'],
-      set: ['licence_status_id', 'licence_search_key', 'is_public_domain', 'licence_start_dt', 'licence_end_dt', 'licence_data_value']
+      set: [
+        'licence_status_id',
+        'licence_search_key',
+        'is_public_domain',
+        'licence_start_dt',
+        'licence_end_dt',
+        'licence_data_value',
+        'date_licence_version_purpose_conditions_last_copied',
+        'date_gauging_station_links_last_copied'
+      ]
     },
     postSelect,
     validation: {
@@ -51,7 +60,9 @@ module.exports = (config = {}) => {
       licence_end_dt: Joi.string(),
       licence_ref: Joi.string(),
       licence_data_value: Joi.string(),
-      metadata: Joi.string()
+      metadata: Joi.string(),
+      date_licence_version_purpose_conditions_last_copied: Joi.date(),
+      date_gauging_station_links_last_copied: Joi.date()
     }
   });
 };

@@ -1,6 +1,6 @@
 {
   "name": "water-abstraction-permit-repository",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Web app for Water Abstraction Permit service",
   "main": "index.js",
   "repository": {
@@ -39,7 +39,7 @@
     "snyk": "1.247.1"
   },
   "dependencies": {
-    "@envage/water-abstraction-helpers": "^4.1.3",
+    "@envage/water-abstraction-helpers": "^4.5.0",
     "@hapi/hapi": "^18.4.1",
     "@hapi/joi": "^15.1.1",
     "blipp": "4.0.0",

@@ -1,7 +1,10 @@
-require('dotenv').config();
-const helpers = require('@envage/water-abstraction-helpers');
+'use strict';
 
-const config = require('../../../config.js');
-const { logger } = require('../../logger');
+const { db } = require('@envage/water-abstraction-helpers');
+const knex = require('./knex');
+const query = (...args) => knex.knex.raw(...db.mapQueryToKnex(...args));
 
-exports.pool = helpers.db.createPool(config.pg, logger);
+exports.pool = {
+  query,
+  end: () => knex.knex.destroy()
+};

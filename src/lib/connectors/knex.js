@@ -14,7 +14,7 @@ pg.types.setTypeParser(pg.types.builtins.DATE, dateMapper);
 const knex = require('knex')({
   client: 'pg',
   connection: config.pg.connectionString,
-  pool: { min: 0, max: config.pg.max }
+  pool: { min: 0, max: config.pg.max, propagateCreateError: false }
 });
 
 exports.knex = knex;

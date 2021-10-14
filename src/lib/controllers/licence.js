@@ -1,4 +1,4 @@
-const HAPIRestAPI = require('hapi-pg-rest-api');
+const HAPIRestAPI = require('@envage/hapi-pg-rest-api');
 const Joi = require('joi');
 const { reduceGridReferenceResolution, isWaterAbstractionLicence } = require('../helpers.js');
 const deepMap = require('deep-map');

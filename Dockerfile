@@ -5,6 +5,6 @@ WORKDIR /app
 COPY package*.json ./
 COPY . .
 
-RUN npm ci --only=production
+RUN npm ci
 
 CMD [ "node", "." ]

@@ -7,3 +7,5 @@
 coverage
 lcov.info
 *.swp
+
+.DS_store

@@ -97,7 +97,7 @@ jobs:
       - name: Run unit tests
         run: |
           npm test
-          sed -i 's/\/home\/runner\/work\/sroc-charging-module-api\/sroc-charging-module-api\//\/github\/workspace\//g' coverage/lcov.info
+          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage/lcov.info
 
       - name: Analyze with SonarCloud
         if: github.actor != 'dependabot[bot]'

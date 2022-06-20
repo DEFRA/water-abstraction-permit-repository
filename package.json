@@ -9,8 +9,6 @@
   },
   "scripts": {
     "test": "lab",
-    "test:ci": "lab -t 55 -m 0 --coverage-path ./src/ -r lcov -o coverage/lcov.info -r console -o stdout",
-    "test-cov-html": "lab -r html -o coverage.html",
     "migrate": "node scripts/create-schema && db-migrate up --verbose",
     "migrate:down": "db-migrate down --verbose",
     "migrate:create": "db-migrate create --sql-file --",

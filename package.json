@@ -19,9 +19,6 @@
     "codecov": "codecov",
     "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md"
   },
-  "engines": {
-    "node": ">=12.0"
-  },
   "devDependencies": {
     "@hapi/code": "^8.0.7",
     "@hapi/lab": "^24.5.1",

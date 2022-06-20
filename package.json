@@ -1,39 +1,22 @@
 {
   "name": "water-abstraction-permit-repository",
   "version": "2.23.0",
-  "description": "Web app for Water Abstraction Permit service",
+  "description": "Permit repository for the Water Resource Licence Service",
+  "homepage": "https://github.com/DEFRA/water-abstraction-team",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/DEFRA/water-abstraction-permit-repository"
   },
+  "author": "WRLS service team",
+  "license": "OGL-UK-3.0",
   "scripts": {
     "test": "lab",
     "migrate": "node scripts/create-schema && db-migrate up --verbose",
     "migrate:down": "db-migrate down --verbose",
     "migrate:create": "db-migrate create --sql-file --",
     "lint": "eslint .",
-    "codecov": "codecov",
     "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md"
-  },
-  "engines": {
-    "node": ">=12.0"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@hapi/code": "^8.0.7",
-    "@hapi/lab": "^24.5.1",
-    "auto-changelog": "^1.16.4",
-    "codecov": "^3.8.3",
-    "db-migrate": "^0.11.13",
-    "db-migrate-pg": "^1.2.2",
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-standard": "^5.0.0"
   },
   "dependencies": {
     "@envage/hapi-pg-rest-api": "^7.0.0",
@@ -51,5 +34,19 @@
     "path": "^0.12.7",
     "pg": "^8.7.3",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@hapi/code": "^8.0.7",
+    "@hapi/lab": "^24.5.1",
+    "auto-changelog": "^1.16.4",
+    "codecov": "^3.8.3",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
+    "eslint": "^8.13.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-standard": "^5.0.0"
   }
 }

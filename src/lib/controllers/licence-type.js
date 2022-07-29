@@ -1,8 +1,8 @@
-const HAPIRestAPI = require('@envage/hapi-pg-rest-api');
-const Joi = require('joi');
+const HAPIRestAPI = require('@envage/hapi-pg-rest-api')
+const Joi = require('joi')
 
 module.exports = (config = {}) => {
-  const { pool, version } = config;
+  const { pool, version } = config
   return new HAPIRestAPI({
     table: 'permit.type',
     primaryKey: 'type_id',
@@ -15,5 +15,5 @@ module.exports = (config = {}) => {
       type_nm: Joi.string(),
       regime_id: Joi.number()
     }
-  });
-};
+  })
+}

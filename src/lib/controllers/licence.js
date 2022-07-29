@@ -1,7 +1,7 @@
-const HAPIRestAPI = require('@envage/hapi-pg-rest-api');
-const Joi = require('joi');
-const { reduceGridReferenceResolution, isWaterAbstractionLicence } = require('../helpers.js');
-const deepMap = require('deep-map');
+const HAPIRestAPI = require('@envage/hapi-pg-rest-api')
+const Joi = require('joi')
+const { reduceGridReferenceResolution, isWaterAbstractionLicence } = require('../helpers.js')
+const deepMap = require('deep-map')
 
 /**
  * Post select handler automatically searches for and reduces the resolution
@@ -12,22 +12,22 @@ const deepMap = require('deep-map');
 const postSelect = (data) => {
   return data.map(row => {
     if (!isWaterAbstractionLicence(row)) {
-      return row;
+      return row
     }
 
-    const { licence_data_value: licenceDataValue, ...rest } = row;
+    const { licence_data_value: licenceDataValue, ...rest } = row
 
     // Filter out grid refs when licence data added with deep-map
     const filtered = deepMap(licenceDataValue, (val) => {
-      return typeof (val) === 'string' ? reduceGridReferenceResolution(val) : val;
-    });
+      return typeof (val) === 'string' ? reduceGridReferenceResolution(val) : val
+    })
 
-    return { licence_data_value: filtered, ...rest };
-  });
-};
+    return { licence_data_value: filtered, ...rest }
+  })
+}
 
 module.exports = (config = {}) => {
-  const { pool, version } = config;
+  const { pool, version } = config
   return new HAPIRestAPI({
     table: 'permit.licence',
     primaryKey: 'licence_id',
@@ -64,7 +64,7 @@ module.exports = (config = {}) => {
       date_licence_version_purpose_conditions_last_copied: Joi.date(),
       date_gauging_station_links_last_copied: Joi.date()
     }
-  });
-};
+  })
+}
 
-module.exports.postSelect = postSelect;
+module.exports.postSelect = postSelect

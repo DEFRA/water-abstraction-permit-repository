@@ -1,10 +1,10 @@
-require('dotenv').config();
-const { pool } = require('../src/lib/connectors/db');
+require('dotenv').config()
+const { pool } = require('../src/lib/connectors/db')
 
 async function run () {
-  const { error } = await pool.query('CREATE SCHEMA IF NOT EXISTS permit;');
-  console.log(error || 'OK');
-  process.exit(error ? 1 : 0);
+  const { error } = await pool.query('CREATE SCHEMA IF NOT EXISTS permit;')
+  console.log(error || 'OK')
+  process.exit(error ? 1 : 0)
 }
 
-run();
+run()

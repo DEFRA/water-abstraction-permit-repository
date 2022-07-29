@@ -1,18 +1,18 @@
 // provides permit API
-require('dotenv').config();
-const config = require('./config');
-const Good = require('good');
-const GoodWinston = require('good-winston');
+require('dotenv').config()
+const config = require('./config')
+const Good = require('good')
+const GoodWinston = require('good-winston')
 
-const Hapi = require('@hapi/hapi');
+const Hapi = require('@hapi/hapi')
 
 // create new server instance and connection information
-const server = new Hapi.Server(config.server);
-const db = require('./src/lib/connectors/db');
+const server = new Hapi.Server(config.server)
+const db = require('./src/lib/connectors/db')
 
 // Initialise logger
-const { logger } = require('./src/logger');
-const goodWinstonStream = new GoodWinston({ winston: logger });
+const { logger } = require('./src/logger')
+const goodWinstonStream = new GoodWinston({ winston: logger })
 
 /**
  * Validate JWT token
@@ -22,10 +22,10 @@ const goodWinstonStream = new GoodWinston({ winston: logger });
  */
 async function validate (decoded, request) {
   if (!decoded.id) {
-    server.log(['info'], 'JWT failed');
-    return { isValid: false };
+    server.log(['info'], 'JWT failed')
+    return { isValid: false }
   }
-  return { isValid: true };
+  return { isValid: true }
 }
 
 /**
@@ -40,55 +40,55 @@ async function start () {
         winston: [goodWinstonStream]
       }
     }
-  });
+  })
 
   // Blipp - lists all routes
   await server.register({
     plugin: require('blipp'),
     options: config.blipp
-  });
+  })
 
   // JWT auth
-  await server.register(require('hapi-auth-jwt2'));
+  await server.register(require('hapi-auth-jwt2'))
 
   server.auth.strategy('jwt', 'jwt', {
     key: process.env.JWT_SECRET,
     validate
-  });
+  })
 
-  server.auth.default('jwt');
+  server.auth.default('jwt')
 
   // load routes
-  server.route(require('./src/routes/API'));
+  server.route(require('./src/routes/API'))
 
   if (!module.parent) {
-    await server.start();
-    server.log(['info'], `Server started on port ${config.server.port}`);
+    await server.start()
+    server.log(['info'], `Server started on port ${config.server.port}`)
   }
 
-  return server;
+  return server
 }
 
 const processError = message => err => {
-  logger.error(message, err);
-  process.exit(1);
-};
+  logger.error(message, err)
+  process.exit(1)
+}
 
 process
   .on('unhandledRejection', processError('unhandledRejection'))
   .on('uncaughtException', processError('uncaughtException'))
   .on('SIGINT', async () => {
-    logger.info('Stopping permit repo');
+    logger.info('Stopping permit repo')
 
-    await server.stop();
-    logger.info('1/2: Hapi server stopped');
+    await server.stop()
+    logger.info('1/2: Hapi server stopped')
 
-    await db.pool.end();
-    logger.info('2/2: Connection pool closed');
+    await db.pool.end()
+    logger.info('2/2: Connection pool closed')
 
-    return process.exit(0);
-  });
+    return process.exit(0)
+  })
 
-start();
+start()
 
-module.exports = server;
+module.exports = server

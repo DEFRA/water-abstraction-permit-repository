@@ -3,13 +3,13 @@ const {
   test,
   before,
   after
-} = exports.lab = require('@hapi/lab').script();
-const { expect } = require('@hapi/code');
-const server = require('../../../index.js');
+} = exports.lab = require('@hapi/lab').script()
+const { expect } = require('@hapi/code')
+const server = require('../../../index.js')
 
-let regimeId, licenceId;
+let regimeId, licenceId
 
-const { postSelect } = require('../../../src/lib/controllers/licence.js');
+const { postSelect } = require('../../../src/lib/controllers/licence.js')
 
 experiment('Test POST licence creation', () => {
   // Create regime for testing
@@ -23,14 +23,14 @@ experiment('Test POST licence creation', () => {
       headers: {
         Authorization: process.env.JWT_TOKEN
       }
-    };
+    }
 
-    const res = await server.inject(request);
+    const res = await server.inject(request)
 
     // Check payload
-    const payload = JSON.parse(res.payload);
-    regimeId = payload.data.regime_id;
-  });
+    const payload = JSON.parse(res.payload)
+    regimeId = payload.data.regime_id
+  })
 
   // Tear down regime
   after(async () => {
@@ -40,11 +40,11 @@ experiment('Test POST licence creation', () => {
       headers: {
         Authorization: process.env.JWT_TOKEN
       }
-    };
+    }
 
-    const res = await server.inject(request);
-    expect(res.statusCode).to.equal(200);
-  });
+    const res = await server.inject(request)
+    expect(res.statusCode).to.equal(200)
+  })
 
   // Create regime for testing
   test('The API should reject requests without authorization header', async () => {
@@ -54,12 +54,12 @@ experiment('Test POST licence creation', () => {
       payload: {
         regime_nm: 'Test regime'
       }
-    };
+    }
 
-    const res = await server.inject(request);
+    const res = await server.inject(request)
 
-    expect(res.statusCode).to.equal(401);
-  });
+    expect(res.statusCode).to.equal(401)
+  })
 
   test('The API should create a new licence with POST', async () => {
     const request = {
@@ -75,19 +75,19 @@ experiment('Test POST licence creation', () => {
       headers: {
         Authorization: process.env.JWT_TOKEN
       }
-    };
+    }
 
-    const res = await server.inject(request);
-    expect(res.statusCode).to.equal(201);
+    const res = await server.inject(request)
+    expect(res.statusCode).to.equal(201)
 
     // Check payload
-    const payload = JSON.parse(res.payload);
+    const payload = JSON.parse(res.payload)
 
-    expect(payload.error).to.equal(null);
-    expect(payload.data.licence_id).to.match(/^[0-9]+$/);
+    expect(payload.error).to.equal(null)
+    expect(payload.data.licence_id).to.match(/^[0-9]+$/)
 
-    licenceId = payload.data.licence_id;
-  });
+    licenceId = payload.data.licence_id
+  })
 
   test('The API should delete a licence with DELETE', async () => {
     const request = {
@@ -96,12 +96,12 @@ experiment('Test POST licence creation', () => {
       headers: {
         Authorization: process.env.JWT_TOKEN
       }
-    };
+    }
 
-    const res = await server.inject(request);
-    expect(res.statusCode).to.equal(200);
-  });
-});
+    const res = await server.inject(request)
+    expect(res.statusCode).to.equal(200)
+  })
+})
 
 experiment('Test postSelect hook', () => {
   const createData = (ngr, typeId = 8) => {
@@ -109,36 +109,36 @@ experiment('Test postSelect hook', () => {
       licence_regime_id: 1,
       licence_type_id: typeId,
       licence_data_value: `{ "key" : "Some text here with ${ngr} value" }`
-    }];
-  };
+    }]
+  }
 
   test('It should filter NGRs with spaces in licence_data_value', async () => {
-    const data = createData('SP 12345 67890');
-    const result = postSelect(data);
-    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
-  });
+    const data = createData('SP 12345 67890')
+    const result = postSelect(data)
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }')
+  })
 
   test('It should filter NGRs without spaces in licence_data_value', async () => {
-    const data = createData('SP1234567890');
-    const result = postSelect(data);
-    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
-  });
+    const data = createData('SP1234567890')
+    const result = postSelect(data)
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }')
+  })
 
   test('It should filter NGRs with initial space licence_data_value', async () => {
-    const data = createData('SP 1234567890');
-    const result = postSelect(data);
-    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
-  });
+    const data = createData('SP 1234567890')
+    const result = postSelect(data)
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }')
+  })
 
   test('It should filter NGRs with second space licence_data_value', async () => {
-    const data = createData('SP12345 67890');
-    const result = postSelect(data);
-    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }');
-  });
+    const data = createData('SP12345 67890')
+    const result = postSelect(data)
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP 123 678 value" }')
+  })
 
   test('It should not filter NGRs for non-abstraction licence types', async () => {
-    const data = createData('SP12345 67890', 9);
-    const result = postSelect(data);
-    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP12345 67890 value" }');
-  });
-});
+    const data = createData('SP12345 67890', 9)
+    const result = postSelect(data)
+    expect(result[0].licence_data_value).to.equal('{ "key" : "Some text here with SP12345 67890 value" }')
+  })
+})

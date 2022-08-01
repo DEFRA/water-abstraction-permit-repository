@@ -1,11 +1,11 @@
-|               |              |  
-|---------------|--------------|
-| Build         |  ![CI](https://github.com/DEFRA/water-abstraction-permit-repository/workflows/CI/badge.svg) |
-| Test coverage | [![Test Coverage](https://api.codeclimate.com/v1/badges/9b655c0bca44bb73f068/test_coverage)](https://codeclimate.com/github/DEFRA/water-abstraction-permit-repository/test_coverage)  |
-| Quality check |  [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=alert_status)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository) |
+# Water Abstraction Permit Repository
 
+![Build Status](https://github.com/DEFRA/water-abstraction-permit-repository/workflows/CI/badge.svg?branch=develop)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository)
+[![Known Vulnerabilities](https://snyk.io/test/github/DEFRA/water-abstraction-permit-repository/badge.svg)](https://snyk.io/test/github/DEFRA/water-abstraction-permit-repository)
+[![Licence](https://img.shields.io/badge/Licence-OGLv3-blue.svg)](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3)
 
-# Introduction
 This component is one of 3 that combine to give you the ability to store a document or details of a permit or pass, to link those documents to users that can view and be able to have different access for internal and external users. With a front end it will enable most processes to capture, share and view details of permits and or licence style information
 
 __Permit Repository:__ https://github.com/DEFRA/water-abstraction-permit-repository
@@ -14,7 +14,7 @@ __IDM:__ https://github.com/DEFRA/water-abstraction-tactical-idm
 
 __CRM:__ https://github.com/DEFRA/water-abstraction-tactical-crm
 
-# water-abstraction-permit-repository
+## Introduction
 
 The permit repository is a lightweight general purpose data store for licences and permits.
 

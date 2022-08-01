@@ -1,48 +1,31 @@
 {
   "name": "water-abstraction-permit-repository",
   "version": "2.24.0",
-  "description": "Web app for Water Abstraction Permit service",
+  "description": "Permit repository for the Water Resource Licence Service",
+  "homepage": "https://github.com/DEFRA/water-abstraction-team",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/DEFRA/water-abstraction-permit-repository"
   },
+  "author": "WRLS service team",
+  "license": "OGL-UK-3.0",
   "scripts": {
     "test": "lab",
-    "test:ci": "lab -t 55 -m 0 --coverage-path ./src/ -r lcov -o coverage/lcov.info -r console -o stdout",
-    "test-cov-html": "lab -r html -o coverage.html",
     "migrate": "node scripts/create-schema && db-migrate up --verbose",
     "migrate:down": "db-migrate down --verbose",
     "migrate:create": "db-migrate create --sql-file --",
-    "lint": "eslint .",
-    "codecov": "codecov",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
     "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md"
-  },
-  "engines": {
-    "node": ">=12.0"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@hapi/code": "^8.0.7",
-    "@hapi/lab": "^24.5.1",
-    "auto-changelog": "^1.16.4",
-    "codecov": "^3.8.3",
-    "db-migrate": "^0.11.13",
-    "db-migrate-pg": "^1.2.2",
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "snyk": "^1.852.0"
   },
   "dependencies": {
     "@envage/hapi-pg-rest-api": "^7.0.0",
     "@envage/water-abstraction-helpers": "4.8.0",
     "@hapi/hapi": "^20.2.1",
     "blipp": "^4.0.2",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
     "deep-map": "^1.5.0",
     "dotenv": "^8.6.0",
     "good": "^8.1.2",
@@ -54,5 +37,12 @@
     "path": "^0.12.7",
     "pg": "^8.7.3",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@hapi/code": "^8.0.7",
+    "@hapi/lab": "^24.5.1",
+    "auto-changelog": "^1.16.4",
+    "codecov": "^3.8.3",
+    "standard": "^17.0.0"
   }
 }

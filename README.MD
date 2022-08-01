@@ -1,6 +1,6 @@
 # Water Abstraction Permit Repository
 
-![Build Status](https://github.com/DEFRA/water-abstraction-permit-repository/workflows/CI/badge.svg?branch=develop)
+![Build Status](https://github.com/DEFRA/water-abstraction-permit-repository/workflows/CI/badge.svg?branch=main)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository)
 [![Known Vulnerabilities](https://snyk.io/test/github/DEFRA/water-abstraction-permit-repository/badge.svg)](https://snyk.io/test/github/DEFRA/water-abstraction-permit-repository)

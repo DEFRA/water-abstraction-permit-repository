@@ -27,7 +27,7 @@ const routes = [
   ...licenceRoutes
 ]
 
-if (config.isAcceptanceTestTarget) {
+if (!config.isProduction) {
   routes.push({
     method: 'DELETE',
     path: `/API/${version}/acceptance-tests`,

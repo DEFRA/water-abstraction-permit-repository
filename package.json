@@ -31,8 +31,7 @@
     "good": "^8.1.2",
     "good-winston": "^4.0.0",
     "hapi-auth-jwt2": "^8.8.1",
-    "joi": "^17.6.0",
-    "request": "^2.88.0"
+    "joi": "^17.6.0"
   },
   "devDependencies": {
     "@hapi/code": "^8.0.7",

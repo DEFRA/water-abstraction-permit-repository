@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@envage/hapi-pg-rest-api": "^7.0.0",
-    "@envage/water-abstraction-helpers": "4.8.0",
-    "@hapi/hapi": "^20.2.1",
+    "@envage/water-abstraction-helpers": "4.8.1",
+    "@hapi/hapi": "^20.2.2",
     "blipp": "^4.0.2",
     "db-migrate": "^0.11.13",
     "db-migrate-pg": "^1.2.2",
@@ -31,18 +31,12 @@
     "good": "^8.1.2",
     "good-winston": "^4.0.0",
     "hapi-auth-jwt2": "^8.8.1",
-    "joi": "^17.6.0",
-    "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
-    "path": "^0.12.7",
-    "pg": "^8.7.3",
-    "request": "^2.88.0"
+    "joi": "^17.6.0"
   },
   "devDependencies": {
     "@hapi/code": "^8.0.7",
     "@hapi/lab": "^24.5.1",
     "auto-changelog": "^1.16.4",
-    "codecov": "^3.8.3",
     "standard": "^17.0.0"
   }
 }

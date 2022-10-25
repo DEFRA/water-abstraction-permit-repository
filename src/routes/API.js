@@ -6,6 +6,7 @@ const { pool } = require('../lib/connectors/db.js')
 
 const { RegimeApi, LicenceTypeApi, LicenceApi } = require('../lib/controllers')({ pool, version })
 const statusController = require('../lib/controllers/status')
+const healthController = require('../lib/controllers/health')
 const acceptanceTestsController = require('../lib/controllers/acceptance-tests')
 const config = require('../../config')
 
@@ -20,6 +21,14 @@ const routes = [
     config: {
       auth: false,
       description: 'Healthcheck endpoint for the load balancer to inspect'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/health/info',
+    handler: healthController.getInfo,
+    config: {
+      auth: false
     }
   },
   ...RegimeApi.getRoutes(),

@@ -2,16 +2,8 @@
   "apps": [
     {
       "name": "permit-repository",
-      "ignore_watch": [
-        "node_modules",
-        "test"
-      ],
       "script": "index.js",
-      "env": {
-        "watch": true
-      },
       "env_production": {
-        "watch": false,
         "instances" : "max",
         "exec_mode" : "cluster"
       }

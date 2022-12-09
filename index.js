@@ -1,8 +1,6 @@
 // provides permit API
 require('dotenv').config()
 const config = require('./config')
-const Good = require('good')
-const GoodWinston = require('good-winston')
 
 const Hapi = require('@hapi/hapi')
 
@@ -10,9 +8,10 @@ const Hapi = require('@hapi/hapi')
 const server = new Hapi.Server(config.server)
 const db = require('./src/lib/connectors/db')
 
+const HapiPinoPlugin = require('./src/plugins/hapi-pino.plugin.js')
+
 // Initialise logger
 const { logger } = require('./src/logger')
-const goodWinstonStream = new GoodWinston({ winston: logger })
 
 /**
  * Validate JWT token
@@ -32,15 +31,7 @@ async function validate (decoded, request) {
  * Async function to start HAPI server
  */
 async function start () {
-  await server.register({
-    plugin: Good,
-    options: {
-      ...config.good,
-      reporters: {
-        winston: [goodWinstonStream]
-      }
-    }
-  })
+  await server.register(HapiPinoPlugin())
 
   // Blipp - lists all routes
   await server.register({

@@ -1,5 +1,9 @@
-const pkg = require('../../../package.json')
+'use strict'
 
-const statusResponse = { version: pkg.version }
+function getStatus () {
+  return { status: 'alive' }
+}
 
-exports.getStatus = () => statusResponse
+module.exports = {
+  getStatus
+}

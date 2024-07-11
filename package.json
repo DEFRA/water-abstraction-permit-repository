@@ -20,22 +20,22 @@
     "version": "npx --yes auto-changelog -p --commit-limit false && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@envage/hapi-pg-rest-api": "^7.0.0",
+    "@envage/hapi-pg-rest-api": "^7.0.1",
     "@envage/water-abstraction-helpers": "^4.9.0",
-    "@hapi/hapi": "^21.3.2",
+    "@hapi/hapi": "^21.3.10",
     "blipp": "^4.0.2",
-    "db-migrate": "^0.11.13",
-    "db-migrate-pg": "^1.2.2",
+    "db-migrate": "^0.11.14",
+    "db-migrate-pg": "^1.5.2",
     "deep-map": "^1.5.0",
     "dotenv": "^8.6.0",
     "hapi-auth-jwt2": "^8.8.1",
     "hapi-pino": "^11.0.1",
-    "joi": "^17.6.0"
+    "joi": "^17.13.3"
   },
   "devDependencies": {
     "@hapi/code": "^8.0.7",
     "@hapi/lab": "^24.5.1",
     "pino-pretty": "^9.1.1",
-    "standard": "^17.0.0"
+    "standard": "^17.1.0"
   }
 }

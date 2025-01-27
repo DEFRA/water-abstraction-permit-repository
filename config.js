@@ -3,10 +3,6 @@ const isProduction = environment === 'prd'
 
 module.exports = {
 
-  blipp: {
-    showAuth: true
-  },
-
   jwt: {
     key: process.env.JWT_SECRET,
     verifyOptions: { algorithms: ['HS256'] }

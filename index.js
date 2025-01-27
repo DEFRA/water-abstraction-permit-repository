@@ -33,12 +33,6 @@ async function validate (decoded, request) {
 async function start () {
   await server.register(HapiPinoPlugin())
 
-  // Blipp - lists all routes
-  await server.register({
-    plugin: require('blipp'),
-    options: config.blipp
-  })
-
   // JWT auth
   await server.register(require('hapi-auth-jwt2'))
 

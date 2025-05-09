@@ -1,6 +1,6 @@
 # Water Abstraction Permit Repository
 
-![Build Status](https://github.com/DEFRA/water-abstraction-permit-repository/workflows/CI/badge.svg?branch=main)
+![Build Status](https://github.com/DEFRA/water-abstraction-permit-repository/actions/workflows/ci.yml/badge.svg?branch=main)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_water-abstraction-permit-repository&metric=coverage)](https://sonarcloud.io/dashboard?id=DEFRA_water-abstraction-permit-repository)
 [![Known Vulnerabilities](https://snyk.io/test/github/DEFRA/water-abstraction-permit-repository/badge.svg)](https://snyk.io/test/github/DEFRA/water-abstraction-permit-repository)
@@ -8,11 +8,11 @@
 
 This component is one of 3 that combine to give you the ability to store a document or details of a permit or pass, to link those documents to users that can view and be able to have different access for internal and external users. With a front end it will enable most processes to capture, share and view details of permits and or licence style information
 
-__Permit Repository:__ https://github.com/DEFRA/water-abstraction-permit-repository
+**Permit Repository:** https://github.com/DEFRA/water-abstraction-permit-repository
 
-__IDM:__ https://github.com/DEFRA/water-abstraction-tactical-idm
+**IDM:** https://github.com/DEFRA/water-abstraction-tactical-idm
 
-__CRM:__ https://github.com/DEFRA/water-abstraction-tactical-crm
+**CRM:** https://github.com/DEFRA/water-abstraction-tactical-crm
 
 ## Introduction
 
@@ -24,11 +24,11 @@ Regime > Licence Type > Licence
 
 These are:
 
-__Regime__: a high level means of grouping licences, e.g. ‘Water’ or ‘Waste’
-__Licence Type__: a means of grouping licences within a regime, e.g. ‘Water Abstraction Licence’, ‘Water Impoundment Licence’
-__Licence__: holds the licence data within a particular regime and licence type
+**Regime**: a high level means of grouping licences, e.g. ‘Water’ or ‘Waste’
+**Licence Type**: a means of grouping licences within a regime, e.g. ‘Water Abstraction Licence’, ‘Water Impoundment Licence’
+**Licence**: holds the licence data within a particular regime and licence type
 
-The store is developed in HAPI/NodeJS and backed by a Postgres SQL database.  All data is transferred via a REST API with JWT authentication.
+The store is developed in HAPI/NodeJS and backed by a Postgres SQL database. All data is transferred via a REST API with JWT authentication.
 
 The REST API supports basic filtering and pagination operations on all endpoints.
 
@@ -246,7 +246,6 @@ Add a multiple fields to licence type [type id] for regime [org id].
 }
 ```
 
-
 ### GET /API/1.0/org/[org id]/licencetype/[type id]
 
 Returns custom attribute definition of a licence of type [type id] for regime [org id]
@@ -385,7 +384,7 @@ THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE
 
 The following attribution statement MUST be cited in your products and applications when using this information.
 
->Contains public sector information licensed under the Open Government license v3
+> Contains public sector information licensed under the Open Government license v3
 
 ### About the license
 
